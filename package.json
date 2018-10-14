@@ -1,0 +1,31 @@
+{
+  "name": "rocketwatch",
+  "version": "1.0.0",
+  "description": "Watch Rockets live!",
+  "main": "app.js",
+  "private": true,
+  "dependencies": {
+    "compression": "^1.7.2",
+    "express": "^4.16.2",
+    "node-storage": "0.0.7",
+    "pushbullet": "^2.1.0",
+    "request": "^2.85.0",
+    "snoowrap": "^1.15.2",
+    "twitter": "^1.7.1",
+    "xmlhttprequest": "^1.8.0",
+    "ytdl-core": "^0.20.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "rocket",
+    "watch",
+    "launch",
+    "live"
+  ],
+  "author": "yasiu.pl",
+  "license": "ISC"
+}
