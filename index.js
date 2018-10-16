@@ -1,13 +1,13 @@
-var express = require('express');
-var compression = require('compression');
-var request = require('request');
-var ytdl = require('ytdl-core');
+const express = require('express');
+const compression = require('compression');
+const request = require('request');
+const ytdl = require('ytdl-core');
 
-var keys = require('./keys.json');
-var RocketWatch = require('./server.js');
+const keys = require('./keys.json');
+const RocketWatch = require('./server.js');
 
 
-var app = express();
+const app = express();
 app.use(function(req, res, next) {
   res.set({
     //'Content-Security-Policy': "default-src data: blob: https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; frame-src http: https:",
