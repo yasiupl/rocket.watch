@@ -1,11 +1,11 @@
-//#!/usr/bin/env nodejs
-
-var keys = require('./keys.json');
-var RocketWatch = require('./server.js');
 var express = require('express');
 var compression = require('compression');
 var request = require('request');
 var ytdl = require('ytdl-core');
+
+var keys = require('./keys.json');
+var RocketWatch = require('./server.js');
+
 
 var app = express();
 app.use(function(req, res, next) {
