@@ -20,9 +20,12 @@ const routes =
     },
 ];
 
-const router = Router()
-routes.forEach(x => router.get(x.slug, (request, response) => response.redirect(301, x.url)))
+const redirect =
+    router =>
+        (slug, url) =>
+            router.get(slug, (request, response) => response.redirect(301, url));
 
-// TODO: How to test this?
+const router = Router();
+routes.forEach(redirect(router))
 
 module.exports = router;
