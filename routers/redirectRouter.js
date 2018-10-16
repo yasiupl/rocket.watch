@@ -21,11 +21,7 @@ const routes =
 ];
 
 const redirect =
-    router =>
-        (slug, url) =>
-            router.get(slug, (request, response) => response.redirect(301, url));
+    (router, route) =>
+            router.get(route.slug, (request, response) => response.redirect(301, route.url));
 
-const router = Router();
-routes.forEach(redirect(router))
-
-module.exports = router;
+module.exports = routes.reduce((router, route) => redirect(router, route), Router())
