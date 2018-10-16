@@ -1,22 +1,22 @@
-const express = require('express');
-const compression = require('compression');
-const request = require('request');
-const ytdl = require('ytdl-core');
+const express = require("express");
+const compression = require("compression");
+const request = require("request");
+const ytdl = require("ytdl-core");
 
-const keys = require('./keys.json');
-const RocketWatch = require('./server.js');
+const keys = require("./keys.json");
+const RocketWatch = require("./server.js");
 
 
 const ble_middleware = function(req, res, next) {
   res.set({
-    //'Content-Security-Policy': "default-src data: blob: https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; frame-src http: https:",
-    'Strict-Transport-Security': 'max-age=2592000; includeSubDomains; preload',
-    'Referrer-Policy': 'same-origin',
-    'X-Content-Type-Options': 'nosniff',
-    'X-XSS-Protection': '1',
-    'Access-Control-Allow-Origin': 'https://rocket.watch',
+    //"Content-Security-Policy": `default-src data: blob: https: "unsafe-inline" "unsafe-eval"; connect-src https:; frame-src http: https:`,
+    "Strict-Transport-Security": "max-age=2592000; includeSubDomains; preload",
+    "Referrer-Policy": "same-origin",
+    "X-Content-Type-Options": "nosniff",
+    "X-XSS-Protection": "1",
+    "Access-Control-Allow-Origin": "https://rocket.watch",
 
-    'Cache-Control': 'max-age=86400'
+    "Cache-Control": "max-age=86400"
   });
   next();
 }
@@ -25,25 +25,38 @@ const middlewares =
 [
     ble_middleware,
     compression(),
-    express.static('static'),
+    express.static("static"),
 ];
 
-app.get('/discord', function(req, res) {
-  res.redirect(301, 'https://discord.gg/cExSaKZ');
-});
+const router = express.Router()
+const routes = 
+[
+    {
+        "slug": "/discord",
+        "url": "https://discord.gg/cExSaKZ",
+    },
+    {
+        "slug": "/reddit",
+        "url": "https://reddit.com/r/rocketwatch",
+    },
+    {
+        "slug": "/youtube",
+        "url": "https://www.youtube.com/channel/UCpY48ts_nCvlBRAVlbJePgg",
+    },
+    {
+        "slug": "/android",
+        "url": "https://play.google.com/store/apps/details?id=pl.yasiu.rocketwatch",
+    },
+];
 
-app.get('/reddit', function(req, res) {
-  res.redirect(301, 'https://reddit.com/r/rocketwatch');
-});
+routes.forEach(x => router.get(x.slug, (request, response) => response.redirect(301, x.url)))
 
-app.get('/youtube', function(req, res) {
-  res.redirect(301, 'https://www.youtube.com/channel/UCpY48ts_nCvlBRAVlbJePgg');
-});
+const routers =
+[
+    router,
+];
 
-app.get('/android', function(req, res) {
-  res.redirect(301, 'https://play.google.com/store/apps/details?id=pl.yasiu.rocketwatch');
-});
-
+const app = express();
 // TODO: Move this all router
     app.post('/api/patreon', function(req, res) {
       console.log(req.body)
@@ -131,8 +144,8 @@ app.get('/android', function(req, res) {
     });
 // TODO: Move this all router [end]
 
+const plugins = [].concat(middlewares).concat(routers);
+plugins.forEach(x => app.use(x))
 
-const app = express();
-middlewares.forEach(middleware => app.use(middleware))
 app.listen(8080);
 console.log("Server running on port 8080");
