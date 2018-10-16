@@ -1,0 +1,9 @@
+node_modules
+.remote-sync.json
+.ftpconfig
+.ftpignore
+.well-known
+*.scss
+components
+.vscode
+keys.local.json
