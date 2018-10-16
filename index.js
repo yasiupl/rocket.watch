@@ -10,7 +10,7 @@ var ytdl = require('ytdl-core');
 var app = express();
 app.use(function(req, res, next) {
   res.set({
-    'Content-Security-Policy': "default-src data: blob: https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; frame-src http: https:",
+    //'Content-Security-Policy': "default-src data: blob: https: 'unsafe-inline' 'unsafe-eval'; connect-src https:; frame-src http: https:",
     'Strict-Transport-Security': 'max-age=2592000; includeSubDomains; preload',
     'Referrer-Policy': 'same-origin',
     'X-Content-Type-Options': 'nosniff',
@@ -23,6 +23,7 @@ app.use(function(req, res, next) {
 app.use(compression());
 app.use(express.static('static'));
 app.listen(8080);
+console.log("Server running on port 8080");
 
 
 

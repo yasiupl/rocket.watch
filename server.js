@@ -4,7 +4,7 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var fs = require('fs');
 var storage = new Storage('./cache.json');
 
-var keys = require('./keys.js');
+var keys = require('./keys.json');
 
 module.exports = {
   load: load,
