@@ -5,6 +5,7 @@
   "main": "app.js",
   "private": true,
   "dependencies": {
+    "axios": "^0.18.0",
     "compression": "^1.7.2",
     "express": "^4.16.2",
     "node-storage": "0.0.7",
