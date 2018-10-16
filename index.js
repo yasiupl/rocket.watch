@@ -5,6 +5,7 @@ const ytdl = require("ytdl-core");
 
 const keys = require("./keys.json");
 const RocketWatch = require("./server.js");
+const redirectRouter = require("./routers/redirectRouter");
 
 
 const ble_middleware = function(req, res, next) {
@@ -23,37 +24,14 @@ const ble_middleware = function(req, res, next) {
 
 const middlewares =
 [
-    ble_middleware,
+    ble_middleware, //TODO: How this should be name and what it should do?
     compression(),
     express.static("static"),
 ];
 
-const router = express.Router()
-const routes = 
-[
-    {
-        "slug": "/discord",
-        "url": "https://discord.gg/cExSaKZ",
-    },
-    {
-        "slug": "/reddit",
-        "url": "https://reddit.com/r/rocketwatch",
-    },
-    {
-        "slug": "/youtube",
-        "url": "https://www.youtube.com/channel/UCpY48ts_nCvlBRAVlbJePgg",
-    },
-    {
-        "slug": "/android",
-        "url": "https://play.google.com/store/apps/details?id=pl.yasiu.rocketwatch",
-    },
-];
-
-routes.forEach(x => router.get(x.slug, (request, response) => response.redirect(301, x.url)))
-
 const routers =
 [
-    router,
+    redirectRouter,
 ];
 
 const app = express();
