@@ -1,7 +1,6 @@
-$(timeout --preserve-status 5 node index.js 2>/dev/null)
-NODE_EXIT_CODE=$?
-
-$(test $NODE_EXIT_CODE = 143)
-TEST_RESULT=$?
-
-exit $TEST_RESULT
+node index.js 2>&1 >/dev/null &
+sleep 2
+curl --silent http://localhost:8080 2>&1 >/dev/null
+CURL_EXIT_CODE=$?
+kill `ps | grep node | cut -d" " -f 2`
+exit $CURL_EXIT_CODE
