@@ -1,10 +1,9 @@
-var Storage = require('node-storage');
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+const Storage = require('node-storage');
+const { XMLHttpRequest } = require("xmlhttprequest");
+const fs = require('fs');
 
-var fs = require('fs');
-var storage = new Storage('./cache.json');
+const keys = require('./keys.json');
 
-var keys = require('./keys.json');
 
 module.exports = {
   load: load,
@@ -13,12 +12,9 @@ module.exports = {
   getJSON: getJSON,
   storage: storage
 };
+const storage = new Storage('./cache.json');
 
 function load(query, callback) {
-     
-  
-     
-
   callback = callback || function() {};
   var queryParams = QueryString(query);
   var query = query.replace(/(\?|&)(page=)([0-9])/g, "");
