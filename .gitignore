@@ -3,7 +3,5 @@ node_modules
 .ftpconfig
 .ftpignore
 .well-known
-*.scss
-components
 .vscode
 keys.local.json
