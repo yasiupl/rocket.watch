@@ -5,13 +5,6 @@ const fs = require('fs');
 const keys = require('./keys.json');
 
 
-module.exports = {
-  load: load,
-  ReadableDateString: ReadableDateString,
-  ISODateString: ISODateString,
-  getJSON: getJSON,
-  storage: storage
-};
 const storage = new Storage('./cache.json');
 
 function load(query, callback) {
@@ -781,3 +774,12 @@ function ISODateString(c) {
   }
   return c.toISOString() || (c.getUTCFullYear() + "-" + d(c.getUTCMonth() + 1) + "-" + d(c.getUTCDate()) + "T" + d(c.getUTCHours()) + ":" + d(c.getUTCMinutes()) + ":" + d(c.getUTCSeconds()) + "Z")
 }
+
+
+module.exports = {
+    load: load,
+    ReadableDateString: ReadableDateString,
+    ISODateString: ISODateString,
+    getJSON: getJSON,
+    storage: storage
+};
