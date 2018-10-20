@@ -14,9 +14,6 @@ module.exports = {
   storage: storage
 };
 
-
-//console.log("Server initiated @ " + ReadableDateString(Date.now()));
-
 function load(query, callback) {
      
   
@@ -30,19 +27,6 @@ function load(query, callback) {
   var baseurl = "https://launchlibrary.net/1.4.1/";
   var cache = storage.get(query);
 
-  /*
-  if (cache) {
-    if (queryParams.page) {
-      var page = (parseInt(queryParams.page) - 1);
-      var perpage = 30;
-      cache[Object.keys(cache)[0]] = cache[Object.keys(cache)[0]].slice(page * perpage, (page + 1) * perpage);
-      cache.offset = page * perpage;
-      callback(cache);
-    } else {
-      callback(cache);
-    }
-  }
-*/
   if (!cache || (cache && ((Date.now() - cache.expire) > 0))) {
     getJSON((format.match("custom") ? ("https://rocket.watch/data/custom/" + query.split("?")[0] + ".json") : (baseurl + query)), function(data) {
       if (data.status >= 500) {
@@ -581,15 +565,6 @@ function load(query, callback) {
 
                       if (q.items && q.items[0]) {
                         youtube = q.items[0];
-                        /*
-                        if (youtube.snippet.liveBroadcastContent != "none") {
-                          f.media.video.unshift({
-                            name: "[YouTube] " + youtube.snippet.title + " Live Chat",
-                            embed: "https://www.youtube.com/live_chat?embed_domain=rocketwatch.yasiu.pl&v=" + youtube.id,
-                            share: "https://www.youtube.com/watch?v=" + youtube.id
-                          })
-                        }
-                        */
                         f.media.video.unshift({
                           name: "[YouTube] " + youtube.snippet.title,
                           embed: "https://www.youtube.com/embed/" + youtube.id + "?rel=0&autoplay=1",
@@ -608,15 +583,6 @@ function load(query, callback) {
                   getJSON("https://www.googleapis.com/youtube/v3/search?key=" + y.data.api.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || y.norminal.youtube), function(r) {
                     for (var q in r.items) {
                       youtube = r.items[q];
-                      /*
-                      if (youtube.snippet.liveBroadcastContent != "none") {
-                        f.media.video.unshift({
-                          name: "[YouTube] " + youtube.snippet.title + " Live Chat",
-                          embed: "https://www.youtube.com/live_chat?embed_domain=rocketwatch.yasiu.pl&v=" + youtube.id,
-                          share: "https://www.youtube.com/watch?v=" + youtube.id
-                        })
-                      }
-                      */
                       if (Date.parse(youtube.snippet.publishedAt) >= (Date.now() - 86400000)) {
                         f.media.video.unshift({
                           name: "[YouTube] " + youtube.snippet.title,
@@ -639,30 +605,11 @@ function load(query, callback) {
                         embed: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude,
                         share: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude
                       });
-                      /*
-                      f.media.comments.push({
-                        name: "[Weather] " + r.currentobservation.name + " weather forecast",
-                        embed: "https://forecast-v3.weather.gov/point/" + f.location.pads[0].latitude + "," + f.location.pads[0].longitude,
-                        share: "https://forecast-v3.weather.gov/point/" + f.location.pads[0].latitude + "," + f.location.pads[0].longitude
-                      });
-                      */
                       f.media.comments.push({
                         name: "[Weather] " + r.currentobservation.name + " radar imagery",
                         embed: "https://radar.weather.gov/lite/N0R/" + r.location.radar.split("K")[1] + "_loop.gif",
                         share: r.credit
                       });
-                      /*
-                      for (var q in r.time.startValidTime) {
-                        if (r.time.startValidTime[q].split("T")[0].replace(/-/gi, "") == f.isonet.split("T")[0]) {
-                          f.media.comments.push({
-                            name: "[Weather] " + r.currentobservation.name + " weather forecast: " + r.data.text[q],
-                            embed: "https://radar.weather.gov/lite/N0R/" + r.location.radar.split("K")[1] + "_loop.gif",
-                            share: r.credit
-                          });
-                          break
-                        }
-                      }
-                      */
                     }
                   })
 
