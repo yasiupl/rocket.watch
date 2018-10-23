@@ -1,7 +1,5 @@
 const { Router } = require("express");
 
-//redirects client to another location on the internet
-
 const routes =
     [
         {

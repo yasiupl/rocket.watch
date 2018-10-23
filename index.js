@@ -30,6 +30,7 @@ const middlewares =
     express.static("static"),
   ];
 
+
 const routers =
   [
     redirectRouter,
@@ -38,30 +39,36 @@ const routers =
 
 const app = express();
 // TODO: Move this all router
-
-app.route('/api/*').get(function (req, res) {
-  if (req.url.split("api/")[1]) {
-    RocketWatch.load(req.url.split("api/")[1], function (d) {
-      res.set({
-        'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'max-age=' + Math.round((d.expire - Date.now()) / 1000)
-      });
-      res.json(d);
+    app.post('/api/patreon', function(req, res) {
+      console.log(req.body)
+      res.json({
+        status: "success"
+      })
     });
-  } else {
-    res.json({
-      endpoints: {
-        launch: "https://rocket.watch/api/launch",
-        mission: "https://rocket.watch/api/mission",
-        rocket: "https://rocket.watch/api/rocket",
-        agency: "https://rocket.watch/api/agency"
-      },
-      docs: "https://launchlibrary.net/docs/1.4/api.html",
-      info: "https://launchlibrary.net",
-      version: "1.4.1"
-    })
-  }
-});
+
+    app.route('/api/*').get(function(req, res) {
+      if (req.url.split("api/")[1]) {
+        RocketWatch.load(req.url.split("api/")[1], function(d) {
+          res.set({
+            'Access-Control-Allow-Origin': '*',
+            'Cache-Control': 'max-age=' + Math.round((d.expire - Date.now()) / 1000)
+          });
+          res.json(d);
+        });
+      } else {
+        res.json({
+          endpoints: {
+            launch: "https://rocket.watch/api/launch",
+            mission: "https://rocket.watch/api/mission",
+            rocket: "https://rocket.watch/api/rocket",
+            agency: "https://rocket.watch/api/agency"
+          },
+          docs: "https://launchlibrary.net/docs/1.4/api.html",
+          info: "https://launchlibrary.net",
+          version: "1.4.1"
+        })
+      }
+    });
 
 
 // TODO: Move this all router [end]
