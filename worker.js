@@ -17,7 +17,7 @@ setInterval(function() {
       RocketWatch.load("/launch?mode=verbose&id=" + prev.launches[i].id + "&format=live");
     }
   });
-}, 60000);
+}, 60 * 1000);
 
 //every ten minutes
 setInterval(function() {
@@ -87,4 +87,4 @@ setInterval(function() {
     }
   });
 
-}, 60 * 60 * 1000);
+}, 10 * 60 * 1000);
