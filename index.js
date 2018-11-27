@@ -113,13 +113,7 @@ const app = express();
         filter: 'audioonly'
       }).pipe(res);
     });
-
-    // TODO: Can we kill it? Why is it here?
-    app.get('/time', function(req, res) {
-      res.json({
-        time: Date.now()
-      });
-    });
+    
 // TODO: Move this all router [end]
 
 const plugins = [].concat(middlewares).concat(routers);
