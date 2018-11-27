@@ -24,7 +24,7 @@ var $main = document.getElementsByTagName("main")[0];
 var $query = QueryString();
 var countdowns = [];
 var lastHash = -1;
-window.addEventListener("hashchange", function() {
+window.addEventListener("hashchange", function () {
   var f;
   if (location.hash.length > 0) {
     f = parseInt(location.hash.replace("#", ""), 10)
@@ -37,7 +37,7 @@ window.addEventListener("hashchange", function() {
   }
 });
 
-(window.reloadhash = function() {
+(window.reloadhash = function () {
 
   document.getElementById("background").innerHTML = "";
   $info.innerHTML = '<div class="card-content"><h1 class="white-text" id="loading-message">Loading...</h1></div>';
@@ -63,10 +63,10 @@ window.addEventListener("hashchange", function() {
 
 
 
-  QueryString(function(b) {
+  QueryString(function (b) {
     window.$query = QueryString();
     launched = 0;
-    ask4consent(function() {
+    ask4consent(function () {
       if (b.id) {
         watch(b.id);
         launched++
@@ -118,12 +118,12 @@ window.addEventListener("hashchange", function() {
       if (!launched) {
         home();
       }
-    }, function() {
+    }, function () {
       home();
     });
 
     if (navigator.onLine) {
-      setTimeout(function() {
+      setTimeout(function () {
         if (document.getElementById("loading-message"))
           document.getElementById("loading-message").innerHTML = '<h1>This is taking longer than usual.</h1><h5 style="cursor: pointer;" onclick="location.reload(true)">Try again</h5>'
       }, 5000);
@@ -150,7 +150,7 @@ function home() {
   $featured.style = "padding: 0 !important";
   $main.appendChild($featured);
 
-  refreshHome = function() {
+  refreshHome = function () {
     localStorage.removeItem("launch/next/4?status=1,5,6");
     localStorage.removeItem("launch?limit=4&sort=desc&mode=summary&status=3,4,7");
     for (var d in window.countdowns) {
@@ -164,7 +164,7 @@ function home() {
     localStorage.removeItem("launch?limit=4&sort=desc&mode=summary&status=3,4,7");
   }
 
-  load("launch/next/4?status=1,5,6?" + Date.now(), function(f) {
+  load("launch/next/4?status=1,5,6?" + Date.now(), function (f) {
     if (f.launches && f.launches.length) {
       for (var a in f.launches.reverse()) {
         var g = f.launches[a];
@@ -192,7 +192,7 @@ function home() {
     }
   });
 
-  load("launch?limit=4&sort=desc&mode=summary&status=3,4,7", function(f) {
+  load("launch?limit=4&sort=desc&mode=summary&status=3,4,7", function (f) {
     $successful.innerHTML = '<ul class="tabs"><li class="tab"><a href="#history" target="_self" class="active">Recent Launches</a></li></ul>';
     for (var i in f.launches) {
       var g = f.launches[i];
@@ -205,7 +205,7 @@ function home() {
     }
   });
 
-  getJSON(location.origin + "/data/sources.json", function(e) {
+  getJSON(location.origin + "/data/sources.json", function (e) {
     if (e.featuring) {
       $featured.innerHTML = '<ul class="tabs"><li class="tab"><a class="active">Featured</a></li></ul>';
       for (var a in e.featuring) {
@@ -219,7 +219,7 @@ function home() {
 function search(c) {
   if (c != "undefined") {
 
-    getJSON(location.origin + "/data/sources.json", function(a) {
+    getJSON(location.origin + "/data/sources.json", function (a) {
       for (var i in a.info.search) {
         if (c.toLowerCase().match(i) && !document.getElementById("maintabs")) {
           data = a.info.search[i]
@@ -236,7 +236,7 @@ function search(c) {
         $info.innerHTML = '<div class="card-content"><h1 class="header black-text truncate">Results for "' + c + '"</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>'
 
 
-      load("launch?limit=200&mode=summary&sort=desc&name=" + c + "&format=stats" + (($query.type == "failures") ? "&status=4" : ""), function(a) {
+      load("launch?limit=200&mode=summary&sort=desc&name=" + c + "&format=stats" + (($query.type == "failures") ? "&status=4" : ""), function (a) {
         if (loading = document.getElementById("loading")) {
           loading.parentNode.removeChild(loading)
         }
@@ -325,10 +325,10 @@ function search(c) {
                 tooltips: {
                   mode: 'label',
                   callbacks: {
-                    afterTitle: function() {
+                    afterTitle: function () {
                       window.launchTotal = 0;
                     },
-                    label: function(tooltipItem, data) {
+                    label: function (tooltipItem, data) {
                       var dataset = data.datasets[tooltipItem.datasetIndex];
                       var count = parseFloat(dataset.data[tooltipItem.index]);
                       window.launchTotal += count;
@@ -339,7 +339,7 @@ function search(c) {
                       return dataset.label + ': ' + count.toLocaleString();
 
                     },
-                    footer: function() {
+                    footer: function () {
                       return 'TOTAL: ' + window.launchTotal.toLocaleString()
                     }
                   }
@@ -405,7 +405,7 @@ function search(c) {
     });
 
   } else {
-    enter = function(event) {
+    enter = function (event) {
       if (event.which == 13 || event.keyCode == 13) {
         location.hash = 'search=' + document.getElementsByTagName('input')[0].value;
         return false;
@@ -419,7 +419,7 @@ function search(c) {
 
 function agency(m) {
   if (m != "undefined") {
-    load("agency/" + m + "?mode=verbose&format=news", function(g) {
+    load("agency/" + m + "?mode=verbose&format=news", function (g) {
       if (g.agencies.length) {
         var c = g.agencies[0];
 
@@ -498,7 +498,7 @@ function agency(m) {
     var p = parseInt($query.page) || 1;
     var l = 30;
     var j = l * (p - 1);
-    load("agency?limit=" + l + "&islsp=1&offset=" + j, function(c) {
+    load("agency?limit=" + l + "&islsp=1&offset=" + j, function (c) {
       if (c.agencies.length) {
         $main.innerHTML = '';
         $info.innerHTML = '<div class="card-content"><h1>Agencies</h1><div id="chips"><div style="display:' + ((p == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#agency&page=' + (p - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + p + '</a><div style="display:' + ((p == Math.ceil(c.total / l)) ? 'none' : 'unset') + '"><a  class="chip" href="/#agency&page=' + (p + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
@@ -518,7 +518,7 @@ function agency(m) {
 }
 
 function nation(k) {
-  load("agency?islsp=1&countryCode=" + k, function(a) {
+  load("agency?islsp=1&countryCode=" + k, function (a) {
     if (a.agencies.length) {
       var c = a.agencies[0];
       $info.innerHTML = '<div class="card-content"><img class="circle materialboxed" src="' + c.countryFlag + '" onerror=this.onerror=null;this.style.display="none"><h1>' + k + '</h1><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"><li class="tab"><a href="#agencies">Agencies</a></li></ul></div></div>';
@@ -534,7 +534,7 @@ function nation(k) {
       $main.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">Not found</h1>'
     }
   });
-  load("location?countrycode=" + k, function(c) {
+  load("location?countrycode=" + k, function (c) {
     if (c.locations.length) {
       document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#locations">Launch Locations</a></li>';
       $locations = document.createElement("div");
@@ -559,7 +559,7 @@ function pad(m) {
   $main.appendChild(l);
 
   if (m != "undefined") {
-    load("pad/" + m + "?mode=verbose", function(g) {
+    load("pad/" + m + "?mode=verbose", function (g) {
       if (g.pads.length) {
         var c = g.pads[0];
 
@@ -581,7 +581,7 @@ function pad(m) {
     var p = parseInt($query.page) || 1;
     var l = 28;
     var e = l * (p - 1);
-    load("pad?limit=" + l + "&mode=verbose&retired=0&offset=" + e, function(c) {
+    load("pad?limit=" + l + "&mode=verbose&retired=0&offset=" + e, function (c) {
       if (c.pads.length) {
         $info.innerHTML = '<div class="card-content"><h1>Launch pads</h1><div id="chips"><div style="display:' + ((p == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#pad&page=' + (p - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + p + '</a><div style="display:' + ((p == Math.ceil(c.total / l)) ? 'none' : 'unset') + '"><a  class="chip" href="/#pad&page=' + (p + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
         $main.innerHTML = ''
@@ -610,7 +610,7 @@ function launchcentre(m) {
   $main.appendChild(l);
 
   if (m != "undefined") {
-    load("location/" + m + "?mode=verbose", function(g) {
+    load("location/" + m + "?mode=verbose", function (g) {
       if (g.locations.length) {
         var c = g.locations[0];
 
@@ -632,7 +632,7 @@ function launchcentre(m) {
     var p = parseInt($query.page) || 1;
     var l = 30;
     var e = l * (p - 1);
-    load("location?limit=" + l + "&mode=verbose&retired=0&offset=" + e, function(c) {
+    load("location?limit=" + l + "&mode=verbose&retired=0&offset=" + e, function (c) {
       if (c.locations.length) {
         $info.innerHTML = '<div class="card-content"><h1>Launch Centers</h1><div id="chips"><div style="display:' + ((p == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#location&page=' + (p - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + p + '</a><div style="display:' + ((p == Math.ceil(c.total / l)) ? 'none' : 'unset') + '"><a  class="chip" href="/#location&page=' + (p + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
         $main.innerHTML = ''
@@ -653,7 +653,7 @@ function launchcentre(m) {
 
 function rocket(m) {
   if (m != "undefined") {
-    load("rocket/" + m + "?mode=verbose", function(c) {
+    load("rocket/" + m + "?mode=verbose", function (c) {
       if (c.rockets.length) {
         var a = c.rockets[0];
         document.getElementById("richEmbed").innerHTML = '{ "@context": "https://schema.org", "@type": "Organization", "name": "' + a.name + '", "url": "' + (a.info || a.infoURL) + '", "logo": "' + (a.icon || a.img) + '" }';
@@ -674,7 +674,7 @@ function rocket(m) {
     var k = parseInt($query.page) || 1;
     var l = 27;
     var j = l * (k - 1);
-    load("rocket?mode=verbose&limit=" + l + "&offset=" + j, function(c) {
+    load("rocket?mode=verbose&limit=" + l + "&offset=" + j, function (c) {
       if (c.rockets.length > 0) {
         $info.innerHTML = '<div class="card-content"><h1>Rockets</h1><div id="chips"><div style="display:' + ((k == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#rocket&page=' + (k - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + k + '</a><div style="display:' + ((k == Math.ceil(c.total / l)) ? 'none' : 'unset') + '"><a  class="chip" href="/#rocket&page=' + (k + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
         $main.innerHTML = '';
@@ -699,7 +699,7 @@ function timeline(k, l) {
   var j = m * (l - 1);
   $main.innerHTML = ""
 
-  load("launch?mode=verbose&limit=" + m + (k ? "&sort=desc&status=3,4,7" : "&status=1,2,5,6") + "&offset=" + j, function(a) {
+  load("launch?mode=verbose&limit=" + m + (k ? "&sort=desc&status=3,4,7" : "&status=1,2,5,6") + "&offset=" + j, function (a) {
     for (var c in a.launches) {
       var b = a.launches[c];
       $main.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" |")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + b.agency.name + '" href="/#agency=' + b.agency.id + '"><img src="' + b.agency.icon + '?size=32" onerror=this.src="' + b.agency.countryFlag + '">' + b.agency.shortname + '</a><a class="chip tooltipped" data-tooltip="' + b.location.name + '" href="/#pad=' + b.location.pads[0].id + '"><i class="far fa-compass"></i>' + b.location.name.split(",")[0] + '</a></br><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + '</a><h5 id="countdown' + b.id + '">' + b.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">More</a></div></div>';
@@ -733,13 +733,13 @@ function watch(j, k) {
   $main.innerHTML = "";
   $main.appendChild($live);
 
-  load((k.match("custom")) ? (j + "?format=customlive") : ("launch?mode=verbose" + (parseInt(j) ? ("&id=" + j) : ("&limit=1&name=" + j)) + "&format=" + (($query.mode == "countdown") ? "" : k)), function(e) {
+  load((k.match("custom")) ? (j + "?format=customlive") : ("launch?mode=verbose" + (parseInt(j) ? ("&id=" + j) : ("&limit=1&name=" + j)) + "&format=" + (($query.mode == "countdown") ? "" : k)), function (e) {
 
     var a = e.launches[0];
 
     var changed = a.changed;
 
-    refreshLaunch = function() {
+    refreshLaunch = function () {
       localStorage.removeItem('launch?mode=verbose&id=' + a.id + '&format=live');
       for (var d in window.countdowns) {
         window.clearInterval(window.countdowns[d]);
@@ -747,10 +747,10 @@ function watch(j, k) {
       watch(j, k);
     }
 
-    updateCountdown = function() {
-      load("launch?mode=summary" + (parseInt(j) ? ("&id=" + j) : ("&limit=1&name=" + j)) + "&changed=" + ISODateString(Date.parse(changed) + 1000).replace("T", " ").split(".")[0], function(refreshdata) {
+    updateCountdown = function () {
+      load("launch?mode=summary" + (parseInt(j) ? ("&id=" + j) : ("&limit=1&name=" + j)) + "&changed=" + ISODateString(Date.parse(changed) + 1000).replace("T", " ").split(".")[0], function (refreshdata) {
 
-        if(refreshdata.status != "error") {
+        if (refreshdata.status != "error") {
           b = refreshdata.launches[0];
 
           if (b) {
@@ -768,7 +768,7 @@ function watch(j, k) {
               M.toast({
                 html: "Updated Countdown"
               });
-              count = setInterval(function() {
+              count = setInterval(function () {
                 var o = Math.floor((Date.parse(b.net) - Date.parse(new Date())) / 1000);
                 document.title = "[" + Countdown(b.net) + "] " + b.name.split("|")[1];
                 countdown.innerHTML = Countdown(b.net)
@@ -803,7 +803,7 @@ function watch(j, k) {
 
     if (navigator.share) {
       buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="window.share()"><i class="fas fa-share-alt"></i></a>';
-      window.share = function() {
+      window.share = function () {
         navigator.share({
           title: a.name,
           text: a.description,
@@ -830,7 +830,7 @@ function watch(j, k) {
     buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="(details.style.display = details.style.display == \'none\' ? \'unset\' : \'none\')">Toggle Details</a>';
 
     if (a.statuscode == 1 || a.statuscode == 6) {
-      count = setInterval(function() {
+      count = setInterval(function () {
         var o = Math.floor((Date.parse(a.net) - Date.parse(new Date())) / 1000);
         document.title = "[" + Countdown(a.net) + "] " + a.name.split("|")[1];
         countdown.innerHTML = Countdown(a.net)
@@ -838,7 +838,7 @@ function watch(j, k) {
       window.countdowns.push(count);
 
 
-      updatecount = setInterval(function() {
+      updatecount = setInterval(function () {
         updateCountdown();
       }, 60000);
       window.countdowns.push(updatecount);
@@ -895,7 +895,7 @@ function watch(j, k) {
         medialist += "<option value='" + e + "'>" + list[e].name.slice(0, 100) + "</option>";
       }
 
-      selectSource = function(o) {
+      selectSource = function (o) {
         e = parseInt(document.getElementById(o + "_select").value);
         window.open(list[e].embed, o);
         document.getElementById(o + "_reload").href = list[e].embed;
@@ -963,8 +963,8 @@ function watch(j, k) {
 
 function settings() {
 
-  restart = function() {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+  restart = function () {
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
       for (let registration of registrations) {
         console.log(registration)
         registration.unregister()
@@ -1023,14 +1023,14 @@ function saveValue(key, value) {
 }
 
 function syncValues() {
-  (window.OneSignal = window.OneSignal || []).push(function() {
-    OneSignal.push(function() {
+  (window.OneSignal = window.OneSignal || []).push(function () {
+    OneSignal.push(function () {
       if (localStorage.getItem("rocketwatch.Settings")) {
-        OneSignal.isPushNotificationsEnabled(function(isEnabled) {
+        OneSignal.isPushNotificationsEnabled(function (isEnabled) {
           var $consent = JSON.parse(localStorage.getItem("consent-v" + consentVersion));
           var $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings"));
           if ($settings && isEnabled) {
-            OneSignal.sendTags(Object.assign($settings, $consent)).then(function(tagsSent) {
+            OneSignal.sendTags(Object.assign($settings, $consent)).then(function (tagsSent) {
               console.log("[Settings] Tags synchronised");
               console.log(tagsSent);
             });
@@ -1047,7 +1047,7 @@ function load(query, callback) {
   if (data && ((Date.now() - data.expire) <= 0) && data.status != "error") {
     if (callback) callback(data);
   } else {
-    getJSON("https://api.rocket.watch/" + query, function(data) {
+    getJSON(location.origin + "/api/" + query, function (data) {
       localStorage.setItem(query, JSON.stringify(data));
       if (callback) callback(data)
     })
@@ -1097,14 +1097,14 @@ function ReadableDateString(f) {
 }
 
 function Countdown(c, d) {
-  padnumber = function(f, b) {
+  padnumber = function (f, b) {
     var a = f + "";
     while (a.length < b) {
       a = "0" + a
     }
     return a
   };
-  count = function(u) {
+  count = function (u) {
     var r;
     var a = Date.parse(u);
     var q = new Date(ServerDate.now());
@@ -1139,7 +1139,7 @@ function Countdown(c, d) {
     return r
   };
   if (d) {
-    countdown = setInterval(function() {
+    countdown = setInterval(function () {
       (document.getElementById(d) || d).innerHTML = count(c)
     }, 1000);
     window.countdowns.push(countdown)
@@ -1171,7 +1171,7 @@ function QueryString(callback, url) {
 function getJSON(g, h) {
   try {
     var k = new XMLHttpRequest();
-    k.onreadystatechange = function() {
+    k.onreadystatechange = function () {
       if (k.readyState === 4) {
         if (k.responseText.split()[0] == "{" || k.status == 200) {
           var a = JSON.parse(k.responseText);
@@ -1198,14 +1198,14 @@ function getJSON(g, h) {
 
 //Service Worker registration = cache shell, offline pwa
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
+  window.addEventListener('load', function () {
     navigator.serviceWorker
       .register('/serviceworker.js')
-      .then(function() {
+      .then(function () {
         console.log('rocket.watch serviceworker install successful');
       })
 
-      .catch(function(err) {
+      .catch(function (err) {
         console.log('rocket.watch serviceworker install failed: ', err);
       });
 
@@ -1234,13 +1234,13 @@ for (var i in cache) {
   load(cache[i]);
 }
 
-load('launch/next/4?status=1,5,6', function(d) {
+load('launch/next/4?status=1,5,6', function (d) {
   for (var i in d.launches) {
     load('launch?mode=verbose&id=' + d.launches[i].id + '&format=live')
   }
 });
 
-load('launch?limit=4&sort=desc&mode=summary&status=3,4,7', function(d) {
+load('launch?limit=4&sort=desc&mode=summary&status=3,4,7', function (d) {
   for (var i in d.launches) {
     load('launch?mode=verbose&id=' + d.launches[i].id + '&format=live')
   }
