@@ -1213,7 +1213,7 @@ if ('serviceWorker' in navigator) {
 }
 
 
-setInterval(function () {
+setTimeout(function () {
 
   // api calls cache
 
@@ -1259,4 +1259,4 @@ setInterval(function () {
     }
   }
 
-}, 1000)
+}, 1000);
