@@ -23,25 +23,25 @@ setInterval(function() {
 setInterval(function() {
 
   //console.log("10 minute loop");
-  RocketWatch.load("/agency/spx?mode=verbose&format=news");
+  RocketWatch.load("/agency/121?mode=verbose&format=news");
   RocketWatch.load("/launch?limit=200&mode=summary&sort=desc&name=&lsp=121&format=stats", function(d) {
     for (var i in d.launches) {
       RocketWatch.load("/launch?mode=verbose&id=" + d.launches[i].id + "&format=live");
     }
   });
-  RocketWatch.load("/agency/ula?mode=verbose&format=news");
+  RocketWatch.load("/agency/124?mode=verbose&format=news");
   RocketWatch.load("/launch?limit=200&mode=summary&sort=desc&name=&lsp=124&format=stats", function(d) {
     for (var i in d.launches) {
       RocketWatch.load("/launch?mode=verbose&id=" + d.launches[i].id + "&format=live");
     }
   });
-  RocketWatch.load("/agency/asa?mode=verbose&format=news");
+  RocketWatch.load("/agency/115?mode=verbose&format=news");
   RocketWatch.load("/launch?limit=200&mode=summary&sort=desc&name=&lsp=115&format=stats", function(d) {
     for (var i in d.launches) {
       RocketWatch.load("/launch?mode=verbose&id=" + d.launches[i].id + "&format=live");
     }
   });
-  RocketWatch.load("/agency/rfsa?mode=verbose&format=news");
+  RocketWatch.load("/agency/63?mode=verbose&format=news");
   RocketWatch.load("/launch?limit=200&mode=summary&sort=desc&name=&lsp=63&format=stats", function(d) {
     for (var i in d.launches) {
       RocketWatch.load("/launch?mode=verbose&id=" + d.launches[i].id + "&format=live");

@@ -1215,13 +1215,13 @@ if ('serviceWorker' in navigator) {
 // api calls cache
 
 var cache = [
-  'agency/spx?mode=verbose&format=news',
+  'agency/121?mode=verbose&format=news',
   'launch?limit=200&mode=summary&sort=desc&name=&lsp=121&format=stats',
-  'agency/ula?mode=verbose&format=news',
+  'agency/124?mode=verbose&format=news',
   'launch?limit=200&mode=summary&sort=desc&name=&lsp=124&format=stats',
-  'agency/asa?mode=verbose&format=news',
+  'agency/115?mode=verbose&format=news',
   'launch?limit=200&mode=summary&sort=desc&name=&lsp=115&format=stats',
-  'agency/rfsa?mode=verbose&format=news',
+  'agency/63?mode=verbose&format=news',
   'launch?limit=200&mode=summary&sort=desc&name=&lsp=63&format=stats',
   'launch?mode=verbose&limit=20&sort=desc&status=3,4,7&offset=0',
   'launch?mode=verbose&limit=20&status=1,2,5,6&offset=0',
