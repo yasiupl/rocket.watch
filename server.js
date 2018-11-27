@@ -671,14 +671,14 @@ function load(query, callback) {
 
             if (f.tolaunch < 86400 && f.tolaunch > -86400) {
               //10 minutes
-              data.expire = Date.now() + 600000;
+              data.expire = Date.now() + 10 * 60 * 1000;
               if (f.tolaunch < 3600 && f.tolaunch > -3600) {
                 //1 minute
-                data.expire = Date.now() + 60000;
+                data.expire = Date.now() + 60 * 1000;
               }
             }
             if (query.match("/next/")) {
-              data.expire = Date.now() + 60000;
+              data.expire = Date.now() + 60 * 1000;
             }
           }
 

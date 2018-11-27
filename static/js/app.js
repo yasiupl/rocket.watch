@@ -125,8 +125,8 @@ window.addEventListener("hashchange", function () {
     if (navigator.onLine) {
       setTimeout(function () {
         if (document.getElementById("loading-message"))
-          document.getElementById("loading-message").innerHTML = '<h1>This is taking longer than usual.</h1><h5 style="cursor: pointer;" onclick="location.reload(true)">Try again</h5>'
-      }, 5000);
+          document.getElementById("loading-message").innerHTML = '<h1>Hold on.</h1><h5 style="cursor: pointer;" onclick="location.reload(true)">Try again</h5>'
+      }, 6000);
     } else {
       document.getElementById("loading-message").innerHTML = '<h1>You\'re offline</h1><h5>Check your internet connection</h5>';
     }
@@ -164,7 +164,7 @@ function home() {
     localStorage.removeItem("launch?limit=4&sort=desc&mode=summary&status=3,4,7");
   }
 
-  load("launch/next/4?status=1,5,6?" + Date.now(), function (f) {
+  load("launch/next/4?status=1,5,6", function (f) {
     if (f.launches && f.launches.length) {
       for (var a in f.launches.reverse()) {
         var g = f.launches[a];
