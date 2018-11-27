@@ -8,6 +8,8 @@ const keys = require('./keys.json');
 const storage = new Storage('./cache.json');
 
 function load(query, callback) {
+
+
   callback = callback || function() {};
   var queryParams = QueryString(query);
   var query = query.replace(/(\?|&)(page=)([0-9])/g, "");
@@ -176,7 +178,7 @@ function load(query, callback) {
             f = processRocket(data.rockets[g]);
 
             if (mode.match("verbose")) {
-              getJSON("https://spacelaunchnow.me/3.0.0/launchers/" + f.id + "/?format=json&mode=detailed", function(data) {
+              getJSON("https://spacelaunchnow.me/3.0.0/launchers/" + f.id + "/?format=json", function(data) {
                 f.description = data.description || "";
                 f.img = data.image_url;
                 f.agency.name = data.agency.name;
@@ -259,7 +261,7 @@ function load(query, callback) {
             }
 
             if (mode.match("verbose")) {
-              getJSON("https://spacelaunchnow.me/3.0.0/agencies/" + f.id + "/?format=json&mode=detailed", function(data) {
+              getJSON("https://spacelaunchnow.me/3.0.0/agencies/" + f.id + "/?format=json", function(data) {
                 f.description = data.description || "";
                 f.icon = data.logo_url || f.icon;
                 f.founded = data.founding_year || "Unknown";
@@ -683,17 +685,6 @@ function load(query, callback) {
 
           storage.put(query, data);
 
-          if (!cache) {
-            if (queryParams.page) {
-              var page = (parseInt(queryParams.page) - 1);
-              var perpage = 30;
-              data[Object.keys(data)[0]] = data[Object.keys(data)[0]].slice(page * perpage, (page + 1) * perpage);
-              data.offset = page * perpage;
-              callback(data);
-            } else {
-              callback(data);
-            }
-          }
         });
       } catch(e) {
         console.log(e)
