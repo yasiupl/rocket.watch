@@ -1212,46 +1212,51 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// api calls cache
 
-var cache = [
-  'agency/121?mode=verbose&format=news',
-  'launch?limit=200&mode=summary&sort=desc&name=&lsp=121&format=stats',
-  'agency/124?mode=verbose&format=news',
-  'launch?limit=200&mode=summary&sort=desc&name=&lsp=124&format=stats',
-  'agency/115?mode=verbose&format=news',
-  'launch?limit=200&mode=summary&sort=desc&name=&lsp=115&format=stats',
-  'agency/63?mode=verbose&format=news',
-  'launch?limit=200&mode=summary&sort=desc&name=&lsp=63&format=stats',
-  'launch?mode=verbose&limit=20&sort=desc&status=3,4,7&offset=0',
-  'launch?mode=verbose&limit=20&status=1,2,5,6&offset=0',
-  'location?limit=30&mode=verbose&retired=0&offset=0',
-  'agency?limit=30&islsp=1&offset=0',
-  'rocket?mode=verbose&limit=30&offset=0'
-]
+setInterval(function () {
 
-for (var i in cache) {
-  load(cache[i]);
-}
+  // api calls cache
 
-load('launch/next/4?status=1,5,6', function (d) {
-  for (var i in d.launches) {
-    load('launch?mode=verbose&id=' + d.launches[i].id + '&format=live')
+  var cache = [
+    'agency/121?mode=verbose&format=news',
+    'launch?limit=200&mode=summary&sort=desc&name=&lsp=121&format=stats',
+    'agency/124?mode=verbose&format=news',
+    'launch?limit=200&mode=summary&sort=desc&name=&lsp=124&format=stats',
+    'agency/115?mode=verbose&format=news',
+    'launch?limit=200&mode=summary&sort=desc&name=&lsp=115&format=stats',
+    'agency/63?mode=verbose&format=news',
+    'launch?limit=200&mode=summary&sort=desc&name=&lsp=63&format=stats',
+    'launch?mode=verbose&limit=20&sort=desc&status=3,4,7&offset=0',
+    'launch?mode=verbose&limit=20&status=1,2,5,6&offset=0',
+    'location?limit=30&mode=verbose&retired=0&offset=0',
+    'agency?limit=30&islsp=1&offset=0',
+    'rocket?mode=verbose&limit=30&offset=0'
+  ]
+
+  for (var i in cache) {
+    load(cache[i]);
   }
-});
 
-load('launch?limit=4&sort=desc&mode=summary&status=3,4,7', function (d) {
-  for (var i in d.launches) {
-    load('launch?mode=verbose&id=' + d.launches[i].id + '&format=live')
-  }
-})
+  load('launch/next/4?status=1,5,6', function (d) {
+    for (var i in d.launches) {
+      load('launch?mode=verbose&id=' + d.launches[i].id + '&format=live')
+    }
+  });
 
-// remove old cache items
-for (var i in localStorage) {
-  data = localStorage.getItem(i);
-  if (data === null) break
-  timestamp = ((data.split('"expire":')[1] || "").split('}')[0] || "").split(',')[0]
-  if (timestamp && (timestamp < Date.now())) {
-    localStorage.removeItem(i);
+  load('launch?limit=4&sort=desc&mode=summary&status=3,4,7', function (d) {
+    for (var i in d.launches) {
+      load('launch?mode=verbose&id=' + d.launches[i].id + '&format=live')
+    }
+  })
+
+  // remove old cache items
+  for (var i in localStorage) {
+    data = localStorage.getItem(i);
+    if (data === null) break
+    timestamp = ((data.split('"expire":')[1] || "").split('}')[0] || "").split(',')[0]
+    if (timestamp && (timestamp < Date.now())) {
+      localStorage.removeItem(i);
+    }
   }
-}
+
+}, 1000)
