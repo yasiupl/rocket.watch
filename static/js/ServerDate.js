@@ -40,7 +40,7 @@ var
 
   // Remember the URL of this script so we can call it again during
   // synchronization.
-  URL = 'https://rocket.watch/time',
+  URL = 'https://rocket.watch/js/ServerDate.min.js',
 
   synchronizationIntervalDelay,
   synchronizationInterval,
