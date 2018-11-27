@@ -3,9 +3,24 @@ var Notify = require('./notifications.js');
 
 console.log("Worker initiated @ " + RocketWatch.ReadableDateString(Date.now()));
 
+loadPrimary();
+loadSecondary();
+
 //every minute
 setInterval(function() {
   //console.log("1 minute loop");
+  loadPrimary();
+}, 2 * 60 * 1000);
+
+//every ten minutes
+setInterval(function() {
+
+  //console.log("10 minute loop");
+  loadSecondary();
+
+}, 10 * 60 * 1000);
+
+function loadPrimary() {
   RocketWatch.load("/launch/next/4?status=1,5,6", function(next) {
     for (var i in next.launches) {
       //cache next 3 launches and notify if needed
@@ -17,12 +32,9 @@ setInterval(function() {
       RocketWatch.load("/launch?mode=verbose&id=" + prev.launches[i].id + "&format=live");
     }
   });
-}, 2 * 60 * 1000);
+}
 
-//every ten minutes
-setInterval(function() {
-
-  //console.log("10 minute loop");
+function loadSecondary() {
   RocketWatch.load("/agency/121?mode=verbose&format=news");
   RocketWatch.load("/launch?limit=200&mode=summary&sort=desc&name=&lsp=121&format=stats", function(d) {
     for (var i in d.launches) {
@@ -86,5 +98,4 @@ setInterval(function() {
       RocketWatch.load("/rocket/" + d.rockets[i].id);
     }
   });
-
-}, 10 * 60 * 1000);
+}
