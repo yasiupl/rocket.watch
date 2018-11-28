@@ -1044,8 +1044,8 @@ function syncValues() {
 
 function load(query, callback) {
   getJSON(location.origin + "/api/" + query, function (data) {
-    localStorage.setItem(query, JSON.stringify(data));
-    if (callback) callback(data)
+    if (callback) callback(data);
+    return data;
   });
 }
 
