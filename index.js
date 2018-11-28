@@ -34,13 +34,6 @@ const routers =
 
 const app = express();
 // TODO: Move this all router
-    app.post('/api/patreon', function(req, res) {
-      console.log(req.body)
-      res.json({
-        status: "success"
-      })
-    });
-
     app.route('/api/*').get(function(req, res) {
       if (req.url.split("api/")[1]) {
         RocketWatch.load(req.url.split("api/")[1], function(d) {
