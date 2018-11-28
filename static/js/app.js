@@ -1046,8 +1046,8 @@ function load(query, callback) {
   getJSON(location.origin + "/api/" + query, function (data) {
     localStorage.setItem(query, JSON.stringify(data));
     if (callback) callback(data)
-  })
-}}
+  });
+}
 
 function materialize() {
   M.Sidenav.init(document.querySelector('.sidenav'));
@@ -1203,7 +1203,6 @@ if ('serviceWorker' in navigator) {
       .catch(function (err) {
         console.log('rocket.watch serviceworker install failed: ', err);
       });
-
   });
 }
 
