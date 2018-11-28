@@ -15,7 +15,7 @@ const ble_middleware = function(req, res, next) {
     "Referrer-Policy": "same-origin",
     "X-Content-Type-Options": "nosniff",
     "X-XSS-Protection": "1",
-    "Cache-Control": "stale-while-revalidate=86400"
+    "Cache-Control": "must-revalidate"
   });
   next();
 }
