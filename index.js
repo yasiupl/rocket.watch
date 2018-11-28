@@ -15,7 +15,7 @@ const ble_middleware = function(req, res, next) {
     "Referrer-Policy": "same-origin",
     "X-Content-Type-Options": "nosniff",
     "X-XSS-Protection": "1",
-    "Cache-Control": "must-revalidate"
+    "Cache-Control": "stale-while-revalidate=86400"
   });
   next();
 }
@@ -111,7 +111,7 @@ const app = express();
         filter: 'audioonly'
       }).pipe(res);
     });
-
+    
 // TODO: Move this all router [end]
 
 const plugins = [].concat(middlewares).concat(routers);

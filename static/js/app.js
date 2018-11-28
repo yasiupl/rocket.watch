@@ -1043,16 +1043,11 @@ function syncValues() {
 
 
 function load(query, callback) {
-  var data = JSON.parse(localStorage.getItem(query));
-  if (data && ((Date.now() - data.expire) <= 0) && data.status != "error") {
-    if (callback) callback(data);
-  } else {
-    getJSON(location.origin + "/api/" + query, function (data) {
-      localStorage.setItem(query, JSON.stringify(data));
-      if (callback) callback(data)
-    })
-  }
-}
+  getJSON(location.origin + "/api/" + query, function (data) {
+    localStorage.setItem(query, JSON.stringify(data));
+    if (callback) callback(data)
+  })
+}}
 
 function materialize() {
   M.Sidenav.init(document.querySelector('.sidenav'));
