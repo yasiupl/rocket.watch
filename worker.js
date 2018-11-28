@@ -8,14 +8,14 @@ loadSecondary();
 
 //every minute
 setInterval(function() {
-  //console.log("1 minute loop");
+  console.log("1 minute loop");
   loadPrimary();
 }, 2 * 60 * 1000);
 
 //every ten minutes
 setInterval(function() {
 
-  //console.log("10 minute loop");
+  console.log("10 minute loop");
   loadSecondary();
 
 }, 10 * 60 * 1000);
@@ -32,6 +32,7 @@ function loadPrimary() {
       RocketWatch.load("/launch?mode=verbose&id=" + prev.launches[i].id + "&format=live");
     }
   });
+  console.log("primary");
 }
 
 function loadSecondary() {
@@ -98,4 +99,5 @@ function loadSecondary() {
       RocketWatch.load("/rocket/" + d.rockets[i].id);
     }
   });
+  console.log("secondary");
 }

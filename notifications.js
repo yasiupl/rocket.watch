@@ -17,8 +17,8 @@ module.exports = {
 
 setInterval(function() {
   //console.log("1 minute loop");
-  RocketWatch.storage.remove("/launch/next/4?status=1,5,6");
-  RocketWatch.load("/launch/next/4?status=1,5,6", function(next) {
+  RocketWatch.storage.remove("/launch/next/4?status=1");
+  RocketWatch.load("/launch/next/4?status=1", function(next) {
     for (var i in next.launches) {
       all(next.launches[i]);
     }
