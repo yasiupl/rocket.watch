@@ -483,7 +483,6 @@ function agency(m) {
         }
 
         if (c.wiki.length) {
-          console.log(c.wiki);
           document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#information">Info</a></li>';
 
           $main.innerHTML += '<div id="information"><div class="card"><div class="video-container"><iframe  src="' + c.wiki.replace("http://", "https://") + '"></iframe></div></div></div>'
