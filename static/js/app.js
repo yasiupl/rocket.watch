@@ -168,7 +168,7 @@ function home() {
     if (f.launches && f.launches.length) {
       for (var a in f.launches.reverse()) {
         var g = f.launches[a];
-        if ((g.statuscode == 1 || g.statuscode == 6) && g.tbdtime != 1) {
+        if (g.statuscode == 1 || g.statuscode == 6) {
           new Countdown(g.net, "countdown" + g.id)
         }
 
