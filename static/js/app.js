@@ -1011,9 +1011,9 @@ function settings() {
 
 //Libs
 function saveValue(key, value) {
-  $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings"));
+  $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings.v2"));
   $settings[key] = value;
-  localStorage.setItem("rocketwatch.Settings", JSON.stringify($settings));
+  localStorage.setItem("rocketwatch.Settings.v2", JSON.stringify($settings));
   M.toast({
     html: "Saved! " + key + ": " + value
   });
@@ -1024,10 +1024,10 @@ function saveValue(key, value) {
 function syncValues() {
   (window.OneSignal = window.OneSignal || []).push(function () {
     OneSignal.push(function () {
-      if (localStorage.getItem("rocketwatch.Settings")) {
+      if (localStorage.getItem("rocketwatch.Settings.v2")) {
         OneSignal.isPushNotificationsEnabled(function (isEnabled) {
           var $consent = JSON.parse(localStorage.getItem("consent-v" + consentVersion));
-          var $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings"));
+          var $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings.v2"));
           if ($settings && isEnabled) {
             OneSignal.sendTags(Object.assign($settings, $consent)).then(function (tagsSent) {
               console.log("[Settings] Tags synchronised");
