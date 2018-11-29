@@ -8,21 +8,21 @@ const RocketWatch = require("./server.js");
 const redirectRouter = require("./routers/redirectRouter");
 
 
-const ble_middleware = function(req, res, next) {
+const defaultHeaders = function(req, res, next) {
   res.set({
     //"Content-Security-Policy": `default-src data: blob: https: "unsafe-inline" "unsafe-eval"; connect-src https:; frame-src http: https:`,
     "Strict-Transport-Security": "max-age=2592000; includeSubDomains; preload",
     "Referrer-Policy": "same-origin",
     "X-Content-Type-Options": "nosniff",
     "X-XSS-Protection": "1",
-    "Cache-Control": "must-revalidate"
+    "Cache-Control": "max-age=86400"
   });
   next();
 }
 
 const middlewares =
 [
-    ble_middleware, //TODO: How this should be name and what it should do?
+    defaultHeaders,
     compression(),
     express.static("static"),
 ];
