@@ -197,7 +197,7 @@ function home() {
     for (var i in f.launches) {
       var g = f.launches[i];
       days = Math.floor((new Date() - new Date(g.net)) / 86400000);
-      $successful.innerHTML += '<div class="col s12 m6 l3"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + g.name.split(" |")[0].split("/")[0] + '">' + g.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>").split(" (")[0] + '</h4><a class="chip tooltipped" data-tooltip="' + g.net + '"><i class="far fa-clock"></i>' + ReadableDateString(g.net) + '</a><a class="chip">' + ((days > 0) ? days + " Days ago" : "Today") + "</a><h5>" + g.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + g.id + '">Watch</a></div></div>';
+      $successful.innerHTML += '<div class="col s12 m6 l3"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + g.name.split(" |")[0].split("/")[0] + '">' + g.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>").split(" (")[0] + '</h4><a class="chip tooltipped" data-tooltip="' + g.net + '"><i class="far fa-clock"></i>' + ReadableDateString(g.net) + '</a></br><a class="chip">' + ((days > 0) ? days + " Days ago" : "Today") + "</a><h5>" + g.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + g.id + '">Watch</a></div></div>';
     }
 
     for (i = 1; i <= ($successful.childElementCount - 1); i++) {
