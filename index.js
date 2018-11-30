@@ -15,10 +15,10 @@ const defaultHeaders = function (req, res, next) {
     "Referrer-Policy": "same-origin",
     "X-Content-Type-Options": "nosniff",
     "X-XSS-Protection": "1",
-    "Cache-Control": "max-age=86400"
+    "Cache-Control": "max-age=2592000"
   });
 
-  if (req.url.match("style.min.css") || req.url.match("app.min.js")) {
+  if (req.url.match(".css") || req.url.match(".js")) {
     res.set({
       "Cache-Control": "must-revalidate"
     });
