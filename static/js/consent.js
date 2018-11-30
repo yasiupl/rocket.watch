@@ -97,26 +97,10 @@ if (typeof(Storage) !== "undefined") {
     }
 
     if (data.thirdparty) {
-      getScript(["https://platform.twitter.com/widgets.js", "https://crate.widgetbot.io/v2"]).then(function() {
+      getScript(["https://platform.twitter.com/widgets.js"]).then(function() {
         twttr.widgets.load();
-
-        document.querySelector("#widgetbot").src = "https://widgetbot.io/channels/150674920869724161/350212847436955649/";
-
-        window.discordcrate = new Crate({
-          server: '150674920869724161',
-          channel: '350214871276716032',
-          notifications: {
-            toasts: {
-              enable: false
-            }
-          }
-        });
-        document.getElementById("discordopen").removeAttribute("href");
-        document.getElementById("discordopen").onclick = function() {
-          window.discordcrate.toggle(true);
-          document.querySelector(".crate-toggle").style.display = "unset";
-        };
       });
+      document.querySelector("#widgetbot").src = "https://widgetbot.io/channels/150674920869724161/350212847436955649/";
     }
 
     function getScript(scripts) {
