@@ -252,7 +252,7 @@ function load(query, callback) {
                       f.news.reddit.push({
                         title: q.data.children[r].data.title,
                         content: "",
-                        url: "https://www.reddit.com/" + q.data.children[r].data.permalink,
+                        url: "https://www.reddit.com" + q.data.children[r].data.permalink,
                         img: (q.data.children[r].data.preview && q.data.children[r].data.preview.images[0].source.url) ? q.data.children[r].data.preview.images[0].source.url : ""
                       });
                     }
