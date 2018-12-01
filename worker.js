@@ -87,9 +87,9 @@ function loadSecondary() {
     }
   });
 
-  RocketWatch.load("/rocket?mode=verbose&limit=30&offset=0", function(d) {
+  RocketWatch.load("/rocket?mode=verbose&limit=27&offset=0", function(d) {
     for (i = 1; (30 * i) - d.total < 30; i++) {
-      RocketWatch.load("/rocket?mode=verbose&limit=30&offset=" + (i * 30), function(c) {
+      RocketWatch.load("/rocket?mode=verbose&limit=27&offset=" + (i * 30), function(c) {
         for (var j in c.rockets) {
           RocketWatch.load("/rocket/" + c.rockets[j].id + "?mode=verbose");
         }
