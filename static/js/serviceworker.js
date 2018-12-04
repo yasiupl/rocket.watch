@@ -16,10 +16,10 @@ var shell = [
   'rocket?mode=verbose&limit=30&offset=0',
   '/data/sources.json',
   '/css/style.min.css',
-  '/js/app.min.js',
+  '/js/app.js',
   '/js/Chart.js',
-  '/js/materialize.min.js',
-  '/js/fontawesome.min.js',
+  '/js/materialize.js',
+  '/js/fontawesome.js',
   '/manifest.json',
   '/index.html',
   '/'

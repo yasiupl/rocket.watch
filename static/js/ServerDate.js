@@ -40,7 +40,7 @@ var
 
   // Remember the URL of this script so we can call it again during
   // synchronization.
-  URL = location.origin + '/js/ServerDate.min.js',
+  URL = location.origin + '/js/ServerDate.js',
 
   synchronizationIntervalDelay,
   synchronizationInterval,
