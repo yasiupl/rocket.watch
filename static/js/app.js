@@ -430,7 +430,7 @@ function agency(m) {
         for (var i in c.social) {
           if ($query.type == "failures") $list.style.display = "none";
 
-          $main.innerHTML += '<div id="news"><div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text">Get notified about agency news and updates:</h3></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" onclick=\"saveValue(\'notifications_agency_' + c.id + '\', ' + !($settings["notifications_agency_" + c.id]) + ');this.innerHTML = \'Saved\'\">' + (($settings["notifications_agency_" + c.id]) ? "Unsubscribe" : "Subscribe") + '</a></div></div></div><div class="card-tabs"><ul id="tabs" class="tabs tabs-fixed-width"></ul></div></div>';
+          //$main.innerHTML += '<div id="news"><div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text">Get notified about agency news and updates:</h3></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" onclick=\"saveValue(\'notifications_agency_' + c.id + '\', ' + !($settings["notifications_agency_" + c.id]) + ');this.innerHTML = \'Saved\'\">' + (($settings["notifications_agency_" + c.id]) ? "Unsubscribe" : "Subscribe") + '</a></div></div></div><div class="card-tabs"><ul id="tabs" class="tabs tabs-fixed-width"></ul></div></div>';
           document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#news">News</a></li>';
 
           $list = document.getElementById("news");
