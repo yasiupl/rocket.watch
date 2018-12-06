@@ -430,12 +430,12 @@ function agency(m) {
         for (var i in c.social) {
           if ($query.type == "failures") $list.style.display = "none";
 
-          //$main.innerHTML += '<div id="news"><div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text">Get notified about agency news and updates:</h3></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" onclick=\"saveValue(\'notifications_agency_' + c.id + '\', ' + !($settings["notifications_agency_" + c.id]) + ');this.innerHTML = \'Saved\'\">' + (($settings["notifications_agency_" + c.id]) ? "Unsubscribe" : "Subscribe") + '</a></div></div></div><div class="card-tabs"><ul id="tabs" class="tabs tabs-fixed-width"></ul></div></div>';
+          $main.innerHTML += '<div id="news"><div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text">Get notified about agency news and updates:</h3></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" onclick=\"saveValue(\'notifications_agency_' + c.id + '\', ' + !($settings["notifications_agency_" + c.id]) + ');this.innerHTML = \'Saved\'\">' + (($settings["notifications_agency_" + c.id]) ? "Unsubscribe" : "Subscribe") + '</a></div></div></div><div class="card-tabs"><ul id="tabs" class="tabs tabs-fixed-width"></ul></div></div>';
           document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#news">News</a></li>';
 
           $list = document.getElementById("news");
 
-          // <div class="col s12"><div class="card"><div class="card-content"><h5><a>Subscribe to news & updates notifications</a></h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" onclick="subscribe()">Subscribe</a></div></div>
+          //<div class="col s12"><div class="card"><div class="card-content"><h5><a>Subscribe to news & updates notifications</a></h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" onclick="subscribe()">Subscribe</a></div></div>
           if (c.news.reddit) {
             document.getElementById("tabs").innerHTML += '<li class="tab"><a class="active" href="#reddit">Reddit</a></li>';
             var a = document.createElement("div");
@@ -1018,7 +1018,8 @@ function saveValue(key, value) {
     html: "Saved! " + key + ": " + value
   });
   console.log(key + ": " + value);
-  syncValues()
+  syncValues();
+  location.reload(true);
 }
 
 function syncValues() {
@@ -1040,28 +1041,12 @@ function syncValues() {
   });
 }
 
-
-function load(query, callback) {
-  getJSON(location.origin + "/api/" + query, function (data) {
-    if (callback) callback(data);
-    return data;
-  });
-}
-
 function materialize() {
   M.Sidenav.init(document.querySelector('.sidenav'));
   M.Sidenav.getInstance(document.querySelector('.sidenav')).close()
   M.Materialbox.init(document.querySelectorAll('.materialboxed'));
   M.Tabs.init(document.querySelectorAll('ul.tabs'));
   M.Tooltip.init(document.querySelectorAll('.tooltipped'));
-  //M.FloatingActionButton.init(document.querySelectorAll('.fixed-action-btn'));
-  //M.Pushpin.init(document.querySelector('.tabs'), {top: document.querySelector('.tabs').offsetTop, offset: 48});
-  /*
-    if (document.querySelector('#maintabs'))
-      M.Pushpin.init(document.querySelector('#maintabs'), {
-        top: document.querySelector('#maintabs').offsetTop + 64
-      });
-      */
 }
 
 function ISODateString(c) {
@@ -1162,15 +1147,22 @@ function QueryString(callback, url) {
   return g
 }
 
-function getJSON(g, h) {
+function load(query, callback) {
+  getJSON(location.origin + "/api/" + query, function (data) {
+    if (callback) callback(data);
+    return data;
+  });
+}
+
+function getJSON(url, callback) {
   try {
-    var k = new XMLHttpRequest();
+    var k = new XMLHttpRequest()
     k.onreadystatechange = function () {
       if (k.readyState === 4) {
         if (k.responseText.split()[0] == "{" || k.status == 200) {
           var a = JSON.parse(k.responseText);
           a.timestamp = Date.now();
-          h(a)
+          callback(a)
         } else {
           var a = {
             timestamp: Date.now(),
@@ -1178,12 +1170,12 @@ function getJSON(g, h) {
             code: k.statusText,
             msg: k.responseText
           };
-          h(a);
+          callback(a);
           console.log(a)
         }
       }
     };
-    k.open("GET", g);
+    k.open("GET", url);
     k.send()
   } catch (e) {
     console.log(e)
