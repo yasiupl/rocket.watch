@@ -1,5 +1,5 @@
 const Storage = require('node-storage');
-const { XMLHttpRequest } = require("xmlhttprequest");
+const request = require("request");
 const fs = require('fs');
 
 const keys = require('./keys.json');
@@ -720,36 +720,12 @@ function QueryString(url, callback) {
 }
 
 function getJSON(url, callback, mode) {
-  try {
-    var xhttp = new XMLHttpRequest()
-
-    xhttp.onreadystatechange = function () {
-      if (xhttp.readyState === 4) {
-        //console.log(xhttp.responseText)
-        if (xhttp.responseText.split("")[0] != "<" && !xhttp.responseText.match('status: "error"')) {
-          var data = JSON.parse(xhttp.responseText);
-          data.timestamp = Date.now();
-          callback(data);
-        } else {
-          var msg = {
-            timestamp: Date.now(),
-            status: xhttp.status,
-            code: xhttp.statusText,
-            msg: xhttp.responseText
-          };
-          callback(msg);
-          console.log(msg);
-        }
-      }
-    };
-
-    xhttp.open("GET", url, (mode || false));
-    xhttp.setRequestHeader('User-Agent', 'RocketWatch');
-    xhttp.send();
-  } catch (e) {
-    console.log(url)
-    console.log(e)
-  }
+  request({
+    url: url,
+    json: true
+  }, function(error, response, body) {
+    callback(body);
+  });
 }
 
 function ReadableDateString(f) {
