@@ -21,4 +21,9 @@ node index.js
 test.sh
 ```
 ## Deployment
-
+```
+npm install
+npm install build-tools
+bt build
+node index.js
+```
