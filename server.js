@@ -245,7 +245,6 @@ async function processData(data, query, callback) {
       }
 
       f.img = null
-
       if (format.match("live")) {
 
         f.media = {

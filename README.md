@@ -23,7 +23,7 @@ test.sh
 ## Deployment
 ```
 npm install
-npm install build-tools
+npm install build-tools -g
 bt build
 node index.js
 ```
