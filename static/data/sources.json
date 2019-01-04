@@ -46,13 +46,15 @@
       "reddit": "ISRO"
     }
   },
-  "featuring": [{
-    "img": "/res/ska.jpg",
-    "name": "SpaceX Moon Announcement",
-    "desc": "SpaceX has signed the world’s first private passenger to fly around the Moon...",
-    "action": "Re-Watch",
-    "url": "/#event=spacex-moon"
-  },{
+  "featuring": [
+    {
+      "img": "/res/ska.jpg",
+      "name": "SpaceX Moon Announcement",
+      "desc": "SpaceX has signed the world’s first private passenger to fly around the Moon...",
+      "action": "Re-Watch",
+      "url": "/#event=spacex-moon"
+    },
+    {
       "img": "/res/gemini.png",
       "name": "Project Gemini",
       "desc": "Project Gemini was NASA's second human spaceflight program. Conducted between projects Mercury and Apollo, Gemini started in 1961 and concluded in 1966. The Gemini spacecraft carried a two-astronaut crew. Ten Gemini crews flew low Earth orbit (LEO) missions between 1965 and 1966 putting the United States in the lead during the Cold War Space Race against the Soviet Union.",
@@ -109,34 +111,41 @@
       "url": "https://discordapp.com/oauth2/authorize?client_id=256766117505269760&scope=bot&permissions=0"
     }
   ],
-  "patrons": [{
-    "nick": "WIDEnet",
-    "amount": 5
-  }, {
-    "nick": "IKERNEII",
-    "amount": 1
-  }, {
-    "nick": "Yogu",
-    "amount": 1
-  }],
+  "patrons": [
+    {
+      "nick": "WIDEnet",
+      "amount": 5
+    },
+    {
+      "nick": "IKERNEII",
+      "amount": 1
+    },
+    {
+      "nick": "Yogu",
+      "amount": 1
+    }
+  ],
   "info": {
     "search": {
       "gemini": {
         "name": "Project Gemini",
         "img": "https://i.imgur.com/v9oMlOo.png",
         "desc": "Project Gemini was NASA's second human spaceflight program. Conducted between projects Mercury and Apollo, Gemini started in 1961 and concluded in 1966. The Gemini spacecraft carried a two-astronaut crew. Ten Gemini crews flew low Earth orbit (LEO) missions between 1965 and 1966 putting the United States in the lead during the Cold War Space Race against the Soviet Union.",
-        "badges": [{
-          "img": "https://i.imgur.com/uaGrY32.png",
-          "name": "Titan II GLV",
-          "url": "/#rocket=Titan II GLV",
-          "tip": "More info"
-        }]
+        "badges": [
+          {
+            "img": "https://i.imgur.com/uaGrY32.png",
+            "name": "Titan II GLV",
+            "url": "/#rocket=Titan II GLV",
+            "tip": "More info"
+          }
+        ]
       },
       "skylab": {
         "name": "Skylab",
         "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Skylab_%28SL-4%29.jpg/240px-Skylab_%28SL-4%29.jpg",
         "desc": "Skylab was the United States' first space station, orbiting Earth from 1973 to 1979.",
-        "badges": [{
+        "badges": [
+          {
             "img": "https://i.imgur.com/ysIE6fk.jpg",
             "name": "Saturn V",
             "url": "/#rocket=136",
@@ -163,18 +172,21 @@
         "img": "https://i.imgur.com/yxixerU.png",
         "name": "Commercial Resupply Services",
         "desc": "Watch NASA-contracted ressuply missions launch to International Space Station",
-        "badges": [{
-          "img": "https://i.imgur.com/yxa6EBQ.jpg",
-          "name": "ISS",
-          "url": "https://en.wikipedia.org/wiki/International_Space_Station",
-          "tip": "More Info"
-        }]
+        "badges": [
+          {
+            "img": "https://i.imgur.com/yxa6EBQ.jpg",
+            "name": "ISS",
+            "url": "https://en.wikipedia.org/wiki/International_Space_Station",
+            "tip": "More Info"
+          }
+        ]
       },
       "apollo": {
         "img": "https://i.imgur.com/hDb8Noi.png",
         "name": "Small Step",
         "desc": "Collection of all Apollo missions",
-        "badges": [{
+        "badges": [
+          {
             "img": "https://i.imgur.com/ysIE6fk.jpg",
             "name": "Saturn V",
             "url": "/#rocket=136",
@@ -192,7 +204,8 @@
         "img": "https://i.imgur.com/r9QBj3A.png",
         "name": "The History of Shuttle",
         "desc": "All 135 missions of the most complicated man-made machine.",
-        "badges": [{
+        "badges": [
+          {
             "img": "https://i.imgur.com/oNnvbRx.jpg",
             "name": "Space Shuttle",
             "url": "https://en.wikipedia.org/wiki/Space_Shuttle",
@@ -218,7 +231,8 @@
     "youtube": "UCpY48ts_nCvlBRAVlbJePgg",
     "reddit": "RocketWatch",
     "twitter": "rocket_watch",
-    "media": [{
+    "media": [
+      {
         "when": "go",
         "is": "last",
         "name": "Rocket Watch Discord",
@@ -233,12 +247,15 @@
   },
   "custom": {
     "byAgencyAbbrev": {
-      "casc": [{
-        "when": "go",
-        "is": "twitter",
-        "url": "https://twitter.com/cnspaceflight"
-      }],
-      "spx": [{
+      "casc": [
+        {
+          "when": "go",
+          "is": "twitter",
+          "url": "https://twitter.com/cnspaceflight"
+        }
+      ],
+      "spx": [
+        {
           "when": "live",
           "is": "audio",
           "name": "Hosted webcast audio",
@@ -261,7 +278,8 @@
           "url": "https://twitter.com/rocket_watch/lists/spacex"
         }
       ],
-      "ula": [{
+      "ula": [
+        {
           "when": "go",
           "is": "last",
           "name": "r/ULA IRC",
@@ -271,13 +289,18 @@
           "url": "https://twitter.com/rocket_watch/lists/united-launch-alliance"
         }
       ],
-      "bo": [{
-        "url": "https://twitter.com/rocket_watch/lists/blue-origin"
-      }],
-      "esa": [{
-        "url": "https://twitter.com/rocket_watch/lists/european-space-agency"
-      }],
-      "asa": [{
+      "bo": [
+        {
+          "url": "https://twitter.com/rocket_watch/lists/blue-origin"
+        }
+      ],
+      "esa": [
+        {
+          "url": "https://twitter.com/rocket_watch/lists/european-space-agency"
+        }
+      ],
+      "asa": [
+        {
           "when": "go",
           "url": "https://twitter.com/rocket_watch/lists/arianespace"
         },
@@ -288,22 +311,33 @@
           "url": "https://ebu-emp.ebu.ch/arianespace/embedded.html?tag=bGl2ZTsyMDc&autoplay=true"
         }
       ],
-      "nasa": [{
-        "url": "https://twitter.com/rocket_watch/lists/nasa"
-      }],
-      "oa": [{
-        "url": "https://twitter.com/rocket_watch/lists/orbital-atk"
-      }],
-      "osc": [{
-        "url": "https://twitter.com/rocket_watch/lists/orbital-atk"
-      }],
-      "rfsa": [{
-        "url": "https://twitter.com/rocket_watch/lists/roscosmos"
-      }],
-      "rl": [{
-        "url": "https://twitter.com/RocketLab"
-      }],
-      "ksrpsc": [{
+      "nasa": [
+        {
+          "url": "https://twitter.com/rocket_watch/lists/nasa"
+        }
+      ],
+      "oa": [
+        {
+          "url": "https://twitter.com/rocket_watch/lists/orbital-atk"
+        }
+      ],
+      "osc": [
+        {
+          "url": "https://twitter.com/rocket_watch/lists/orbital-atk"
+        }
+      ],
+      "rfsa": [
+        {
+          "url": "https://twitter.com/rocket_watch/lists/roscosmos"
+        }
+      ],
+      "rl": [
+        {
+          "url": "https://twitter.com/RocketLab"
+        }
+      ],
+      "ksrpsc": [
+        {
           "url": "https://twitter.com/rocket_watch/lists/roscosmos"
         },
         {
@@ -319,7 +353,8 @@
           "name": "roscosmos.ru Official livestream"
         }
       ],
-      "tsskb-progress": [{
+      "tsskb-progress": [
+        {
           "url": "https://twitter.com/rocket_watch/lists/roscosmos"
         },
         {
@@ -337,7 +372,8 @@
       ]
     },
     "byLocationID": {
-      "16": [{
+      "16": [
+        {
           "when": "live",
           "name": "Kennedy Space Center",
           "is": "audio",
@@ -382,7 +418,8 @@
           "url": "//www.twopalms.com/"
         }
       ],
-      "17": [{
+      "17": [
+        {
           "when": "!live",
           "is": "video",
           "name": "SpaceFlightNow.com Live",
@@ -434,22 +471,27 @@
           "url": "//www.twopalms.com/"
         }
       ],
-      "18": [{
-        "when": "recovery",
-        "is": "video",
-        "name": "ASDS \"Just Read The Instructions\" Support Ship Location",
-        "url": "//www.vesselfinder.com/aismap?zoom=13&names=true&mmsi=367486370&track=true&fleet=dabb73c2ac88d80f3bff7e985d83f5bc&fleet_hide_old_positions=false&clicktoact=false&store_pos=true&ra=rocketwatch.yasiu.pl"
-      }]
+      "18": [
+        {
+          "when": "recovery",
+          "is": "video",
+          "name": "ASDS \"Just Read The Instructions\" Support Ship Location",
+          "url": "//www.vesselfinder.com/aismap?zoom=13&names=true&mmsi=367486370&track=true&fleet=dabb73c2ac88d80f3bff7e985d83f5bc&fleet_hide_old_positions=false&clicktoact=false&store_pos=true&ra=rocketwatch.yasiu.pl"
+        }
+      ]
     },
     "byMissionName": {
-      "SES-11": [{
-        "is": "badge",
-        "name": "Reused booster",
-        "desc": "This is a reflight of previously landed first stage booster (CRS-10)",
-        "img": "http://i.imgur.com/9WTbBfH.png",
-        "url": "/?search=CRS-10"
-      }],
-      "IAC2017": [{
+      "SES-11": [
+        {
+          "is": "badge",
+          "name": "Reused booster",
+          "desc": "This is a reflight of previously landed first stage booster (CRS-10)",
+          "img": "http://i.imgur.com/9WTbBfH.png",
+          "url": "/?search=CRS-10"
+        }
+      ],
+      "IAC2017": [
+        {
           "name": "Making Life Multiplanetary",
           "url": "https://www.youtube.com/watch?v=S5V7R_se1Xc?autoplay=1"
         },
@@ -458,13 +500,16 @@
           "url": "https://www.reddit.com/r/spacex/comments/730j9l/rspacex_official_iac_2017_making_humans_a/"
         }
       ],
-      "Soyuz MS-06": [{
-        "is": "info",
-        "name": "SpaceFlightNow.com live updates",
-        "embed": "https://node.24live.co/live?eid=1e615bc0978411e78acaf23c913e9177#/",
-        "share": "https://spaceflightnow.com/2017/09/12/soyuz-ms-06-mission-status-center/"
-      }],
-      "Intelsat 35e": [{
+      "Soyuz MS-06": [
+        {
+          "is": "info",
+          "name": "SpaceFlightNow.com live updates",
+          "embed": "https://node.24live.co/live?eid=1e615bc0978411e78acaf23c913e9177#/",
+          "share": "https://spaceflightnow.com/2017/09/12/soyuz-ms-06-mission-status-center/"
+        }
+      ],
+      "Intelsat 35e": [
+        {
           "name": "Day #2 Webcast",
           "url": "//www.youtube.com/watch?v=ASbCLpWDPV4?autoplay=1"
         },
@@ -477,7 +522,8 @@
           "url": "//www.youtube.com/watch?v=VvXrHPk0kt4?autoplay=1"
         }
       ],
-      "BulgariaSat-1": [{
+      "BulgariaSat-1": [
+        {
           "is": "button",
           "when": "!recovery",
           "name": "First stage recovery",
@@ -495,7 +541,8 @@
           "is": "video"
         }
       ],
-      "CRS-11": [{
+      "CRS-11": [
+        {
           "is": "video",
           "name": "Press Conference",
           "url": "//www.youtube.com/watch?v=UZRf6yxzjbQ?autoplay=1"
@@ -508,18 +555,23 @@
       ]
     },
     "byMissionId": {
-      "999": [{
-        "name": "Reddit Thread",
-        "url": "https://www.reddit.com/r/spacex/comments/9ggtma/bfr_manned_moon_mission_thread_livestream_at/"
-      }],
-      "864": [{
-        "name": "Reddit live",
-        "url": "//www.reddit.com/live/10eml9bua3no8"
-      }, {
-        "name": "Falcon Heavy Static Fire",
-        "embed": "https://www.youtube.com/embed/NuXHriwQB9g",
-        "share": "https://www.youtube.com/watch?v=NuXHriwQB9g"
-      }]
+      "999": [
+        {
+          "name": "Reddit Thread",
+          "url": "https://www.reddit.com/r/spacex/comments/9ggtma/bfr_manned_moon_mission_thread_livestream_at/"
+        }
+      ],
+      "864": [
+        {
+          "name": "Reddit live",
+          "url": "//www.reddit.com/live/10eml9bua3no8"
+        },
+        {
+          "name": "Falcon Heavy Static Fire",
+          "embed": "https://www.youtube.com/embed/NuXHriwQB9g",
+          "share": "https://www.youtube.com/watch?v=NuXHriwQB9g"
+        }
+      ]
     }
   }
 }

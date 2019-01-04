@@ -12,6 +12,8 @@ Website for watching rocket launches, otherwise - mom's spagetti.
 ### Development server
 ```
 npm install
+npm install build-tools
+bt build
 node index.js
 ```
 ### Run tests
