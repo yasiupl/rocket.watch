@@ -497,7 +497,7 @@ async function processData(data, query, callback) {
  
         if ([3, 4, 7].indexOf(f.statuscode) == -1 && f.tolaunch > 0) {
           if (f.location.countryCode == "USA") {
-             
+            /*
             await getJSON("https://forecast.weather.gov/MapClick.php?unit=1&lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude + "&FcstType=json").then(r => {
               if (r && r.currentobservation.name) {
                 f.media.comments.push({
@@ -512,7 +512,7 @@ async function processData(data, query, callback) {
                 });
               }
             })
-            
+            */
           }
           if (f.location.id == 9) {
             f.media.comments.push({
