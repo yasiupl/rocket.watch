@@ -1,20 +1,20 @@
 {
     "webhooks": [],
-    "google": "*",
-    "facebook": "*",
-    "onesignal": "*",
+    "google": "AIzaSyCCsE02VLjRNzLWT0iZF648lXy9JNlNjdc",
+    "facebook": "264009833956500|yRCXRDPgX819IneEz4rEKUh-OY8",
+    "onesignal": "ODg0NDBhODUtNmM1Yi00MGJmLTlhOGEtZTQxMGUzY2NhMDQ0",
     "pushbullet": "*",
     "twitter": {
-        "consumer_key": "*",
-        "consumer_secret": "*",
-        "access_token_key": "*",
-        "access_token_secret": "*"
+        "consumer_key": "a9h82OFYGTN65W6XBhpd7NTyj",
+        "consumer_secret": "3thWXgiiDtQcnSbGWeFEgEpZybPcwwlZBwtBkS82ILo012IE7h",
+        "access_token_key": "3191371661-fEmXyfivRBn4LYUsSmFN6pkyLbguBgiNar6C9zT",
+        "access_token_secret": "94hWrCdRjt3qzJqrz2Ux8crUjpUvOw6JniwkFTJN3Il2u"
     },
     "reddit": {
-        "userAgent": "*",
-        "clientId": "*",
-        "clientSecret": "*",
-        "username": "*",
-        "password": "*"
+        "userAgent": "rocket.watch",
+        "clientId": "twQSdHQqMcWF1w",
+        "clientSecret": "KiIDnMGEs2iuxrC9QBzz6eH35E",
+        "username": "RocketWatchBOT",
+        "password": "Cet5FpszpZF9quK"
     }
 }
