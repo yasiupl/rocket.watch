@@ -1,7 +1,7 @@
 const Storage = require('node-storage');
 const request = require("request");
 
-const keys = require('./keys.json');
+const keys = require('./config.json');
 const sources = require('./static/data/sources.json');
 const storage = new Storage('./cache.json');
 
