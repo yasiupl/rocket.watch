@@ -1,1 +1,5 @@
 config.json
+keys.json
+keys.local.json
+node_modules
+*.min.*
