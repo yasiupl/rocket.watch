@@ -3,7 +3,7 @@ const compression = require("compression");
 const request = require("request");
 const ytdl = require("ytdl-core");
 
-const keys = require("./keys.json");
+const keys = require("./config.json");
 const RocketWatch = require("./server.js");
 const redirectRouter = require("./routers/redirectRouter");
 

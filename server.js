@@ -738,9 +738,6 @@ function getJSON(url) {
       json: true
     }, function (error, response, body) {
       if (error) reject(error);
-      if (response.statusCode != 200) {
-        reject('Invalid status code <' + response.statusCode + '>');
-      }
       resolve(body);
     });
   });
