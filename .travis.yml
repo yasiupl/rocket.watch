@@ -6,6 +6,7 @@ install:
         - npm install
         - npm install build-tools
         - bt build
+        - mv config.template.json config.json
 
 script:
         - chmod -R +x tests/e2e 
