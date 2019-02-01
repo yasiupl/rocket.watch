@@ -97,11 +97,6 @@ app.route('/external/analytics.js').get(function (req, res) {
   request('https://www.google-analytics.com/analytics.js').pipe(res);
 });
 
-app.route('/external/vidpulse.js').get(function (req, res) {
-  request('https://s.vidpulse.com/all/vp.js').pipe(res);
-});
-
-
 
 app.route('/audio/*').get(function (req, res) {
   res.set({
