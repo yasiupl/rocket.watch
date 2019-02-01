@@ -14,7 +14,6 @@
     "request": "^2.85.0",
     "snoowrap": "^1.15.2",
     "twitter": "^1.7.1",
-    "xmlhttprequest": "^1.8.0",
     "ytdl-core": "^0.20.2"
   },
   "devDependencies": {},
