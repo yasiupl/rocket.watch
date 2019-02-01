@@ -3,6 +3,9 @@ node_js: "8"
 
 install:
         - npm install
+        - npm install
+        - npm install build-tools
+        - bt build
 
 script:
         - chmod -R +x tests/e2e 
