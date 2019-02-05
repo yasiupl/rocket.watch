@@ -1187,7 +1187,7 @@ function getJSON(url, callback) {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker
-      .register('/serviceworker.js')
+      .register('/OneSignalSDKWorker.js')
       .then(function () {
         console.log('rocket.watch serviceworker install successful');
       })
