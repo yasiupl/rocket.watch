@@ -65,12 +65,13 @@ if (typeof(Storage) !== "undefined") {
     }
 
     if (data.onesignal) {
-      getScript(["https://rocket.watch/external/notifications.js"]).then(function() {
+      getScript(["https://cdn.onesignal.com/sdks/OneSignalSDK.js"]).then(function() {
         OneSignal.push(function() {
-          OneSignal.provideUserConsent(true)
+          //OneSignal.provideUserConsent(true);
           OneSignal.init({
             appId: "d15cb12b-085c-4f0b-a40a-45dbdcba9e7c",
-            autoRegister: true
+            autoRegister: true,
+            allowLocalhostAsSecureOrigin: true
           })
 
           if (localStorage.getItem("rocketwatch.Settings")) {
