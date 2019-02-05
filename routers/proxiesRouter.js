@@ -29,7 +29,7 @@ const routes =
 
 const proxy =
     (route) =>
-            Router.route(route.slug).get((request, response) =>webrequest(route.url + req.url.split(route.slug.split("*")[0])[1] + route.suffix).pipe(response));
+            Router.route(route.slug).get((request, response) =>webrequest(route.url + request.url.split(route.slug.split("*")[0])[1] + route.suffix).pipe(response));
 
 
 routes.forEach(route => proxy(route))
