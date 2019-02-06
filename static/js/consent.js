@@ -31,7 +31,7 @@ if (typeof(Storage) !== "undefined") {
 
     var data = JSON.parse(localStorage.getItem("consent-v" + consentVersion));
     if (data.analytics) {
-      getScript(["https://rocket.watch/external/analytics.js"]).then(function() {
+      getScript(["https://www.google-analytics.com/analytics.js"]).then(function() {
         console.log("Sent pageview: " + location.pathname + location.search + location.hash);
         ga("create", "UA-71778687-10", "auto");
         ga('send', 'pageview', {
@@ -57,7 +57,7 @@ if (typeof(Storage) !== "undefined") {
     }
 
     if (data.ads) {
-      getScript(["https://rocket.watch/external/promotion.js"]).then(function() {
+      getScript(["https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]).then(function() {
         (adsbygoogle = window.adsbygoogle || []).push({});
         console.log("adsbygoogle");
       });
