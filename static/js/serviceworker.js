@@ -1,5 +1,5 @@
 var shell = [
-  '/api/launch/next/4?status=1,5,6',
+  '/api/launch/next/4',
   '/api/launch?limit=4&sort=desc&mode=summary&status=3,4,7',
   '/api/agency/121?mode=verbose&format=news',
   '/api/launch?limit=200&mode=summary&sort=desc&name=&lsp=121&format=stats',
@@ -54,8 +54,8 @@ self.addEventListener('fetch', function(event) {
   if (event.request.url.match("rocket.watch/")) {
     event.respondWith(
       caches.open('rocketwatch').then(function(cache) {
-        return cache.match(event.request).then(function (response) {
-          return (!navigator.onLine)? response : fetch(event.request).then(function(response) {
+        return cache.match(event.request).then(function(response) {
+          return response || fetch(event.request).then(function(response) {
             cache.put(event.request, response.clone());
             return response;
           });

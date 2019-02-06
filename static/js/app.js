@@ -158,7 +158,7 @@ function home() {
     home()
   }
 
-  load("launch/next/4?status=1,5,6", function (f) {
+  load("launch/next/4", function (f) {
     if (f.launches && f.launches.length) {
       for (var a in f.launches.reverse()) {
         var g = f.launches[a];

@@ -20,7 +20,7 @@ setInterval(function () {
 
 function loadPrimary() {
   try {
-    RocketWatch.load("/launch/next/4?status=1,5,6", function (next) {
+    RocketWatch.load("/launch/next/4", function (next) {
       for (var i in next.launches) {
         //cache next 3 launches and notify if needed
         RocketWatch.load("/launch?mode=verbose&id=" + next.launches[i].id + "&format=live");

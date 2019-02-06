@@ -11,8 +11,6 @@ module.exports = {
   all: all
 };
 
-//https://api.rocket.watch/launch/next/4?status=1,5,6
-
 setInterval(function() {
   //console.log("1 minute loop");
   RocketWatch.storage.remove("/launch/next/4?status=1");
