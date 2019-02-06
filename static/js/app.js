@@ -152,7 +152,7 @@ function home() {
   $main.appendChild($featured);
 
   refreshHome = function () {
-    localStorage.removeItem("launch/next/4?status=1,5,6");
+    localStorage.removeItem("launch/next/4");
     localStorage.removeItem("launch?limit=4&sort=desc&mode=summary&status=3,4,7");
     for (var d in window.countdowns) {
       window.clearInterval(window.countdowns[d]);
@@ -161,11 +161,11 @@ function home() {
   }
 
   if (navigator.onLine) {
-    localStorage.removeItem("launch/next/4?status=1,5,6");
+    localStorage.removeItem("launch/next/4");
     localStorage.removeItem("launch?limit=4&sort=desc&mode=summary&status=3,4,7");
   }
 
-  load("launch/next/4?status=1,5,6", function (f) {
+  load("launch/next/4", function (f) {
     if (f.launches && f.launches.length) {
       for (var a in f.launches.reverse()) {
         var g = f.launches[a];
@@ -1223,7 +1223,7 @@ setTimeout(function () {
     load(cache[i]);
   }
 
-  load('launch/next/4?status=1,5,6', function (d) {
+  load('launch/next/4', function (d) {
     for (var i in d.launches) {
       load('launch?mode=verbose&id=' + d.launches[i].id + '&format=live')
     }
