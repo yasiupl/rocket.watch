@@ -649,13 +649,12 @@ async function processData(data, query, callback) {
           });
         }
 
-        var custom = (sources.custom.byMissionName[f.mission] || [])
+        var custom = (sources.norminal.media || []).concat(sources.custom.byMissionName[f.mission] || [])
           .concat(sources.custom.byMissionId[f.id] || [])
           .concat(sources.custom.byLocationID[f.location.id] || [])
           .concat(
             sources.custom.byAgencyAbbrev[f.agency.abbrev.toLowerCase()] || []
-          )
-          .concat(sources.norminal.media || []);
+          );
 
         for (var v in custom) {
           if (

@@ -173,7 +173,7 @@ function home() {
         }
 
         if (total == (f.count - 1)) break
-        $main.innerHTML = '<ul class="tabs"><li class="tab"><a href="#future" target="_self" class="active">More Launches</a></li></ul>' + $main.innerHTML;
+        //$main.innerHTML = '<ul class="tabs"><li class="tab"><a href="#future" target="_self" class="active">More Launches</a></li></ul>' + $main.innerHTML;
         $upcoming.innerHTML = '<div class="col s12 l' + Math.floor(12 / (f.count - 1)) + '"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More Info" href="/#rocket=' + g.rocket.name.split("/")[0] + '">' + g.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>").split(" (")[0] + '</h4><a class="chip tooltipped" data-tooltip="' + g.agency.name + '" href="/#agency=' + g.agency.id + '"><img src="' + g.agency.icon + '?size=32" onerror=this.src="' + g.agency.countryFlag + '">' + g.agency.shortname + '</a><a class="chip tooltipped" data-tooltip="' + g.location.name + '" href="/#pad=' + g.location.pads[0].id + '"><i class="far fa-compass"></i>' + g.location.name.split(",")[0] + '</a></br><a class="chip tooltipped" data-tooltip="' + g.net + '"><i class="far fa-clock"></i>' + ReadableDateString(g.net) + '</a><h5 id="countdown' + g.id + '">' + g.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + g.id + '">Details</button></div></div></div>' + $upcoming.innerHTML;
 
         total++
