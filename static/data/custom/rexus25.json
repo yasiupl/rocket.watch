@@ -31,9 +31,20 @@
                 "infoURL": "",
                 "wikiURL": "",
                 "mapURL": "http:\/\/maps.google.com\/maps?q=67.893889, 21.106944",
-                "latitude": 67.893889, 
+                "latitude": 67.893889,
                 "longitude": 21.106944,
-                "agencies": [{"id":151,"name":"Swedish Space Corp","countryCode":"SWE","abbrev":"SSC","type":3,"infoURL":"http:\/\/www.sscspace.com\/","wikiURL":"http:\/\/en.wikipedia.org\/wiki\/Swedish_Space_Corporation","infoURLs":["http:\/\/www.sscspace.com\/","https:\/\/twitter.com\/Sscspace","https:\/\/www.facebook.com\/SSC.SwedishSpaceCorporation"],"islsp":0,"changed":"2017-02-21 00:00:00"}]
+                "agencies": [{
+                    "id": 151,
+                    "name": "Swedish Space Corp",
+                    "countryCode": "SWE",
+                    "abbrev": "SSC",
+                    "type": 3,
+                    "infoURL": "http:\/\/www.sscspace.com\/",
+                    "wikiURL": "http:\/\/en.wikipedia.org\/wiki\/Swedish_Space_Corporation",
+                    "infoURLs": ["http:\/\/www.sscspace.com\/", "https:\/\/twitter.com\/Sscspace", "https:\/\/www.facebook.com\/SSC.SwedishSpaceCorporation"],
+                    "islsp": 0,
+                    "changed": "2017-02-21 00:00:00"
+                }]
             }],
             "id": 18,
             "name": "Kiruna, Sweden",
@@ -46,7 +57,18 @@
             "name": "Orion",
             "configuration": "Improved",
             "familyname": "Sounding",
-            "agencies": [{"id":151,"name":"Swedish Space Corp","countryCode":"SWE","abbrev":"SSC","type":3,"infoURL":"http:\/\/www.sscspace.com\/","wikiURL":"http:\/\/en.wikipedia.org\/wiki\/Swedish_Space_Corporation","infoURLs":["http:\/\/www.sscspace.com\/","https:\/\/twitter.com\/Sscspace","https:\/\/www.facebook.com\/SSC.SwedishSpaceCorporation"],"islsp":0,"changed":"2017-02-21 00:00:00"}],
+            "agencies": [{
+                "id": 151,
+                "name": "Swedish Space Corp",
+                "countryCode": "SWE",
+                "abbrev": "SSC",
+                "type": 3,
+                "infoURL": "http:\/\/www.sscspace.com\/",
+                "wikiURL": "http:\/\/en.wikipedia.org\/wiki\/Swedish_Space_Corporation",
+                "infoURLs": ["http:\/\/www.sscspace.com\/", "https:\/\/twitter.com\/Sscspace", "https:\/\/www.facebook.com\/SSC.SwedishSpaceCorporation"],
+                "islsp": 0,
+                "changed": "2017-02-21 00:00:00"
+            }],
             "wikiURL": "https://pl.wikipedia.org/wiki/REXUS/BEXUS",
             "infoURLs": [],
             "infoURL": null,
