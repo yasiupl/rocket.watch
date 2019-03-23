@@ -28,4 +28,4 @@ bt build
 node index.js
 ```
 
-~[showcase](https://i.imgur.com/qJ6fE74.png)
+![showcase](https://i.imgur.com/qJ6fE74.png)
