@@ -4,6 +4,9 @@
 
 Website for watching rocket launches, otherwise - mom's spagetti.
 
+![showcase](https://i.imgur.com/qJ6fE74.png)
+
+
 ## Prerequisites
 - node.js
 - npm (included with node)
@@ -27,5 +30,3 @@ npm install build-tools -g
 bt build
 node index.js
 ```
-
-![showcase](https://i.imgur.com/qJ6fE74.png)
