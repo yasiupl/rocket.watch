@@ -20,7 +20,7 @@ Website for watching rocket launches, otherwise - mom's spagetti.
 ```
 chmod -R +x tests/e2e 
 ./tests/e2e/smoke-test.sh
-- node ./tests/e2e/test-redirect.js
+node ./tests/e2e/test-redirect.js
 ```
 ## Deployment
 ```
