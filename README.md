@@ -25,7 +25,7 @@ chmod -R +x tests/e2e
 ## Deployment
 ```
 cd frontend
-npm install
+npm install gulp gulp-sass node-sass --save-dev
 gulp sass
 cd ../backend
 npm install
