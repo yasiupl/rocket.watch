@@ -27,7 +27,7 @@ const defaultHeaders = function(req, res, next) {
 const middlewares = [
   defaultHeaders,
   compression(),
-  express.static("static"),
+  express.static("./../frontend/static"),
   redirectRouter,
   proxiesRouter,
   apiRouter
