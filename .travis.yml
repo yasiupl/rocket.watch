@@ -2,10 +2,11 @@ language: node_js
 node_js: "8"
 
 install:
+        - cd frontend
         - npm install
+        - cd ..
+        - cd backend
         - npm install
-        - npm install build-tools
-        - bt build
         - mv config.template.json config.json
 
 script:
