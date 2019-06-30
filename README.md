@@ -14,19 +14,20 @@ Website for watching rocket launches, otherwise - mom's spagetti.
 ## Development workflow
 ### Development server
 ```
-npm install
-npm install build-tools
-bt build
-node index.js
+
 ```
 ### Run tests
 ```
-test.sh
+chmod -R +x tests/e2e 
+./tests/e2e/smoke-test.sh
+- node ./tests/e2e/test-redirect.js
 ```
 ## Deployment
 ```
+cd frontend
 npm install
-npm install build-tools -g
-bt build
+gulp sass
+cd ../backend
+npm install
 node index.js
 ```
