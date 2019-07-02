@@ -1,5 +1,5 @@
-const express = require("express")();
-const compression = require("compression")();
+const express = require("express");
+const compression = require("compression");
 
 const defaultHeaders = function(req, res, next) {
   res.set({

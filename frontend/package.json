@@ -1,0 +1,27 @@
+{
+  "name": "frontend.rocket.watch",
+  "version": "1.0.0",
+  "description": "Front-end for the rocket.watch website",
+  "main": "index.js",
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.0.2",
+    "node-sass": "^4.12.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yasiupl/rocket.watch.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yasiupl/rocket.watch/issues"
+  },
+  "homepage": "https://github.com/yasiupl/rocket.watch#readme"
+}
