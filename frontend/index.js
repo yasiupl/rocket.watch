@@ -1,9 +1,5 @@
-const express = require("express");
-const compression = require("compression");
-
-const redirectRouter = require("./routers/redirectRouter");
-const proxiesRouter = require("./routers/proxiesRouter");
-const apiRouter = require("./routers/apiRouter");
+const express = require("express")();
+const compression = require("compression")();
 
 const defaultHeaders = function(req, res, next) {
   res.set({
@@ -15,19 +11,23 @@ const defaultHeaders = function(req, res, next) {
     "X-XSS-Protection": "1",
     "Cache-Control": "max-age=2592000"
   });
+
+  if (req.url.match(".css") || req.url.match(".js")) {
+    res.set({
+      "Cache-Control": "must-revalidate"
+    });
+  }
   next();
 };
 
 const middlewares = [
-  compression(),
   defaultHeaders,
-  redirectRouter,
-  proxiesRouter,
-  apiRouter
+  compression(),
+  express.static("static"),
 ];
 
 const app = express();
 middlewares.forEach(x => app.use(x));
 
-app.listen(9000);
-console.log("Server running on port 9000");
+app.listen(8080);
+console.log("Server running on port 8080");
