@@ -17,7 +17,7 @@ Router.route("/api/").get((req, res) => {
 });
 
 Router.route("/api/*").get((req, res) => {
-  RocketWatch.load(req.path.split("/api/")[1], function (d) {
+  RocketWatch.load(req.url.split("/api/")[1], function (d) {
     res.set({
       'Access-Control-Allow-Origin': '*',
       'Cache-Control': 'max-age=' + Math.round((d.expire - Date.now()) / 1000)
