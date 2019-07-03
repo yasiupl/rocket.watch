@@ -790,7 +790,7 @@ async function processData(data, query, callback) {
         await getJSON(
           "https://www.reddit.com/r/" +
             (f.agency.social.reddit || sources.norminal.reddit) +
-            "/search.json?sort=relevance&restrict_sr=on&q=" + decodeURIComponent(f.mission)
+            "/search.json?sort=relevance&restrict_sr=on&q=" + encodeURIComponent(f.mission)
         ).then(r => {
           if (r && r.data) {
             for (var q in r.data.children) {
