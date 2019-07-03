@@ -792,7 +792,7 @@ async function processData(data, query, callback) {
             (f.agency.social.reddit || sources.norminal.reddit) +
             "/search.json?sort=relevance&restrict_sr=on&q=" + decodeURIComponent(f.mission)
         ).then(r => {
-          if (r.data) {
+          if (r && r.data) {
             for (var q in r.data.children) {
               if (
                 !(
