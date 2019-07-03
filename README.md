@@ -10,25 +10,11 @@ Website for watching rocket launches, otherwise - mom's spagetti.
 ## Prerequisites
 - node.js
 - npm (included with node)
+- GNU Make >= 4.1
 
 ## Development workflow
-### Development server
+In either `backend` or `frontend`
+```
+make help
 ```
 
-```
-### Run tests
-```
-chmod -R +x tests/e2e 
-./tests/e2e/smoke-test.sh
-node ./tests/e2e/test-redirect.js
-```
-## Deployment
-```
-cd frontend
-npm install gulp -g
-npm install gulp-sass node-sass --save-dev
-gulp sass
-cd ../backend
-npm install
-node index.js
-```

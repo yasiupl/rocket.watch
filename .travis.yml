@@ -10,6 +10,4 @@ install:
         - mv config.template.json config.json
 
 script:
-        - chmod -R +x tests/e2e 
-        - ./tests/e2e/smoke-test.sh
-        - node ./tests/e2e/test-redirect.js
+        - make test

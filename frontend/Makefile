@@ -1,15 +1,14 @@
 .DEFAULT_GOAL := help
-PORT := 9000
 
 # Porcelain
 # ###############
 .PHONY: env-up env-down serve ci build lint test container
 
-launch: node_modules config.json open-browser ## run the development server and open browser
-	PORT=$(PORT) node index.js
-	
-serve: node_modules config.json ## run the development server
-	PORT=$(PORT) node index.js
+launch: build open-browser ## run the development server and open browser
+	node_modules/.bin/live-server static/
+
+serve: build ## run the development server
+	node_modules/.bin/live-server --no-browser static/
 
 ci: lint test build container ## run all test and build all artifacts
 	@echo "Not implemented"; false
@@ -20,13 +19,13 @@ env-up: ## set up dev environment
 env-down: ## tear down dev environment
 	@echo "Not implemented"; false
 
-build: ## create artifact
-	@echo "Not implemented"; false
+build: compile-sass ## create artifact
 
 lint: ## run static analysis
 	@echo "Not implemented"; false
 
-test: test-e2e ## run all tests
+test: ## run all tests
+	@echo "Not implemented"; false
 
 container: ## build container
 	@echo "Not implemented"; false
@@ -34,23 +33,17 @@ container: ## build container
 
 # Plumbing
 # ###############
-.PHONY: open-browser test-e2e
+.PHONY: compile-sass open-browser
 
-test-e2e: node_modules 
-	# TODO: fix this
-	#tests/e2e/setup
-	#tests/e2e/smoke-test.sh
-	#node tests/e2e/test-redirect.js
-	#tests/e2e/teardown
+compile-sass: node_modules
+	node_modules/.bin/gulp sass
 
 node_modules: package.json package-lock.json 
 	npm ci
 
-config.json: config.template.json
-	cp config.template.json config.json
-
 open-browser: 
-	(sleep 2; xdg-open localhost:$(PORT)/api) &
+	(sleep 2; xdg-open localhost:8080) &
+
 
 # Utilities
 # ###############
