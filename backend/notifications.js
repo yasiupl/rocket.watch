@@ -1,4 +1,4 @@
-var RocketWatch = require("server.js");
+var RocketWatch = require("./server.js");
 var https = require("https");
 var lastloop = new Date();
 var keys = require("./config.json");
