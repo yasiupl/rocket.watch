@@ -16,7 +16,9 @@
     "twitter": "^1.7.1",
     "ytdl-core": "^0.20.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^6.0.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
