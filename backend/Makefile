@@ -16,7 +16,7 @@ launch: setup open-browser ## run the development server and open browser
 serve: setup ## run the development server
 	PORT=$(PORT) node index.js
 
-ci: setup lint build test container ## run all tests and build all artifacts
+ci: audit setup lint build test container ## run all tests and build all artifacts
 	@echo "Not implemented"; false
 
 env-up: ## set up dev environment
@@ -34,7 +34,7 @@ fmt: setup ## automatically reformat the sources according to linter configurati
 lint: setup ## run static analysis
 	$(LINTER) $(SOURCES)
 
-test: setup test-e2e ## run all tests
+test: setup test-unit test-e2e ## run all tests
 
 container: setup build ## build container
 	@echo "Not implemented"; false
@@ -42,16 +42,22 @@ container: setup build ## build container
 
 # Plumbing
 # ###############
-.PHONY: open-browser test-e2e setup
+.PHONY: open-browser test-e2e setup test-unit
+
+audit:
+	npm audit
 
 setup: node_modules config.json
 
-test-e2e: node_modules 
+test-e2e:
 	# TODO: fix this
 	#tests/e2e/setup
 	#tests/e2e/smoke-test.sh
 	#node tests/e2e/test-redirect.js
 	#tests/e2e/teardown
+
+test-unit:
+	$(NPM_BINARY_PREFIX)/jest
 
 node_modules: package.json package-lock.json 
 	npm ci
