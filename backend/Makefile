@@ -16,7 +16,7 @@ launch: setup open-browser ## run the development server and open browser
 serve: setup ## run the development server
 	PORT=$(PORT) node index.js
 
-ci: setup lint test build container ## run all tests and build all artifacts
+ci: setup lint build test container ## run all tests and build all artifacts
 	@echo "Not implemented"; false
 
 env-up: ## set up dev environment
@@ -28,15 +28,15 @@ env-down: ## tear down dev environment
 build: setup ## create artifact
 	@echo "Not implemented"; false
 
-fmt: ## automatically reformat the sources according to linter configuration
+fmt: setup ## automatically reformat the sources according to linter configuration
 	$(LINTER) --fix $(SOURCES)
 
-lint: ## run static analysis
+lint: setup ## run static analysis
 	$(LINTER) $(SOURCES)
 
 test: setup test-e2e ## run all tests
 
-container: ## build container
+container: setup build ## build container
 	@echo "Not implemented"; false
 
 
