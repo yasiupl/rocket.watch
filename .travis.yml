@@ -4,10 +4,12 @@ node_js: "8"
 install:
         - cd frontend
         - npm install
-        - cd ..
-        - cd backend
-        - npm install
-        - mv config.template.json config.json
 
+        - cd ../backend
+        - make setup
 script:
+        # still inside the backend folder
+        - make lint
         - make test
+
+        - cd ../frontend

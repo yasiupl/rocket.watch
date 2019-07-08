@@ -1,17 +1,22 @@
 .DEFAULT_GOAL := help
 PORT := 9000
 
+NPM_BINARY_PREFIX := ./node_modules/.bin
+SOURCES := index.js src
+
+LINTER := $(NPM_BINARY_PREFIX)/eslint
+
 # Porcelain
 # ###############
 .PHONY: env-up env-down serve ci build lint test container
 
-launch: node_modules config.json open-browser ## run the development server and open browser
+launch: setup open-browser ## run the development server and open browser
 	PORT=$(PORT) node index.js
 	
-serve: node_modules config.json ## run the development server
+serve: setup ## run the development server
 	PORT=$(PORT) node index.js
 
-ci: lint test build container ## run all test and build all artifacts
+ci: setup lint test build container ## run all tests and build all artifacts
 	@echo "Not implemented"; false
 
 env-up: ## set up dev environment
@@ -20,13 +25,16 @@ env-up: ## set up dev environment
 env-down: ## tear down dev environment
 	@echo "Not implemented"; false
 
-build: ## create artifact
+build: setup ## create artifact
 	@echo "Not implemented"; false
+
+fmt: ## automatically reformat the sources according to linter configuration
+	$(LINTER) --fix $(SOURCES)
 
 lint: ## run static analysis
-	@echo "Not implemented"; false
+	$(LINTER) $(SOURCES)
 
-test: test-e2e ## run all tests
+test: setup test-e2e ## run all tests
 
 container: ## build container
 	@echo "Not implemented"; false
@@ -34,7 +42,9 @@ container: ## build container
 
 # Plumbing
 # ###############
-.PHONY: open-browser test-e2e
+.PHONY: open-browser test-e2e setup
+
+setup: node_modules config.json
 
 test-e2e: node_modules 
 	# TODO: fix this
