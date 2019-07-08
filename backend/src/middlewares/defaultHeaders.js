@@ -13,4 +13,4 @@ function defaultHeaders(_, response, next)
 }
 
 
-module.exports = defaultHeaders
+module.exports = defaultHeaders;
