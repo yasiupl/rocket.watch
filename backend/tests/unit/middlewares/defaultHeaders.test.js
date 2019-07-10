@@ -1,6 +1,6 @@
 const httpMocks = require('node-mocks-http');
 
-const defaultHeaders = require("../../../src/middlewares/defaultHeaders");
+const defaultHeaders = require("middlewares/defaultHeaders");
 
 
 test('calls next()', () => {

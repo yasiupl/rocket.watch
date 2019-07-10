@@ -13,4 +13,5 @@ module.exports = {
       "text",
       "lcov",
     ],
+    moduleDirectories: ["node_modules", "src"]
 };
