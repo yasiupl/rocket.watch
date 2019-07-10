@@ -1241,7 +1241,5 @@ function ISODateString(c) {
 module.exports = {
   load: load,
   ReadableDateString: ReadableDateString,
-  ISODateString: ISODateString,
-  getJSON: getJSON,
   storage: storage
 };
