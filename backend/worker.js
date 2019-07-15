@@ -1,7 +1,7 @@
 var RocketWatch = require('./server.js');
 //var Notify = require('./notifications.js');
 
-console.log("Worker initiated @ " + RocketWatch.ReadableDateString(Date.now()));
+console.log("Worker initiated @ " + Date.now());
 
 
 //every minute

@@ -1198,22 +1198,7 @@ function getJSON(url) {
   });
 }
 
-function ReadableDateString(f) {
-  var e = new Date(f || new Date());
-  var d =
-    ("0" + e.getDate()).slice(-2) +
-    "/" +
-    ("0" + (e.getMonth() + 1)).slice(-2) +
-    "/" +
-    e.getFullYear() +
-    " " +
-    ("0" + e.getHours()).slice(-2) +
-    ":" +
-    ("0" + e.getMinutes()).slice(-2) +
-    ":" +
-    ("0" + e.getSeconds()).slice(-2);
-  return d;
-}
+
 
 function ISODateString(c) {
   c = new Date(c || new Date());
@@ -1240,6 +1225,5 @@ function ISODateString(c) {
 
 module.exports = {
   load: load,
-  ReadableDateString: ReadableDateString,
   storage: storage
 };
