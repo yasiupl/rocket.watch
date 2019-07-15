@@ -46,85 +46,6 @@
       "reddit": "ISRO"
     }
   },
-  "featuring": [
-    {
-      "img": "/res/ska.jpg",
-      "name": "SpaceX Moon Announcement",
-      "desc": "SpaceX has signed the world’s first private passenger to fly around the Moon...",
-      "action": "Re-Watch",
-      "url": "/#event=spacex-moon"
-    },
-    {
-      "img": "/res/gemini.png",
-      "name": "Project Gemini",
-      "desc": "Project Gemini was NASA's second human spaceflight program. Conducted between projects Mercury and Apollo, Gemini started in 1961 and concluded in 1966. The Gemini spacecraft carried a two-astronaut crew. Ten Gemini crews flew low Earth orbit (LEO) missions between 1965 and 1966 putting the United States in the lead during the Cold War Space Race against the Soviet Union.",
-      "action": "Watch",
-      "url": "/#collection=gemini"
-    },
-    {
-      "img": "/res/crs.png",
-      "name": "Commercial Resupply Services",
-      "desc": "NASA-contracted ressuply missions to International Space Station",
-      "action": "Watch",
-      "url": "/#search=crs"
-    },
-    {
-      "img": "/res/shuttle.png",
-      "name": "The History of Shuttle",
-      "desc": "All 135 missions of the most complicated man-made machine.",
-      "action": "Watch",
-      "url": "/#collection=shuttle"
-    },
-    {
-      "img": "/res/nro.png",
-      "name": "Top Secret",
-      "desc": "Top secret launches for US' National Reconnaissance Office",
-      "action": "Watch",
-      "url": "/#collection=nro"
-    },
-    {
-      "img": "/res/apollo.png",
-      "name": "Small Step",
-      "desc": "Collection of all Apollo missions",
-      "action": "Relive the Moon race",
-      "url": "/#collection=apollo"
-    },
-    {
-      "img": "/res/soviet.png",
-      "name": "Soviet Space Program",
-      "desc": "The famous Russian engineering",
-      "action": "Watch",
-      "url": "/#agency=66"
-    },
-    {
-      "img": "/res/spacelaunchschedual.png",
-      "name": "Rocket Launch Schedule",
-      "desc": "A Chrome extension providing an easy way to be up to date with the scheduled launches to space.",
-      "action": "Install",
-      "url": "https://chrome.google.com/webstore/detail/rocket-launch-schedule/ijabdkefnohiaibcmbfihcjkjamffoph"
-    },
-    {
-      "img": "/res/discord.png",
-      "name": "Go4Liftoff Discord Bot",
-      "desc": "Invite a spaceflight bot to your Discord Server!",
-      "action": "Invite",
-      "url": "https://discordapp.com/oauth2/authorize?client_id=256766117505269760&scope=bot&permissions=0"
-    }
-  ],
-  "patrons": [
-    {
-      "nick": "WIDEnet",
-      "amount": 5
-    },
-    {
-      "nick": "IKERNEII",
-      "amount": 1
-    },
-    {
-      "nick": "Yogu",
-      "amount": 1
-    }
-  ],
   "info": {
     "search": {
       "gemini": {
@@ -573,5 +494,20 @@
         }
       ]
     }
-  }
+  },
+  "embed_blacklist": [
+    "twitter.com",
+    "spacex.com",
+    "youtube.com",
+    "rocketwatch.yasiu.pl",
+    "online.roscosmos.ru",
+    "google.com",
+    "filedropper.com",
+    "spacenews.com",
+    "aviationweek.com",
+    "medium.com",
+    "ulalaunch.com",
+    "arianespace.com",
+    "forum.nasaspaceflight.com"
+  ]
 }

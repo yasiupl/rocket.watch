@@ -223,24 +223,7 @@ const a = [
   "Unknown"
 ];
 
-sources.data = {
-  api: keys,
-  embed_blacklist: [
-    "twitter.com",
-    "spacex.com",
-    "youtube.com",
-    "rocketwatch.yasiu.pl",
-    "online.roscosmos.ru",
-    "google.com",
-    "filedropper.com",
-    "spacenews.com",
-    "aviationweek.com",
-    "medium.com",
-    "ulalaunch.com",
-    "arianespace.com",
-    "forum.nasaspaceflight.com"
-  ]
-};
+
 
 function load(query, callback) {
   callback = callback || function() {};
@@ -338,7 +321,7 @@ async function processData(data, query, callback) {
           getJSON(
             "https://graph.facebook.com/v2.11/" +
               f.social.facebook.split("/")[0] +
-              "/posts?fields=message%2Ccreated_time%2Cid%2Clink%2Cfull_picture&limit=5&access_token=" + sources.data.api.facebook
+              "/posts?fields=message%2Ccreated_time%2Cid%2Clink%2Cfull_picture&limit=5&access_token=" + keys.facebook
           ).then(async q => {
             f.news.facebook = f.news.facebook || [];
             for (var r in q.data) {
@@ -357,7 +340,7 @@ async function processData(data, query, callback) {
         if (f.social.youtube) {
           await getJSON(
             "https://www.googleapis.com/youtube/v3/search?key=" +
-              sources.data.api.google +
+              keys.google +
               "&part=snippet&order=date&maxResults=1&type=video&channelId=" +
               f.social.youtube
           ).then(r => {
@@ -506,7 +489,7 @@ async function processData(data, query, callback) {
         ).replace("http://", "https://");
         f.location.map =
           "https://www.google.com/maps/embed/v1/place?key=" +
-          sources.data.api.google +
+          keys.google +
           "&maptype=satellite&q=" +
           f.location.pads[0].latitude +
           "," +
@@ -831,7 +814,7 @@ async function processData(data, query, callback) {
             if (url.split("?v=")[1] != undefined) {
               await getJSON(
                 "https://www.googleapis.com/youtube/v3/videos?key=" +
-                  sources.data.api.google +
+                  keys.google +
                   "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&id=" +
                   url.split("?v=")[1]
               ).then(q => {
@@ -867,7 +850,7 @@ async function processData(data, query, callback) {
 
         /* else {
           if ([3, 4, 7].indexOf(f.statuscode) == -1) {
-            await getJSON("https://www.googleapis.com/youtube/v3/search?key=" + sources.data.api.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || sources.norminal.youtube)).then(r => {
+            await getJSON("https://www.googleapis.com/youtube/v3/search?key=" + keys.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || sources.norminal.youtube)).then(r => {
               for (var q in r.items) {
                 youtube = r.items[q];
                 if (Date.parse(youtube.snippet.publishedAt) >= (Date.now() - 86400000)) {
@@ -1113,7 +1096,7 @@ function processPad(data) {
     wiki: (data.wikiURL || "").replace("http://", "https://"),
     map:
       "https://www.google.com/maps/embed/v1/place?key=" +
-      sources.data.api.google +
+      keys.google +
       "&maptype=satellite&q=" +
       data.latitude +
       "," +
@@ -1150,7 +1133,7 @@ function processLocation(data) {
       data.countrycode.split(",")[0].toLowerCase(),
     map:
       "https://www.google.com/maps/embed/v1/place?key=" +
-      sources.data.api.google +
+      keys.google +
       "&maptype=satellite&q=Launch+Centre+" +
       data.name.replace(" ", "+"),
     img:
