@@ -8,11 +8,7 @@ const agenciesType = [
 
 function agencyType(agencyID, agenciesResolutionTable = agenciesType) 
 {
-    if(agencyID > 0 && agencyID - 1 < agenciesResolutionTable.length) 
-    {
-        return agenciesResolutionTable[agencyID - 1];
-    }
-    else return "Unknown";
+    return agenciesResolutionTable[agencyID-1] || "Unknown"
 }
 
 module.exports = agencyType;
