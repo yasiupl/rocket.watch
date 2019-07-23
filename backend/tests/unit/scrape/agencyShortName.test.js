@@ -17,7 +17,7 @@ each([undefined, null]).test('return "Unknown" on undefined/null', (agencyID) =>
 });
 
 
-each([-100, 0, 100]).test('return "Unknown" on value outside reference table', (agencyID) => {
+each([-100, 0, 4, 100]).test('return "Unknown" on value outside reference table', (agencyID) => {
    
 
     const result = agencyType(agencyID, stub)
