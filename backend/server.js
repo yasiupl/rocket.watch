@@ -1,6 +1,8 @@
 const Storage = require("node-storage");
 const request = require("request");
 
+const agencyType = require("./src/scrape/agencyType.js")
+
 const keys = require("./config.json");
 const sources = require("./data/sources.json");
 const storage = new Storage("./cache.json");
@@ -211,18 +213,6 @@ const e = [
   "LMSO",
   "MBRSC"
 ];
-
-// agencies type
-const a = [
-  "",
-  "Government",
-  "Multinational",
-  "Commercial",
-  "Educational",
-  "Private",
-  "Unknown"
-];
-
 
 
 function load(query, callback) {
@@ -984,7 +974,7 @@ function processAgency(data) {
     abbrev: (data.abbrev && data.abbrev.split("-")[0]) || "UNK",
     shortname:
       data.name && data.name.length > 11 ? data.abbrev : data.name || "UNK",
-    type: a[data.type] || "Unknown",
+    type: agencyType(data.type),
     typeCode: data.type || -1,
     islsp: data.islsp || 0,
     countryCode: data.countryCode || "UNK",
@@ -1000,7 +990,7 @@ function processAgency(data) {
   };
   if (!data) return modelAgency;
   if (modelAgency.countryCode.split(",").length > 1) {
-    modelAgency.countryCode = a[modelAgency.typeCode];
+    modelAgency.countryCode = agencyType(modelAgency.typeCode);
     modelAgency.countryFlag = "https://rocket.watch/res/multinational.png";
   }
   modelAgency.social = {};
