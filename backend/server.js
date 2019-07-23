@@ -2,6 +2,7 @@ const Storage = require("node-storage");
 const request = require("request");
 
 const agencyType = require("./src/scrape/agencyType.js")
+const Utilities = require("./src/utilities.js")
 
 const keys = require("./config.json");
 const sources = require("./data/sources.json");
@@ -674,9 +675,9 @@ async function processData(data, query, callback) {
             "https://api.spacexdata.com/v2/launches" +
               (f.tolaunch > 0 ? "/upcoming" : "") +
               "?start=" +
-              ISODateString(Date.parse(f.net) - 86400000).split("T")[0] +
+              Date.toISOString(Date.parse(f.net) - 86400000).split("T")[0] +
               "&final=" +
-              ISODateString(Date.parse(f.net) + 86400000).split("T")[0]
+              Date.toISOString(Date.parse(f.net) + 86400000).split("T")[0]
           ).then(d => {
             var data = d[0];
             if (data) {
@@ -1169,31 +1170,6 @@ function getJSON(url) {
       }
     );
   });
-}
-
-
-
-function ISODateString(c) {
-  c = new Date(c || new Date());
-
-  function d(a) {
-    return a < 10 ? "0" + a : a;
-  }
-  return (
-    c.toISOString() ||
-    c.getUTCFullYear() +
-      "-" +
-      d(c.getUTCMonth() + 1) +
-      "-" +
-      d(c.getUTCDate()) +
-      "T" +
-      d(c.getUTCHours()) +
-      ":" +
-      d(c.getUTCMinutes()) +
-      ":" +
-      d(c.getUTCSeconds()) +
-      "Z"
-  );
 }
 
 module.exports = {
