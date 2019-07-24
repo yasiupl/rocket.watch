@@ -8,7 +8,7 @@ const agenciesType = [
 
 function agencyType(agencyID, agenciesResolutionTable = agenciesType) 
 {
-    return agenciesResolutionTable[agencyID-1] || "Unknown"
+    return agenciesResolutionTable[agencyID-1] || "Unknown";
 }
 
 module.exports = agencyType;

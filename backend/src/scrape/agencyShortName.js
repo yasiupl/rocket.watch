@@ -206,7 +206,7 @@ const shortNames = [
 ];
 function agencyShortName(agencyID, agenciesResolutionTable = shortNames) 
 {
-    return agenciesResolutionTable[agencyID-1] || "Unknown"
+    return agenciesResolutionTable[agencyID-1] || "Unknown";
 }
 
 module.exports = agencyShortName;
