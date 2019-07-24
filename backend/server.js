@@ -60,6 +60,7 @@ async function processData(data, query, callback) {
     // override /rocket
     for (var g in data.rockets) {
       f = processRocket(data.rockets[g]);
+      /*
       if (mode.match("verbose")) {
         await getJSON(
           "https://spacelaunchnow.me/3.0.0/launchers/" + f.id + "/?format=json"
@@ -82,7 +83,7 @@ async function processData(data, query, callback) {
           f.agency.icon = data.agency.logo_url;
         });
       }
-
+      */
       data.rockets[g] = f;
     }
 
@@ -473,9 +474,9 @@ async function processData(data, query, callback) {
             "https://api.spacexdata.com/v2/launches" +
               (f.tolaunch > 0 ? "/upcoming" : "") +
               "?start=" +
-              Date.toISOString(Date.parse(f.net) - 86400000).split("T")[0] +
+              (new Date(Date.parse(f.net) - 86400000)).toISOString().split("T")[0] +
               "&final=" +
-              Date.toISOString(Date.parse(f.net) + 86400000).split("T")[0]
+              (new Date(Date.parse(f.net) + 86400000)).toISOString().split("T")[0]
           ).then(d => {
             var data = d[0];
             if (data) {
@@ -773,6 +774,8 @@ function processAgency(data) {
     abbrev: (data.abbrev && data.abbrev.split("-")[0]) || "UNK",
     shortname:
       data.name && data.name.length > 11 ? data.abbrev : data.name || "UNK",
+    description: "",
+    founded: "",
     type: agencyType(data.type),
     typeCode: data.type || -1,
     islsp: data.islsp || 0,
@@ -785,7 +788,7 @@ function processAgency(data) {
     icon:
       data.infoURL || (data.infoURLs && data.infoURLs[0])
         ? "https://rocket.watch/logo/" + (data.infoURL || data.infoURLs[0])
-        : ""
+        : "",
   };
   if (!data) return modelAgency;
   if (modelAgency.countryCode.split(",").length > 1) {
