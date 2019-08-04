@@ -1,6 +1,6 @@
 # rocket.watch
 
-[![Build Status](https://travis-ci.com/yasiupl/rocket.watch.svg?branch=master)](https://travis-ci.com/yasiupl/rocket.watch)
+[![Build Status](https://travis-ci.com/yasiupl/rocket.watch.svg?branch=master)](https://travis-ci.com/yasiupl/rocket.watch) [![Discord](https://img.shields.io/discord/150674920869724161)](https://discord.gg/PcJt3mg)
 
 Website for watching rocket launches, otherwise - mom's spagetti.
 
