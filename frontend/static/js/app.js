@@ -1,6 +1,6 @@
 console.log("rocket.watch");
 
-let backendURL = "https://api.rocket.watch"
+let backendURL = "https://api.rocket.watch/"
 
 if (localStorage.getItem("rocketwatch.Settings.v2")) {
   var $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings.v2"));
