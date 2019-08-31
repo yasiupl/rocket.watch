@@ -1,5 +1,7 @@
 console.log("rocket.watch");
 
+const backendURL = "https://api.rocket.watch/"
+
 if (localStorage.getItem("rocketwatch.Settings.v2")) {
   var $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings.v2"));
   if ($settings.dark) {
@@ -1141,7 +1143,7 @@ function QueryString(callback, url) {
 }
 
 function load(query, callback) {
-  getJSON(location.origin + "/api/" + query, function (data) {
+  getJSON(backendURL + query, function (data) {
     if (callback) callback(data);
     return data;
   });
