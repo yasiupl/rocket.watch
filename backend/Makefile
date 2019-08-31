@@ -51,10 +51,7 @@ setup: node_modules config.json
 
 test-e2e:
 	# TODO: fix this
-	#tests/e2e/setup
-	#tests/e2e/smoke-test.sh
-	#node tests/e2e/test-redirect.js
-	#tests/e2e/teardown
+	tests/e2e/smoke-test.sh
 
 test-unit:
 	$(NPM_BINARY_PREFIX)/jest

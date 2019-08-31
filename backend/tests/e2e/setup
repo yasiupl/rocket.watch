@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-# vim: ft=sh
-node index.js 2>&1 >/dev/null &
-sleep 2
