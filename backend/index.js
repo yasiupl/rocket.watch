@@ -8,11 +8,11 @@ const apiRouter = require("./routers/apiRouter");
 
 
 const components = [
-    compression(),
-    defaultHeaders,
-    redirectRouter,
-    proxiesRouter,
-    apiRouter,
+	compression(),
+	defaultHeaders,
+	redirectRouter,
+	proxiesRouter,
+	apiRouter,
 ];
 
 const app = components.reduce((app, c) => app.use(c), express());
