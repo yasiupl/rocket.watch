@@ -2,7 +2,7 @@
 PORT := 9000
 
 NPM_BINARY_PREFIX := ./node_modules/.bin
-SOURCES := index.js src
+SOURCES := index.js src tests
 
 LINTER := $(NPM_BINARY_PREFIX)/eslint
 
