@@ -3,6 +3,8 @@ var Router = express.Router();
 const keys = require("../config.json");
 const webrequest = require("request");
 
+const baseSlug = "/api"
+
 const routes = [
   {
     slug: "/logo/*",
@@ -27,7 +29,7 @@ const routes = [
 ];
 
 const proxy = route =>
-  Router.route(route.slug).get((request, response) =>
+  Router.route(baseSlug + route.slug).get((request, response) =>
     webrequest(
       route.url + request.url.split(route.slug.split("*")[0])[1] + route.suffix
     ).pipe(response)

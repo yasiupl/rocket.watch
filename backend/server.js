@@ -76,7 +76,7 @@ async function processData(data, query, callback) {
           f.agency.type = data.agency.type;
           f.agency.countryCode = data.agency.country_code;
           f.agency.countryFlag =
-            "https://rocket.watch/flag/" +
+            "https://api.rocket.watch/flag/" +
             data.agency.country_code.split(",")[0].toLowerCase();
           f.agency.info = data.agency.info_url;
           f.agency.wiki = data.agency.wiki_url;
@@ -258,7 +258,7 @@ async function processData(data, query, callback) {
 
       if (f.location) {
         f.location.countryFlag =
-          "https://rocket.watch/flag/" +
+          "https://api.rocket.watch/flag/" +
           (
             f.location.countryCode ||
             (f.location.pads[0] &&
@@ -266,7 +266,7 @@ async function processData(data, query, callback) {
               f.location.pads[0].agencies[0].countryCode)
           ).toLowerCase();
         f.location.img =
-          "https://rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
+          "https://api.rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
           f.location.pads[0].latitude +
           "," +
           f.location.pads[0].longitude;
@@ -678,13 +678,13 @@ async function processData(data, query, callback) {
             f.media.comments.push({
               name: "[Weather] JAXA TNSC Daily weather forecast",
               embed:
-                "https://rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/daily.gif",
+                "https://api.rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/daily.gif",
               share: "http://space.jaxa.jp/tnsc/tn-weather/"
             });
             f.media.comments.push({
               name: "[Weather] JAXA TNSC Weekly weather forecast",
               embed:
-                "https://rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/weekly.gif",
+                "https://api.rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/weekly.gif",
               share: "http://space.jaxa.jp/tnsc/tn-weather/"
             });
           }
@@ -781,13 +781,13 @@ function processAgency(data) {
     islsp: data.islsp || 0,
     countryCode: data.countryCode || "UNK",
     countryFlag:
-      "https://rocket.watch/flag/" +
+      "https://api.rocket.watch/flag/" +
       data.countryCode.split(",")[0].toLowerCase(),
     info: data.infoURL || (data.infoURLs && data.infoURLs[0]) || "",
     wiki: (data.wikiURL || "").replace("http://", "https://"),
     icon:
       data.infoURL || (data.infoURLs && data.infoURLs[0])
-        ? "https://rocket.watch/logo/" + (data.infoURL || data.infoURLs[0])
+        ? "https://api.rocket.watch/logo/" + (data.infoURL || data.infoURLs[0])
         : "",
   };
   if (!data) return modelAgency;
@@ -894,12 +894,12 @@ function processPad(data) {
       "," +
       data.longitude,
     img:
-      "https://rocket.watch/map/?zoom=16&maptype=satellite&size=256x256&scale=1&center=" +
+      "https://api.rocket.watch/map/?zoom=16&maptype=satellite&size=256x256&scale=1&center=" +
       data.latitude +
       "," +
       data.longitude,
     icon:
-      "https://rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
+      "https://api.rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
       data.latitude +
       "," +
       data.longitude,
@@ -921,7 +921,7 @@ function processLocation(data) {
     name: data.name || "Unknown",
     countryCode: data.countrycode || "UNK",
     countryFlag:
-      "https://rocket.watch/flag/" +
+      "https://api.rocket.watch/flag/" +
       data.countrycode.split(",")[0].toLowerCase(),
     map:
       "https://www.google.com/maps/embed/v1/place?key=" +
@@ -929,7 +929,7 @@ function processLocation(data) {
       "&maptype=satellite&q=Launch+Centre+" +
       data.name.replace(" ", "+"),
     img:
-      "https://rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=Launch+Centre+" +
+      "https://api.rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=Launch+Centre+" +
       data.name.replace(" ", "+"),
     info: data.infoURL || data.infoURLs[0] || "",
     wiki: (data.wikiURL || "").replace("http://", "https://")
