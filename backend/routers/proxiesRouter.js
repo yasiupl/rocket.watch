@@ -25,11 +25,6 @@ const routes = [
     slug: "/rocket/*",
     url: "https://s3.amazonaws.com/launchlibrary/RocketImages/",
     suffix: ""
-  },
-  {
-    slug: "/proxy/*",
-    url: "",
-    suffix: ""
   }
 ];
 
