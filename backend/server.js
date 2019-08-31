@@ -1,6 +1,9 @@
 const Storage = require("node-storage");
 const request = require("request");
 
+const agencyType = require("./src/scrape/agencyType.js")
+const agencyShortName = require("./src/scrape/agencyShortName.js")
+
 const keys = require("./config.json");
 const sources = require("./data/sources.json");
 const storage = new Storage("./cache.json");
@@ -9,238 +12,7 @@ const envargs = process.argv.slice(2);
 
 const baseurl = "https://launchlibrary.net/1.4.1/";
 
-// agencies shortname
-const e = [
-  "Unknown",
-  "BSA",
-  "CIDA-E",
-  "AEM",
-  "ASAL",
-  "AP-MCSTA",
-  "APRSAF",
-  "APSCO",
-  "ALR",
-  "AMAKA",
-  "BIRA",
-  "ABAE",
-  "AEB",
-  "UKSA",
-  "ABAE",
-  "SRI-BAS",
-  "CSA",
-  "CNSA",
-  "CCE",
-  "CRISP",
-  "CSIRO",
-  "CCSDS",
-  "COSPAR",
-  "HSA",
-  "CSO",
-  "DRC",
-  "DTU",
-  "ESA",
-  "GISTDA",
-  "DLR",
-  "HSO",
-  "ISRO",
-  "ISARS",
-  "INTA",
-  "ISA",
-  "ISA",
-  "ASI",
-  "JAXA",
-  "NSA",
-  "SRI",
-  "KCST",
-  "KARI",
-  "LSA",
-  "ANGKASA",
-  "NASA",
-  "NARSS",
-  "CNES",
-  "CONIDA",
-  "CNIE",
-  "CONAE",
-  "LAPAN",
-  "NRSC",
-  "CNT",
-  "USSRA",
-  "HKAY",
-  "NSPO",
-  "NASRDA",
-  "SRON",
-  "NRS",
-  "SUPARCO",
-  "FTC SO",
-  "ASR",
-  "CRTS",
-  "RFSA",
-  "SLSA",
-  "TUBITAK UZAY",
-  "CCCP",
-  "SPARRSP",
-  "CBK-PAN",
-  "SANSA",
-  "KACST-SRI",
-  "SSO",
-  "TNSA",
-  "UNOOSA",
-  "SSO",
-  "UNCOPUOS",
-  "SNSB",
-  "OHB System",
-  "THALES",
-  "JSC-ISS",
-  "Boeing",
-  "EADS",
-  "LMT",
-  "SSL",
-  "Amsat",
-  "ATSB",
-  "BLL",
-  "BAE",
-  "CASC",
-  "FSED",
-  "FSS",
-  "GE",
-  "HSD",
-  "HAC",
-  "IHI",
-  "IAI",
-  "KhSC",
-  "LA",
-  "MHI",
-  "NOC",
-  "OSC",
-  "PHILCO",
-  "ROI",
-  "RSC",
-  "SPAR",
-  "SpaceDev",
-  "GD",
-  "SSTL",
-  "SA",
-  "TAI",
-  "TRW",
-  "TsSKB-Progress",
-  "OKB-586",
-  "INVAP",
-  "",
-  "ASA",
-  "EADS",
-  "ELS",
-  "ILS",
-  "ISCK",
-  "SQ",
-  "SpaceX",
-  "Sea Launch",
-  "Starsem SA",
-  "ULA",
-  "PA Yuzhmash",
-  "DSI",
-  "RI",
-  "PRI",
-  "TUI",
-  "RUAG Space",
-  "Andrews Space",
-  "KDA",
-  "Aerojet",
-  "AMROC",
-  "Rocketdyne",
-  "AARC",
-  "REL",
-  "Snecma",
-  "Armadillo",
-  "Bigelow",
-  "BO",
-  "CSU",
-  "PlanetSpace",
-  "Scaled",
-  "XCOR",
-  "Canadian Arrow",
-  "RL",
-  "SSLC",
-  "IOS",
-  "Masten",
-  "SSC",
-  "UPA",
-  "MDC",
-  "NP",
-  "",
-  "ATK",
-  "BAC",
-  "Chrysler",
-  "Avio S.p.A",
-  "RAAF",
-  "USAF",
-  "PLA",
-  "VKO",
-  "",
-  "US Army",
-  "US Navy",
-  "SF",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "MOD_RUS",
-  "",
-  "CGWIC",
-  "AIRDS",
-  "OA",
-  "",
-  "NRO",
-  "KazCosmos",
-  "Unknown",
-  "CASIC",
-  "",
-  "POLSA",
-  "GKLSJV",
-  "GST",
-  "CASC",
-  "ACL",
-  "USA",
-  "LSOC",
-  "VKS",
-  "ExPace",
-  "SNL",
-  "LL",
-  "LMSO",
-  "MBRSC"
-];
 
-// agencies type
-const a = [
-  "",
-  "Government",
-  "Multinational",
-  "Commercial",
-  "Educational",
-  "Private",
-  "Unknown"
-];
-
-sources.data = {
-  api: keys,
-  embed_blacklist: [
-    "twitter.com",
-    "spacex.com",
-    "youtube.com",
-    "rocketwatch.yasiu.pl",
-    "online.roscosmos.ru",
-    "google.com",
-    "filedropper.com",
-    "spacenews.com",
-    "aviationweek.com",
-    "medium.com",
-    "ulalaunch.com",
-    "arianespace.com",
-    "forum.nasaspaceflight.com"
-  ]
-};
 
 function load(query, callback) {
   callback = callback || function() {};
@@ -288,6 +60,7 @@ async function processData(data, query, callback) {
     // override /rocket
     for (var g in data.rockets) {
       f = processRocket(data.rockets[g]);
+      /*
       if (mode.match("verbose")) {
         await getJSON(
           "https://spacelaunchnow.me/3.0.0/launchers/" + f.id + "/?format=json"
@@ -310,7 +83,7 @@ async function processData(data, query, callback) {
           f.agency.icon = data.agency.logo_url;
         });
       }
-
+      */
       data.rockets[g] = f;
     }
 
@@ -338,7 +111,7 @@ async function processData(data, query, callback) {
           getJSON(
             "https://graph.facebook.com/v2.11/" +
               f.social.facebook.split("/")[0] +
-              "/posts?fields=message%2Ccreated_time%2Cid%2Clink%2Cfull_picture&limit=5&access_token=" + sources.data.api.facebook
+              "/posts?fields=message%2Ccreated_time%2Cid%2Clink%2Cfull_picture&limit=5&access_token=" + keys.facebook
           ).then(async q => {
             f.news.facebook = f.news.facebook || [];
             for (var r in q.data) {
@@ -357,7 +130,7 @@ async function processData(data, query, callback) {
         if (f.social.youtube) {
           await getJSON(
             "https://www.googleapis.com/youtube/v3/search?key=" +
-              sources.data.api.google +
+              keys.google +
               "&part=snippet&order=date&maxResults=1&type=video&channelId=" +
               f.social.youtube
           ).then(r => {
@@ -506,7 +279,7 @@ async function processData(data, query, callback) {
         ).replace("http://", "https://");
         f.location.map =
           "https://www.google.com/maps/embed/v1/place?key=" +
-          sources.data.api.google +
+          keys.google +
           "&maptype=satellite&q=" +
           f.location.pads[0].latitude +
           "," +
@@ -701,9 +474,9 @@ async function processData(data, query, callback) {
             "https://api.spacexdata.com/v2/launches" +
               (f.tolaunch > 0 ? "/upcoming" : "") +
               "?start=" +
-              ISODateString(Date.parse(f.net) - 86400000).split("T")[0] +
+              (new Date(Date.parse(f.net) - 86400000)).toISOString().split("T")[0] +
               "&final=" +
-              ISODateString(Date.parse(f.net) + 86400000).split("T")[0]
+              (new Date(Date.parse(f.net) + 86400000)).toISOString().split("T")[0]
           ).then(d => {
             var data = d[0];
             if (data) {
@@ -831,7 +604,7 @@ async function processData(data, query, callback) {
             if (url.split("?v=")[1] != undefined) {
               await getJSON(
                 "https://www.googleapis.com/youtube/v3/videos?key=" +
-                  sources.data.api.google +
+                  keys.google +
                   "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&id=" +
                   url.split("?v=")[1]
               ).then(q => {
@@ -867,7 +640,7 @@ async function processData(data, query, callback) {
 
         /* else {
           if ([3, 4, 7].indexOf(f.statuscode) == -1) {
-            await getJSON("https://www.googleapis.com/youtube/v3/search?key=" + sources.data.api.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || sources.norminal.youtube)).then(r => {
+            await getJSON("https://www.googleapis.com/youtube/v3/search?key=" + keys.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || sources.norminal.youtube)).then(r => {
               for (var q in r.items) {
                 youtube = r.items[q];
                 if (Date.parse(youtube.snippet.publishedAt) >= (Date.now() - 86400000)) {
@@ -1001,7 +774,9 @@ function processAgency(data) {
     abbrev: (data.abbrev && data.abbrev.split("-")[0]) || "UNK",
     shortname:
       data.name && data.name.length > 11 ? data.abbrev : data.name || "UNK",
-    type: a[data.type] || "Unknown",
+    description: "",
+    founded: "",
+    type: agencyType(data.type),
     typeCode: data.type || -1,
     islsp: data.islsp || 0,
     countryCode: data.countryCode || "UNK",
@@ -1013,11 +788,11 @@ function processAgency(data) {
     icon:
       data.infoURL || (data.infoURLs && data.infoURLs[0])
         ? "https://rocket.watch/logo/" + (data.infoURL || data.infoURLs[0])
-        : ""
+        : "",
   };
   if (!data) return modelAgency;
   if (modelAgency.countryCode.split(",").length > 1) {
-    modelAgency.countryCode = a[modelAgency.typeCode];
+    modelAgency.countryCode = agencyType(modelAgency.typeCode);
     modelAgency.countryFlag = "https://rocket.watch/res/multinational.png";
   }
   modelAgency.social = {};
@@ -1093,7 +868,7 @@ function processRocket(data) {
     for (var i in data.family.agencies) {
       modelRocket.family.agencies[i] = {
         id: parseInt(data.family.agencies[i]) || -1,
-        name: e[data.family.agencies[i]]
+        name: agencyShortName(data.family.agencies[i])
       };
     }
   }
@@ -1113,7 +888,7 @@ function processPad(data) {
     wiki: (data.wikiURL || "").replace("http://", "https://"),
     map:
       "https://www.google.com/maps/embed/v1/place?key=" +
-      sources.data.api.google +
+      keys.google +
       "&maptype=satellite&q=" +
       data.latitude +
       "," +
@@ -1150,7 +925,7 @@ function processLocation(data) {
       data.countrycode.split(",")[0].toLowerCase(),
     map:
       "https://www.google.com/maps/embed/v1/place?key=" +
-      sources.data.api.google +
+      keys.google +
       "&maptype=satellite&q=Launch+Centre+" +
       data.name.replace(" ", "+"),
     img:
@@ -1198,48 +973,7 @@ function getJSON(url) {
   });
 }
 
-function ReadableDateString(f) {
-  var e = new Date(f || new Date());
-  var d =
-    ("0" + e.getDate()).slice(-2) +
-    "/" +
-    ("0" + (e.getMonth() + 1)).slice(-2) +
-    "/" +
-    e.getFullYear() +
-    " " +
-    ("0" + e.getHours()).slice(-2) +
-    ":" +
-    ("0" + e.getMinutes()).slice(-2) +
-    ":" +
-    ("0" + e.getSeconds()).slice(-2);
-  return d;
-}
-
-function ISODateString(c) {
-  c = new Date(c || new Date());
-
-  function d(a) {
-    return a < 10 ? "0" + a : a;
-  }
-  return (
-    c.toISOString() ||
-    c.getUTCFullYear() +
-      "-" +
-      d(c.getUTCMonth() + 1) +
-      "-" +
-      d(c.getUTCDate()) +
-      "T" +
-      d(c.getUTCHours()) +
-      ":" +
-      d(c.getUTCMinutes()) +
-      ":" +
-      d(c.getUTCSeconds()) +
-      "Z"
-  );
-}
-
 module.exports = {
   load: load,
-  ReadableDateString: ReadableDateString,
   storage: storage
 };
