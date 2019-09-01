@@ -15,7 +15,7 @@ const baseurl = "https://launchlibrary.net/1.4.1/";
 
 
 function load(query, callback) {
-  callback = callback || function() {};
+  callback = callback || function () { };
   var queryParams = QueryString(query);
   var query = query.replace(/(\?|&)(page=)([0-9])/g, "");
   var format = queryParams.format || "undefined";
@@ -60,7 +60,7 @@ async function processData(data, query, callback) {
     // override /rocket
     for (var g in data.rockets) {
       f = processRocket(data.rockets[g]);
-      /*
+
       if (mode.match("verbose")) {
         await getJSON(
           "https://spacelaunchnow.me/3.0.0/launchers/" + f.id + "/?format=json"
@@ -76,14 +76,14 @@ async function processData(data, query, callback) {
           f.agency.type = data.agency.type;
           f.agency.countryCode = data.agency.country_code;
           f.agency.countryFlag =
-            "https://rocket.watch/flag/" +
+            "https://api.rocket.watch/flag/" +
             data.agency.country_code.split(",")[0].toLowerCase();
           f.agency.info = data.agency.info_url;
           f.agency.wiki = data.agency.wiki_url;
           f.agency.icon = data.agency.logo_url;
         });
       }
-      */
+
       data.rockets[g] = f;
     }
 
@@ -110,8 +110,8 @@ async function processData(data, query, callback) {
         if (f.social.facebook) {
           getJSON(
             "https://graph.facebook.com/v2.11/" +
-              f.social.facebook.split("/")[0] +
-              "/posts?fields=message%2Ccreated_time%2Cid%2Clink%2Cfull_picture&limit=5&access_token=" + keys.facebook
+            f.social.facebook.split("/")[0] +
+            "/posts?fields=message%2Ccreated_time%2Cid%2Clink%2Cfull_picture&limit=5&access_token=" + keys.facebook
           ).then(async q => {
             f.news.facebook = f.news.facebook || [];
             for (var r in q.data) {
@@ -130,9 +130,9 @@ async function processData(data, query, callback) {
         if (f.social.youtube) {
           await getJSON(
             "https://www.googleapis.com/youtube/v3/search?key=" +
-              keys.google +
-              "&part=snippet&order=date&maxResults=1&type=video&channelId=" +
-              f.social.youtube
+            keys.google +
+            "&part=snippet&order=date&maxResults=1&type=video&channelId=" +
+            f.social.youtube
           ).then(r => {
             f.news.youtube = f.news.youtube || [];
             for (var q in r.items) {
@@ -161,7 +161,7 @@ async function processData(data, query, callback) {
                   "https://www.reddit.com" + q.data.children[r].data.permalink,
                 img:
                   q.data.children[r].data.preview &&
-                  q.data.children[r].data.preview.images[0].source.url
+                    q.data.children[r].data.preview.images[0].source.url
                     ? q.data.children[r].data.preview.images[0].source.url
                     : ""
               });
@@ -246,8 +246,8 @@ async function processData(data, query, callback) {
       ) {
         f.agency = processAgency(
           f.lsp ||
-            f.rocket.agencies[0] ||
-            (f.location.pads[0] && f.location.pads[0].agencies[0])
+          f.rocket.agencies[0] ||
+          (f.location.pads[0] && f.location.pads[0].agencies[0])
         );
         delete f.lsp;
       }
@@ -258,7 +258,7 @@ async function processData(data, query, callback) {
 
       if (f.location) {
         f.location.countryFlag =
-          "https://rocket.watch/flag/" +
+          "https://api.rocket.watch/flag/" +
           (
             f.location.countryCode ||
             (f.location.pads[0] &&
@@ -266,7 +266,7 @@ async function processData(data, query, callback) {
               f.location.pads[0].agencies[0].countryCode)
           ).toLowerCase();
         f.location.img =
-          "https://rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
+          "https://api.rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
           f.location.pads[0].latitude +
           "," +
           f.location.pads[0].longitude;
@@ -301,7 +301,7 @@ async function processData(data, query, callback) {
           twitter: []
         };
 
-        addSource = async function(name, url, fallback) {
+        addSource = async function (name, url, fallback) {
           url = (url || "").replace("http://", "https://");
 
           if (url.match(".reddit.com/r/")) {
@@ -455,7 +455,7 @@ async function processData(data, query, callback) {
               addSource(
                 custom[v].name,
                 custom[v].url || custom[v].embed || custom[v].share,
-                function() {
+                function () {
                   f.media.info.push({
                     name: custom[v].name,
                     embed: custom[v].embed || custom[v].url,
@@ -472,11 +472,11 @@ async function processData(data, query, callback) {
 
           await getJSON(
             "https://api.spacexdata.com/v2/launches" +
-              (f.tolaunch > 0 ? "/upcoming" : "") +
-              "?start=" +
-              (new Date(Date.parse(f.net) - 86400000)).toISOString().split("T")[0] +
-              "&final=" +
-              (new Date(Date.parse(f.net) + 86400000)).toISOString().split("T")[0]
+            (f.tolaunch > 0 ? "/upcoming" : "") +
+            "?start=" +
+            (new Date(Date.parse(f.net) - 86400000)).toISOString().split("T")[0] +
+            "&final=" +
+            (new Date(Date.parse(f.net) + 86400000)).toISOString().split("T")[0]
           ).then(d => {
             var data = d[0];
             if (data) {
@@ -562,8 +562,8 @@ async function processData(data, query, callback) {
 
         await getJSON(
           "https://www.reddit.com/r/" +
-            (f.agency.social.reddit || sources.norminal.reddit) +
-            "/search.json?sort=relevance&restrict_sr=on&q=" + encodeURIComponent(f.mission)
+          (f.agency.social.reddit || sources.norminal.reddit) +
+          "/search.json?sort=relevance&restrict_sr=on&q=" + encodeURIComponent(f.mission)
         ).then(r => {
           if (r && r.data) {
             for (var q in r.data.children) {
@@ -604,9 +604,9 @@ async function processData(data, query, callback) {
             if (url.split("?v=")[1] != undefined) {
               await getJSON(
                 "https://www.googleapis.com/youtube/v3/videos?key=" +
-                  keys.google +
-                  "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&id=" +
-                  url.split("?v=")[1]
+                keys.google +
+                "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&id=" +
+                url.split("?v=")[1]
               ).then(q => {
                 if (q.items && q.items[0]) {
                   youtube = q.items[0];
@@ -621,10 +621,10 @@ async function processData(data, query, callback) {
                 } else {
                   console.log(
                     "Youtube video " +
-                      url.split("?v=")[1] +
-                      " of launch " +
-                      f.id +
-                      " not found"
+                    url.split("?v=")[1] +
+                    " of launch " +
+                    f.id +
+                    " not found"
                   );
                 }
               });
@@ -636,127 +636,126 @@ async function processData(data, query, callback) {
               addSource(url.split("://")[1].split("/")[0], url);
             }
           }
-        }
-
-        /* else {
-          if ([3, 4, 7].indexOf(f.statuscode) == -1) {
-            await getJSON("https://www.googleapis.com/youtube/v3/search?key=" + keys.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || sources.norminal.youtube)).then(r => {
-              for (var q in r.items) {
-                youtube = r.items[q];
-                if (Date.parse(youtube.snippet.publishedAt) >= (Date.now() - 86400000)) {
-                  f.media.video.unshift({
-                    name: "[YouTube] " + youtube.snippet.title,
-                    embed: "https://www.youtube.com/embed/" + youtube.id.videoId + "?rel=0&autoplay=1",
-                    share: "https://www.youtube.com/watch?v=" + youtube.id.videoId
-                  });
-                }
-              }
-            });
-          }
-        } */
-
-        if ([3, 4, 7].indexOf(f.statuscode) == -1 && f.tolaunch > 0) {
-          if (f.location.countryCode == "USA") {
-            /*
-            await getJSON("https://forecast.weather.gov/MapClick.php?unit=1&lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude + "&FcstType=json").then(r => {
-              if (r && r.currentobservation.name) {
-                f.media.comments.push({
-                  name: "[Weather] " + r.currentobservation.name + " weather forecast",
-                  embed: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude,
-                  share: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude
-                });
-                f.media.comments.push({
-                  name: "[Weather] " + r.currentobservation.name + " radar imagery",
-                  embed: "https://radar.weather.gov/lite/N0R/" + r.location.radar.split("K")[1] + "_loop.gif",
-                  share: r.credit
+        } else if ([3, 4, 7].indexOf(f.statuscode) == -1) {
+          await getJSON("https://www.googleapis.com/youtube/v3/search?key=" + keys.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || sources.norminal.youtube)).then(r => {
+            for (var q in r.items) {
+              youtube = r.items[q];
+              if (Date.parse(youtube.snippet.publishedAt) >= (Date.now() - 86400000)) {
+                f.media.video.unshift({
+                  name: "[YouTube] " + youtube.snippet.title,
+                  embed: "https://www.youtube.com/embed/" + youtube.id.videoId + "?rel=0&autoplay=1",
+                  share: "https://www.youtube.com/watch?v=" + youtube.id.videoId
                 });
               }
-            })
-            */
-          }
-          if (f.location.id == 9) {
-            f.media.comments.push({
-              name: "[Weather] JAXA TNSC Daily weather forecast",
-              embed:
-                "https://rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/daily.gif",
-              share: "http://space.jaxa.jp/tnsc/tn-weather/"
-            });
-            f.media.comments.push({
-              name: "[Weather] JAXA TNSC Weekly weather forecast",
-              embed:
-                "https://rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/weekly.gif",
-              share: "http://space.jaxa.jp/tnsc/tn-weather/"
-            });
-          }
-        }
-
-        if (f.agency.social.reddit) {
-          f.media.button.push({
-            name: "/r/" + f.agency.social.reddit + " subreddit",
-            url: "https://www.reddit.com/r/" + f.agency.social.reddit
+            }
           });
         }
       }
 
-      if (format.match("stats")) {
-        data.stats = data.stats || {};
-        data.stats.byStatus = data.stats.byStatus || {};
-        data.stats.byStatus[f.statuscode] =
-          data.stats.byStatus[f.statuscode] || [];
-        data.stats.byStatus[f.statuscode].push(f.id);
-        data.stats.byYear = data.stats.byYear || {};
+      if ([3, 4, 7].indexOf(f.statuscode) == -1 && f.tolaunch > 0) {
+        if (f.location.countryCode == "USA") {
 
-        data.rockets = data.rockets || [];
-        var rocket = f.name.split(" |")[0].replace("(?)", "");
-
-        if (
-          !data.rockets.find(function(a) {
-            if (typeof a == "object") {
-              return a.name.match(rocket);
-            } else {
-              return a.match(rocket);
+          await getJSON("https://forecast.weather.gov/MapClick.php?unit=1&lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude + "&FcstType=json").then(r => {
+            if (r && r.currentobservation.name) {
+              f.media.comments.push({
+                name: "[Weather] " + r.currentobservation.name + " weather forecast",
+                embed: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude,
+                share: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude
+              });
+              f.media.comments.push({
+                name: "[Weather] " + r.currentobservation.name + " radar imagery",
+                embed: "https://radar.weather.gov/lite/N0R/" + r.location.radar.split("K")[1] + "_loop.gif",
+                share: r.credit
+              });
             }
-          }) ||
-          0
-        ) {
-          data.rockets.push(f.rocket || f.name.split(" |")[0]);
+          })
         }
+        // Mixed content without working proxy
+        /*
+        if (f.location.id == 9) {
+          f.media.comments.push({
+            name: "[Weather] JAXA TNSC Daily weather forecast",
+            embed:
+              "https://api.rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/daily.gif",
+            share: "http://space.jaxa.jp/tnsc/tn-weather/"
+          });
+          f.media.comments.push({
+            name: "[Weather] JAXA TNSC Weekly weather forecast",
+            embed:
+              "https://api.rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/weekly.gif",
+            share: "http://space.jaxa.jp/tnsc/tn-weather/"
+          });
+        }
+        */
+      }
 
-        //BUG: NIE MAM POJĘCIA JAK TO DZIAŁA
-        var b = new Date(data.launches[g].net);
-        if (!data.stats.byYear[b.getUTCFullYear()]) {
-          for (
-            i = b.getUTCFullYear();
-            i < new Date().getUTCFullYear() + 1;
-            i++
-          ) {
-            data.stats.byYear[i] = data.stats.byYear[i] || {
-              "1": 0,
-              "2": 0,
-              "3": 0,
-              "4": 0
-            };
-            if (i == b.getUTCFullYear()) {
-              data.stats.byYear[b.getUTCFullYear()][f.statuscode]++;
-            }
+      if (f.agency.social.reddit) {
+        f.media.button.push({
+          name: "/r/" + f.agency.social.reddit + " subreddit",
+          url: "https://www.reddit.com/r/" + f.agency.social.reddit
+        });
+      }
+    }
+
+    if (format.match("stats")) {
+      data.stats = data.stats || {};
+      data.stats.byStatus = data.stats.byStatus || {};
+      data.stats.byStatus[f.statuscode] =
+        data.stats.byStatus[f.statuscode] || [];
+      data.stats.byStatus[f.statuscode].push(f.id);
+      data.stats.byYear = data.stats.byYear || {};
+
+      data.rockets = data.rockets || [];
+      var rocket = f.name.split(" |")[0].replace("(?)", "");
+
+      if (
+        !data.rockets.find(function (a) {
+          if (typeof a == "object") {
+            return a.name.match(rocket);
+          } else {
+            return a.match(rocket);
           }
-        } else {
-          data.stats.byYear[b.getUTCFullYear()][f.statuscode]++;
-        }
+        }) ||
+        0
+      ) {
+        data.rockets.push(f.rocket || f.name.split(" |")[0]);
       }
 
-      if (f.tolaunch < 86400 && f.tolaunch > -86400) {
-        //10 minutes
-        data.expire = Date.now() + 10 * 60 * 1000;
-        if (f.tolaunch < 3600 && f.tolaunch > -3600) {
-          //1 minute
-          data.expire = Date.now() + 60 * 1000;
+      //BUG: NIE MAM POJĘCIA JAK TO DZIAŁA
+      var b = new Date(data.launches[g].net);
+      if (!data.stats.byYear[b.getUTCFullYear()]) {
+        for (
+          i = b.getUTCFullYear();
+          i < new Date().getUTCFullYear() + 1;
+          i++
+        ) {
+          data.stats.byYear[i] = data.stats.byYear[i] || {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0
+          };
+          if (i == b.getUTCFullYear()) {
+            data.stats.byYear[b.getUTCFullYear()][f.statuscode]++;
+          }
         }
+      } else {
+        data.stats.byYear[b.getUTCFullYear()][f.statuscode]++;
       }
-      if (query.match("/next/")) {
+    }
+
+    if (f.tolaunch < 86400 && f.tolaunch > -86400) {
+      //10 minutes
+      data.expire = Date.now() + 10 * 60 * 1000;
+      if (f.tolaunch < 3600 && f.tolaunch > -3600) {
+        //1 minute
         data.expire = Date.now() + 60 * 1000;
       }
     }
+    if (query.match("/next/")) {
+      data.expire = Date.now() + 60 * 1000;
+    }
+
 
     if (envargs.indexOf("dev") == -1) storage.put(query, data);
     callback(data);
@@ -781,13 +780,13 @@ function processAgency(data) {
     islsp: data.islsp || 0,
     countryCode: data.countryCode || "UNK",
     countryFlag:
-      "https://rocket.watch/flag/" +
+      "https://api.rocket.watch/flag/" +
       data.countryCode.split(",")[0].toLowerCase(),
     info: data.infoURL || (data.infoURLs && data.infoURLs[0]) || "",
     wiki: (data.wikiURL || "").replace("http://", "https://"),
     icon:
       data.infoURL || (data.infoURLs && data.infoURLs[0])
-        ? "https://rocket.watch/logo/" + (data.infoURL || data.infoURLs[0])
+        ? "https://api.rocket.watch/logo/" + (data.infoURL || data.infoURLs[0])
         : "",
   };
   if (!data) return modelAgency;
@@ -797,17 +796,17 @@ function processAgency(data) {
   }
   modelAgency.social = {};
   modelAgency.social.youtube = (
-    data.infoURLs.find(function(a) {
+    data.infoURLs.find(function (a) {
       return a.match("youtube.com/channel/");
     }) || ""
   ).split("youtube.com/channel/")[1];
   modelAgency.social.facebook = (
-    data.infoURLs.find(function(a) {
+    data.infoURLs.find(function (a) {
       return a.match("facebook.com/");
     }) || ""
   ).split("facebook.com/")[1];
   modelAgency.social.twitter = (
-    data.infoURLs.find(function(a) {
+    data.infoURLs.find(function (a) {
       return a.match("twitter.com/");
     }) || ""
   ).split("twitter.com/")[1];
@@ -894,12 +893,12 @@ function processPad(data) {
       "," +
       data.longitude,
     img:
-      "https://rocket.watch/map/?zoom=16&maptype=satellite&size=256x256&scale=1&center=" +
+      "https://api.rocket.watch/map/?zoom=16&maptype=satellite&size=256x256&scale=1&center=" +
       data.latitude +
       "," +
       data.longitude,
     icon:
-      "https://rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
+      "https://api.rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
       data.latitude +
       "," +
       data.longitude,
@@ -921,7 +920,7 @@ function processLocation(data) {
     name: data.name || "Unknown",
     countryCode: data.countrycode || "UNK",
     countryFlag:
-      "https://rocket.watch/flag/" +
+      "https://api.rocket.watch/flag/" +
       data.countrycode.split(",")[0].toLowerCase(),
     map:
       "https://www.google.com/maps/embed/v1/place?key=" +
@@ -929,7 +928,7 @@ function processLocation(data) {
       "&maptype=satellite&q=Launch+Centre+" +
       data.name.replace(" ", "+"),
     img:
-      "https://rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=Launch+Centre+" +
+      "https://api.rocket.watch/map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=Launch+Centre+" +
       data.name.replace(" ", "+"),
     info: data.infoURL || data.infoURLs[0] || "",
     wiki: (data.wikiURL || "").replace("http://", "https://")
@@ -965,7 +964,7 @@ function getJSON(url) {
         url: url,
         json: true
       },
-      function(error, response, body) {
+      function (error, response, body) {
         if (error) reject(error);
         resolve(body);
       }
