@@ -650,50 +650,51 @@ async function processData(data, query, callback) {
             }
           });
         }
-      }
 
-      if ([3, 4, 7].indexOf(f.statuscode) == -1 && f.tolaunch > 0) {
-        if (f.location.countryCode == "USA") {
 
-          await getJSON("https://forecast.weather.gov/MapClick.php?unit=1&lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude + "&FcstType=json").then(r => {
-            if (r && r.currentobservation.name) {
-              f.media.comments.push({
-                name: "[Weather] " + r.currentobservation.name + " weather forecast",
-                embed: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude,
-                share: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude
-              });
-              f.media.comments.push({
-                name: "[Weather] " + r.currentobservation.name + " radar imagery",
-                embed: "https://radar.weather.gov/lite/N0R/" + r.location.radar.split("K")[1] + "_loop.gif",
-                share: r.credit
-              });
-            }
-          })
+        if ([3, 4, 7].indexOf(f.statuscode) == -1 && f.tolaunch > 0) {
+          if (f.location.countryCode == "USA") {
+
+            await getJSON("https://forecast.weather.gov/MapClick.php?unit=1&lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude + "&FcstType=json").then(r => {
+              if (r && r.currentobservation.name) {
+                f.media.comments.push({
+                  name: "[Weather] " + r.currentobservation.name + " weather forecast",
+                  embed: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude,
+                  share: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude
+                });
+                f.media.comments.push({
+                  name: "[Weather] " + r.currentobservation.name + " radar imagery",
+                  embed: "https://radar.weather.gov/lite/N0R/" + r.location.radar.split("K")[1] + "_loop.gif",
+                  share: r.credit
+                });
+              }
+            })
+          }
+          // Mixed content without working proxy
+          /*
+          if (f.location.id == 9) {
+            f.media.comments.push({
+              name: "[Weather] JAXA TNSC Daily weather forecast",
+              embed:
+                "https://api.rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/daily.gif",
+              share: "http://space.jaxa.jp/tnsc/tn-weather/"
+            });
+            f.media.comments.push({
+              name: "[Weather] JAXA TNSC Weekly weather forecast",
+              embed:
+                "https://api.rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/weekly.gif",
+              share: "http://space.jaxa.jp/tnsc/tn-weather/"
+            });
+          }
+          */
         }
-        // Mixed content without working proxy
-        /*
-        if (f.location.id == 9) {
-          f.media.comments.push({
-            name: "[Weather] JAXA TNSC Daily weather forecast",
-            embed:
-              "https://api.rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/daily.gif",
-            share: "http://space.jaxa.jp/tnsc/tn-weather/"
-          });
-          f.media.comments.push({
-            name: "[Weather] JAXA TNSC Weekly weather forecast",
-            embed:
-              "https://api.rocket.watch/proxy/http://space.jaxa.jp/tnsc/tn-weather/data/weekly.gif",
-            share: "http://space.jaxa.jp/tnsc/tn-weather/"
+
+        if (f.agency.social.reddit) {
+          f.media.button.push({
+            name: "/r/" + f.agency.social.reddit + " subreddit",
+            url: "https://www.reddit.com/r/" + f.agency.social.reddit
           });
         }
-        */
-      }
-
-      if (f.agency.social.reddit) {
-        f.media.button.push({
-          name: "/r/" + f.agency.social.reddit + " subreddit",
-          url: "https://www.reddit.com/r/" + f.agency.social.reddit
-        });
       }
     }
 
