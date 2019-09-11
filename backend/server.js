@@ -696,67 +696,66 @@ async function processData(data, query, callback) {
           });
         }
       }
-    }
 
-    if (format.match("stats")) {
-      data.stats = data.stats || {};
-      data.stats.byStatus = data.stats.byStatus || {};
-      data.stats.byStatus[f.statuscode] =
-        data.stats.byStatus[f.statuscode] || [];
-      data.stats.byStatus[f.statuscode].push(f.id);
-      data.stats.byYear = data.stats.byYear || {};
+      if (format.match("stats")) {
+        data.stats = data.stats || {};
+        data.stats.byStatus = data.stats.byStatus || {};
+        data.stats.byStatus[f.statuscode] =
+          data.stats.byStatus[f.statuscode] || [];
+        data.stats.byStatus[f.statuscode].push(f.id);
+        data.stats.byYear = data.stats.byYear || {};
 
-      data.rockets = data.rockets || [];
-      var rocket = f.name.split(" |")[0].replace("(?)", "");
+        data.rockets = data.rockets || [];
+        var rocket = f.name.split(" |")[0].replace("(?)", "");
 
-      if (
-        !data.rockets.find(function (a) {
-          if (typeof a == "object") {
-            return a.name.match(rocket);
-          } else {
-            return a.match(rocket);
-          }
-        }) ||
-        0
-      ) {
-        data.rockets.push(f.rocket || f.name.split(" |")[0]);
-      }
-
-      //BUG: NIE MAM POJĘCIA JAK TO DZIAŁA
-      var b = new Date(data.launches[g].net);
-      if (!data.stats.byYear[b.getUTCFullYear()]) {
-        for (
-          i = b.getUTCFullYear();
-          i < new Date().getUTCFullYear() + 1;
-          i++
+        if (
+          !data.rockets.find(function (a) {
+            if (typeof a == "object") {
+              return a.name.match(rocket);
+            } else {
+              return a.match(rocket);
+            }
+          }) ||
+          0
         ) {
-          data.stats.byYear[i] = data.stats.byYear[i] || {
-            "1": 0,
-            "2": 0,
-            "3": 0,
-            "4": 0
-          };
-          if (i == b.getUTCFullYear()) {
-            data.stats.byYear[b.getUTCFullYear()][f.statuscode]++;
-          }
+          data.rockets.push(f.rocket || f.name.split(" |")[0]);
         }
-      } else {
-        data.stats.byYear[b.getUTCFullYear()][f.statuscode]++;
-      }
-    }
 
-    if (f.tolaunch < 86400 && f.tolaunch > -86400) {
-      //10 minutes
-      data.expire = Date.now() + 10 * 60 * 1000;
-      if (f.tolaunch < 3600 && f.tolaunch > -3600) {
-        //1 minute
+        //BUG: NIE MAM POJĘCIA JAK TO DZIAŁA
+        var b = new Date(data.launches[g].net);
+        if (!data.stats.byYear[b.getUTCFullYear()]) {
+          for (
+            i = b.getUTCFullYear();
+            i < new Date().getUTCFullYear() + 1;
+            i++
+          ) {
+            data.stats.byYear[i] = data.stats.byYear[i] || {
+              "1": 0,
+              "2": 0,
+              "3": 0,
+              "4": 0
+            };
+            if (i == b.getUTCFullYear()) {
+              data.stats.byYear[b.getUTCFullYear()][f.statuscode]++;
+            }
+          }
+        } else {
+          data.stats.byYear[b.getUTCFullYear()][f.statuscode]++;
+        }
+      }
+
+      if (f.tolaunch < 86400 && f.tolaunch > -86400) {
+        //10 minutes
+        data.expire = Date.now() + 10 * 60 * 1000;
+        if (f.tolaunch < 3600 && f.tolaunch > -3600) {
+          //1 minute
+          data.expire = Date.now() + 60 * 1000;
+        }
+      }
+      if (query.match("/next/")) {
         data.expire = Date.now() + 60 * 1000;
       }
     }
-    if (query.match("/next/")) {
-      data.expire = Date.now() + 60 * 1000;
-    }
-
 
     if (envargs.indexOf("dev") == -1) storage.put(query, data);
     callback(data);
