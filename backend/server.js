@@ -674,14 +674,12 @@ async function processData(data, query, callback) {
           if (f.location.id == 9) {
             f.media.comments.push({
               name: "[Weather] JAXA TNSC Daily weather forecast",
-              embed:
-                config.deploymentURL + "proxy/http://space.jaxa.jp/tnsc/tn-weather/data/daily.gif",
+              embed: config.deploymentURL + "proxy/http://space.jaxa.jp/tnsc/tn-weather/data/daily.gif",
               share: "http://space.jaxa.jp/tnsc/tn-weather/"
             });
             f.media.comments.push({
               name: "[Weather] JAXA TNSC Weekly weather forecast",
-              embed:
-                config.deploymentURL + "proxy/http://space.jaxa.jp/tnsc/tn-weather/data/weekly.gif",
+              embed: config.deploymentURL + "proxy/http://space.jaxa.jp/tnsc/tn-weather/data/weekly.gif",
               share: "http://space.jaxa.jp/tnsc/tn-weather/"
             });
           }
