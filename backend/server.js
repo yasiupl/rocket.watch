@@ -4,13 +4,11 @@ const request = require("request");
 const agencyType = require("./src/scrape/agencyType.js")
 const agencyShortName = require("./src/scrape/agencyShortName.js")
 
-const keys = require("./config.json");
+const config = require("./config.json");
 const sources = require("./data/sources.json");
 const storage = new Storage("./cache.json");
 
 const envargs = process.argv.slice(2);
-
-const baseurl = "https://launchlibrary.net/1.4.1/";
 
 
 
@@ -27,7 +25,7 @@ function load(query, callback) {
     getJSON(
       format.match("custom")
         ? "https://rocket.watch/data/custom/" + query.split("?")[0] + ".json"
-        : baseurl + query
+        : config.launchlibraryURL + query
     ).then(data => {
       if (data.status >= 500) {
         if (data) {
@@ -111,7 +109,7 @@ async function processData(data, query, callback) {
           getJSON(
             "https://graph.facebook.com/v2.11/" +
             f.social.facebook.split("/")[0] +
-            "/posts?fields=message%2Ccreated_time%2Cid%2Clink%2Cfull_picture&limit=5&access_token=" + keys.facebook
+            "/posts?fields=message%2Ccreated_time%2Cid%2Clink%2Cfull_picture&limit=5&access_token=" + config.keys.facebook
           ).then(async q => {
             f.news.facebook = f.news.facebook || [];
             for (var r in q.data) {
@@ -130,7 +128,7 @@ async function processData(data, query, callback) {
         if (f.social.youtube) {
           await getJSON(
             "https://www.googleapis.com/youtube/v3/search?key=" +
-            keys.google +
+            config.keys.google +
             "&part=snippet&order=date&maxResults=1&type=video&channelId=" +
             f.social.youtube
           ).then(r => {
@@ -279,7 +277,7 @@ async function processData(data, query, callback) {
         ).replace("http://", "https://");
         f.location.map =
           "https://www.google.com/maps/embed/v1/place?key=" +
-          keys.google +
+          config.keys.google +
           "&maptype=satellite&q=" +
           f.location.pads[0].latitude +
           "," +
@@ -604,7 +602,7 @@ async function processData(data, query, callback) {
             if (url.split("?v=")[1] != undefined) {
               await getJSON(
                 "https://www.googleapis.com/youtube/v3/videos?key=" +
-                keys.google +
+                config.keys.google +
                 "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&id=" +
                 url.split("?v=")[1]
               ).then(q => {
@@ -638,7 +636,7 @@ async function processData(data, query, callback) {
             }
           }
         } else if ([3, 4, 7].indexOf(f.statuscode) == -1) {
-          await getJSON("https://www.googleapis.com/youtube/v3/search?key=" + keys.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || sources.norminal.youtube)).then(r => {
+          await getJSON("https://www.googleapis.com/youtube/v3/search?key=" + config.keys.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || sources.norminal.youtube)).then(r => {
             for (var q in r.items) {
               youtube = r.items[q];
               if (Date.parse(youtube.snippet.publishedAt) >= (Date.now() - 86400000)) {
@@ -888,7 +886,7 @@ function processPad(data) {
     wiki: (data.wikiURL || "").replace("http://", "https://"),
     map:
       "https://www.google.com/maps/embed/v1/place?key=" +
-      keys.google +
+      config.keys.google +
       "&maptype=satellite&q=" +
       data.latitude +
       "," +
@@ -925,7 +923,7 @@ function processLocation(data) {
       data.countrycode.split(",")[0].toLowerCase(),
     map:
       "https://www.google.com/maps/embed/v1/place?key=" +
-      keys.google +
+      config.keys.google +
       "&maptype=satellite&q=Launch+Centre+" +
       data.name.replace(" ", "+"),
     img:
