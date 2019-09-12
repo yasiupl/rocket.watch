@@ -27,7 +27,7 @@ const routes = [
 ];
 
 const proxy = route =>
-  Router.route(route.slug).get((request, response) =>
+  Router.route("/api" + route.slug).get((request, response) =>
     webrequest(
       route.url + request.url.split(route.slug.split("*")[0])[1] + route.suffix
     ).pipe(response)
