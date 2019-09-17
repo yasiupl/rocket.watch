@@ -125,27 +125,6 @@ async function processData(data, query, callback) {
           });
         }
 
-        if (f.social.youtube) {
-          await getJSON(
-            "https://www.googleapis.com/youtube/v3/search?key=" +
-            config.keys.google +
-            "&part=snippet&order=date&maxResults=1&type=video&channelId=" +
-            f.social.youtube
-          ).then(r => {
-            f.news.youtube = f.news.youtube || [];
-            for (var q in r.items) {
-              f.news.youtube.push({
-                title: r.items[q].snippet.title,
-                content: r.items[q].snippet.description,
-                url:
-                  "https://www.youtube.com/embed/" +
-                  r.items[q].id.videoId +
-                  "?rel=0",
-                img: r.items[q].snippet.thumbnails.high.url
-              });
-            }
-          });
-        }
         if (f.social.reddit) {
           await getJSON(
             "https://www.reddit.com/r/" + f.social.reddit + ".json?limit=5"
