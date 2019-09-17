@@ -125,27 +125,6 @@ async function processData(data, query, callback) {
           });
         }
 
-        if (f.social.youtube) {
-          await getJSON(
-            "https://www.googleapis.com/youtube/v3/search?key=" +
-            config.keys.google +
-            "&part=snippet&order=date&maxResults=1&type=video&channelId=" +
-            f.social.youtube
-          ).then(r => {
-            f.news.youtube = f.news.youtube || [];
-            for (var q in r.items) {
-              f.news.youtube.push({
-                title: r.items[q].snippet.title,
-                content: r.items[q].snippet.description,
-                url:
-                  "https://www.youtube.com/embed/" +
-                  r.items[q].id.videoId +
-                  "?rel=0",
-                img: r.items[q].snippet.thumbnails.high.url
-              });
-            }
-          });
-        }
         if (f.social.reddit) {
           await getJSON(
             "https://www.reddit.com/r/" + f.social.reddit + ".json?limit=5"
@@ -600,32 +579,13 @@ async function processData(data, query, callback) {
           for (var v in f.vidURLs) {
             var url = f.vidURLs[v];
             if (url.split("?v=")[1] != undefined) {
-              await getJSON(
-                "https://www.googleapis.com/youtube/v3/videos?key=" +
-                config.keys.google +
-                "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&id=" +
-                url.split("?v=")[1]
-              ).then(q => {
-                if (q.items && q.items[0]) {
-                  youtube = q.items[0];
-                  f.media.video.unshift({
-                    name: "[YouTube] " + youtube.snippet.title,
-                    embed:
-                      "https://www.youtube.com/embed/" +
-                      youtube.id +
-                      "?rel=0&autoplay=1",
-                    share: "https://www.youtube.com/watch?v=" + youtube.id
-                  });
-                } else {
-                  console.log(q)
-                  console.log(
-                    "Youtube video " +
-                    url.split("?v=")[1] +
-                    " of launch " +
-                    f.id +
-                    " not found"
-                  );
-                }
+              f.media.video.unshift({
+                name: "YouTube feed #"+v,
+                embed:
+                  "https://www.youtube.com/embed/" +
+                  url.split("?v=")[1] +
+                  "?rel=0&autoplay=1",
+                share: "https://www.youtube.com/watch?v=" + url.split("?v=")[1]
               });
             } else if (
               !url.match("/c/") &&
@@ -635,19 +595,6 @@ async function processData(data, query, callback) {
               addSource(url.split("://")[1].split("/")[0], url);
             }
           }
-        } else if ([3, 4, 7].indexOf(f.statuscode) == -1) {
-          await getJSON("https://www.googleapis.com/youtube/v3/search?key=" + config.keys.google + "&part=snippet&fields=items(id,snippet(title,description,channelId,channelTitle,liveBroadcastContent,publishedAt))&order=date&maxResults=2&type=video&eventType=upcoming&channelId=" + (f.agency.social.youtube || sources.norminal.youtube)).then(r => {
-            for (var q in r.items) {
-              youtube = r.items[q];
-              if (Date.parse(youtube.snippet.publishedAt) >= (Date.now() - 86400000)) {
-                f.media.video.unshift({
-                  name: "[YouTube] " + youtube.snippet.title,
-                  embed: "https://www.youtube.com/embed/" + youtube.id.videoId + "?rel=0&autoplay=1",
-                  share: "https://www.youtube.com/watch?v=" + youtube.id.videoId
-                });
-              }
-            }
-          });
         }
 
 
