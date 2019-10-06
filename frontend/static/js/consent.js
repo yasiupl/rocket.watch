@@ -94,7 +94,7 @@ if (typeof(Storage) !== "undefined") {
       getScript(["https://platform.twitter.com/widgets.js"]).then(function() {
         twttr.widgets.load();
       });
-      document.querySelector("#widgetbot").src = "https://cl2.widgetbot.io/channels/150674920869724161/350212847436955649/";
+      document.querySelector("#widgetbot").src = "https://disweb.deploys.io/channels/150674920869724161/350212847436955649/";
     }
 
     function getScript(scripts) {
