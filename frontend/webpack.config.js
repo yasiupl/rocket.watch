@@ -61,7 +61,7 @@ module.exports = {
         }),
         new WorkboxPlugin.InjectManifest({
             swSrc: './src/serviceworker.js',
-            swDest: 'sw.js'
+            swDest: 'OneSignalSDKWorker.js'
         }),
         new GoogleAnalyticsPlugin({
             id: 'UA-71778687-10'
