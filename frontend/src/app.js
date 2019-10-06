@@ -7,6 +7,10 @@ console.log("rocket.watch");
 
 const backendURL = "https://api.rocket.watch/";
 
+let countdowns = [];
+
+window.addEventListener("hashchange", init);
+window.addEventListener("DOMContentLoaded", init);
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
@@ -22,7 +26,7 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-var OneSignal = window.OneSignal || [];
+let OneSignal = window.OneSignal || [];
 OneSignal.push(function () {
     OneSignal.init({
         appId: "d15cb12b-085c-4f0b-a40a-45dbdcba9e7c",
@@ -33,57 +37,35 @@ OneSignal.push(function () {
     });
 });
 
-if (localStorage.getItem("rocketwatch.Settings.v2")) {
-    var $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings.v2"));
+if (localStorage.getItem("rocketwatch.settings")) {
+    var $settings = JSON.parse(localStorage.getItem("rocketwatch.settings"));
     if ($settings.dark) {
         document.querySelector("body").className += " dark";
     }
 } else {
-    let $oldsettings = JSON.parse(localStorage.getItem("rocketwatch.Settings") || "{}");
     var $settings = {
-        dark: $oldsettings.dark || false,
-        notifications_launches: $oldsettings.notifications_launches || true,
-        notifications_launches_webcast: $oldsettings.notifications_launches_webcast || false,
-        notifications_launches_24: $oldsettings.notifications_launches_24 || true,
-        notifications_launches_60: $oldsettings.notifications_launches_60 || true,
-        notifications_launches_20: $oldsettings.notifications_launches_20 || true,
-        notifications_news: $oldsettings.notifications_news || true,
+        dark: false,
     };
-    localStorage.setItem("rocketwatch.Settings.v2", JSON.stringify($settings))
+    localStorage.setItem("rocketwatch.settings", JSON.stringify($settings))
 }
 
-var $info = document.getElementById("info");
-var $main = document.getElementsByTagName("main")[0];
-var $query = QueryString();
-var countdowns = [];
-var lastHash = -1;
-window.addEventListener("hashchange", function () {
-    var f;
-    if (location.hash.length > 0) {
-        f = parseInt(location.hash.replace("#", ""), 10)
-    } else {
-        f = 1
-    }
-    if (lastHash != f) {
-        lastHash = f;
-        reloadhash();
-    }
-});
 
-(window.reloadhash = function () {
 
+function init() {
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
     document.getElementById("background").innerHTML = "";
     $info.innerHTML = '<div class="card-content"><h1 class="white-text" id="loading-message">Loading...</h1></div>';
     $main.innerHTML = '<div id="loading" style="height:500px"><div class="rocket"><div class="rocket-body"><div class="body"></div><div class="fin fin-left"></div><div class="fin fin-right"></div><div class="window"></div></div><div class="exhaust-flame"></div><ul class="exhaust-fumes"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul><ul class="star"><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div></div>';
     $main.className = "container";
     delete $main.id;
 
-    for (var d in countdowns) {
+    for (let d in countdowns) {
         window.clearInterval(countdowns[d])
     }
-    var tooltips = document.querySelectorAll('.material-tooltip');
+    let tooltips = document.querySelectorAll('.material-tooltip');
     if (tooltips.length) {
-        for (var i in tooltips) {
+        for (let i in tooltips) {
             if (i == (tooltips.length - 1)) break
             tooltips[i].parentElement.removeChild(tooltips[i]);
         }
@@ -97,7 +79,6 @@ window.addEventListener("hashchange", function () {
 
 
     QueryString(function (b) {
-        window.$query = QueryString();
         let launched = 0;
         if (b.id) {
             watch(b.id);
@@ -162,11 +143,12 @@ window.addEventListener("hashchange", function () {
         //window.history.pushState(undefined, undefined, (location.search || location.hash).replace("#", "?"));
     });
 
-})();
+}
 
 function home() {
-    //Materialize.toast('<span>We are testing Google Auto Ads site-wide. Please share your feedback </span><a class="btn-flat toast-action" id="intercom_chat" href="mailto:rocket-watch.intercom-mail.com">here</a>', 1000);
-    var total = 0;
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
+    let total = 0;
     $main.innerHTML = '';
     let $upcoming = document.createElement("div");
     $upcoming.style = "padding: 0 !important";
@@ -181,7 +163,7 @@ function home() {
     $main.appendChild($featured);
 
     let refreshHome = function () {
-        for (var d in countdowns) {
+        for (let d in countdowns) {
             window.clearInterval(countdowns[d]);
         }
         home()
@@ -189,13 +171,15 @@ function home() {
 
     load("launch/next/4?status=1,5,6", function (f) {
         if (f.launches && f.launches.length) {
-            for (var a in f.launches.reverse()) {
-                var g = f.launches[a];
+            for (let a in f.launches.reverse()) {
+                let g = f.launches[a];
                 if (g.statuscode == 1 || g.statuscode == 6) {
                     new Countdown(g.net, "countdown" + g.id)
                 }
 
-                $info.innerHTML = '<div id="video"></div><div class="card-content"><h1><a class="tooltipped" data-tooltip="More Info" href="/#rocket=' + g.rocket.id + '">' + g.name.replace("|", "</a>|") + '</h1><h3 id="countdown' + g.id + '">' + g.status + '</h3><div id="chips"><a class="chip" onclick="refreshHome()"><i class="fas fa-sync"></i>Refresh</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=' + g.agency.id + '"><img src="' + g.agency.icon + '?size=32" onerror=this.onerror=null;this.src="' + g.agency.countryFlag + '">' + g.agency.name + '</a><a class="chip tooltipped" data-tooltip="More info" href="/#pad=' + (g.location.pads && g.location.pads[0].id) + '"><i class="far fa-compass"></i>' + g.location.pads[0].name + '</a><a class="chip tooltipped" id="launchdate" data-tooltip="' + g.net + '"><i class="far fa-clock"></i>' + ReadableDateString(g.net) + '</a></div><p class="flow-text">' + g.description + '</p></div><div id="card-action" class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + g.id + '">Details</a></div></div>';
+                $info.innerHTML = '<div id="video"></div><div class="card-content"><h1><a class="tooltipped" data-tooltip="More Info" href="/#rocket=' + g.rocket.id + '">' + g.name.replace("|", "</a>|") + '</h1><h3 id="countdown' + g.id + '">' + g.status + '</h3><div id="chips"><a class="chip" id="refreshHome"><i class="fas fa-sync"></i>Refresh</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=' + g.agency.id + '"><img src="' + g.agency.icon + '?size=32" onerror=this.onerror=null;this.src="' + g.agency.countryFlag + '">' + g.agency.name + '</a><a class="chip tooltipped" data-tooltip="More info" href="/#pad=' + (g.location.pads && g.location.pads[0].id) + '"><i class="far fa-compass"></i>' + g.location.pads[0].name + '</a><a class="chip tooltipped" id="launchdate" data-tooltip="' + g.net + '"><i class="far fa-clock"></i>' + ReadableDateString(g.net) + '</a></div><p class="flow-text">' + g.description + '</p></div><div id="card-action" class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + g.id + '">Details</a></div></div>';
+
+                document.getElementById("refreshHome").onclick = refreshHome
 
                 if (g.vidURLs[0] && g.vidURLs[0].match("youtube.com") && !g.vidURLs[0].match("/live")) {
                     document.querySelector("#video").innerHTML = '<div class="video-container" id="videoframe1"><iframe name="videoframe1" src="' + g.vidURLs[0].replace("watch?v=", "embed/") + '"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe1_reload" href="' + g.vidURLs[0].replace("watch?v=", "embed/") + '?autoplay=1" target="videoframe1"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="' + g.vidURLs[0] + '" target="_blank"><i class="fas fa-external-link-square-alt"></i></a></div></div>';
@@ -216,13 +200,13 @@ function home() {
 
     load("launch?limit=4&sort=desc&mode=summary&status=3,4,7", function (f) {
         $successful.innerHTML = '<ul class="tabs"><li class="tab"><a href="#history" target="_self" class="active">Recent Launches</a></li></ul>';
-        for (var i in f.launches) {
-            var g = f.launches[i];
+        for (let i in f.launches) {
+            let g = f.launches[i];
             let days = Math.floor((new Date() - new Date(g.net)) / 86400000);
             $successful.innerHTML += '<div class="col s12 m6 l3"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + g.name.split(" |")[0].split("/")[0] + '">' + g.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>").split(" (")[0] + '</h4><a class="chip tooltipped" data-tooltip="' + g.net + '"><i class="far fa-clock"></i>' + ReadableDateString(g.net) + '</a></br><a class="chip">' + ((days > 0) ? days + " Days ago" : "Today") + "</a><h5>" + g.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + g.id + '">Watch</a></div></div>';
         }
 
-        for (i = 1; i <= ($successful.childElementCount - 1); i++) {
+        for (let i = 1; i <= ($successful.childElementCount - 1); i++) {
             $successful.children[i].className = 'col s12 l' + Math.floor(12 / ($successful.childElementCount - 1))
         }
     });
@@ -230,7 +214,7 @@ function home() {
 
     if (sources.featuring) {
         $featured.innerHTML = '<ul class="tabs"><li class="tab"><a class="active">Featured</a></li></ul>';
-        for (var a in sources.featuring) {
+        for (let a in sources.featuring) {
             $featured.innerHTML += '<div class="col s12 m6 l4"><div class="card"><div class="card-content"><img class="circle logo" src="' + sources.featuring[a].img + '" onerror=this.onerror=null;this.src=""><h5 class="header black-text truncate">' + sources.featuring[a].name + "</h5><a class='max2lines'>" + sources.featuring[a].desc + '</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="' + sources.featuring[a].url + '">' + sources.featuring[a].action + "</a></div></div>"
         }
     }
@@ -239,13 +223,16 @@ function home() {
 }
 
 function search(c) {
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
+    let $query = QueryString();
     if (c != "undefined") {
 
-        for (var i in sources.info.search) {
+        for (let i in sources.info.search) {
             if (c.toLowerCase().match(i) && !document.getElementById("maintabs")) {
                 data = sources.info.search[i]
                 $info.innerHTML = '<div class="card-content"><img class="circle" src="' + data.img + '" onerror=this.onerror=null;this.src=""><h1 class="header black-text truncate">' + data.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></br><a class="flow-text">' + (data.desc || "") + '</a></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
-                for (var b in data.badges) {
+                for (let b in data.badges) {
                     badge = data.badges[b];
                     document.getElementById("chips").innerHTML += '<a class="chip tooltipped" data-tooltip="' + (badge.tip || "") + '" href="' + (badge.url || "") + '"><img src="' + (badge.img || "") + '">' + (badge.name || "") + "</a>"
                 }
@@ -271,14 +258,14 @@ function search(c) {
 
                 if (a.launches.length == 1) {
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#results" class="active">Launches</a></li>' + document.getElementById("maintabs").innerHTML;
-                    var b = a.launches[0];
+                    let b = a.launches[0];
                     document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + '</a><h4 id="countdown' + b.id + '">' + b.status + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Details</a></div></div></div>';
                 } else {
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#stats">Stats</a></li>' + document.getElementById("maintabs").innerHTML;
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#results" class="active">Launches</a></li>' + document.getElementById("maintabs").innerHTML;
 
-                    for (var g in a.launches) {
-                        var b = a.launches[g];
+                    for (let g in a.launches) {
+                        let b = a.launches[g];
                         if (Date.parse(b.net) < $today) {
                             $past.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + "</a><h5>" + b.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Watch</a></div></div>'
                         } else {
@@ -296,11 +283,11 @@ function search(c) {
                         }
                     }
 
-                    var labels = [];
-                    var togo = [];
-                    var success = [];
-                    var fail = [];
-                    for (var k in a.stats.byYear) {
+                    let labels = [];
+                    let togo = [];
+                    let success = [];
+                    let fail = [];
+                    for (let k in a.stats.byYear) {
                         if (k <= new Date().getUTCFullYear()) {
                             labels.push(parseInt(k));
                             togo.push(a.stats.byYear[k][1] + a.stats.byYear[k][2]);
@@ -309,8 +296,8 @@ function search(c) {
                         }
                     }
 
-                    var rocketlist = "";
-                    for (var i in a.rockets) {
+                    let rocketlist = "";
+                    for (let i in a.rockets) {
                         rocketlist += '<li class="collection-item"><a href="/#rocket=' + a.rockets[i] + '">' + a.rockets[i] + '</a></li>'
                     }
 
@@ -351,8 +338,8 @@ function search(c) {
                                         window.launchTotal = 0;
                                     },
                                     label: function (tooltipItem, data) {
-                                        var dataset = data.datasets[tooltipItem.datasetIndex];
-                                        var count = parseFloat(dataset.data[tooltipItem.index]);
+                                        let dataset = data.datasets[tooltipItem.datasetIndex];
+                                        let count = parseFloat(dataset.data[tooltipItem.index]);
                                         window.launchTotal += count;
 
                                         if (count === 0) {
@@ -426,29 +413,25 @@ function search(c) {
         })
 
     } else {
-        enter = function (event) {
-            if (event.which == 13 || event.keyCode == 13) {
-                location.hash = 'search=' + document.getElementsByTagName('input')[0].value;
-                return false;
-            }
-            return true;
-        }
         $info.innerHTML = '<div class="card-content"><h1 class="header black-text truncate">What are you looking for?</h1></div>';
-        $main.innerHTML = '<div class="row"><div class="col s12"><div class="card"><div class="card-content"><div class="input-field"><input onkeypress="return enter(event)" type="text" name="search"></div></div><div class="card-action"><a onclick="(location.hash = \'search=\' + document.getElementsByTagName(\'input\')[0].value)" class="waves-effect waves-light btn hoverable">Submit</a></div></div></div>';
+        $main.innerHTML = '<div class="row"><div class="col s12"><div class="card"><div class="card-content"><div class="input-field"><input type="text" name="search"></div></div><div class="card-action"><a onclick="(location.hash = \'search=\' + document.getElementsByTagName(\'input\')[0].value)" class="waves-effect waves-light btn hoverable">Submit</a></div></div></div>';
     }
 }
 
 function agency(m) {
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
+    let $query = QueryString();
     if (m != "undefined") {
         load("agency/" + m + "?mode=verbose&format=news", function (g) {
             if (g.agencies.length) {
-                var c = g.agencies[0];
+                let c = g.agencies[0];
 
                 document.getElementById("richEmbed").innerHTML = '{ "@context": "https://schema.org", "@type": "Organization", "name": "' + c.name + '", "url": "' + (c.infoURL || c.info) + '", "logo": "' + (c.icon || c.img) + '" }';
 
                 $info.innerHTML = '<div class="card-content"><img class="circle logo materialboxed" src="' + c.icon + '" onerror=this.onerror=null;this.style.display="none";><h1 class="tooltipped" data-tooltip="' + c.shortname + '">' + c.name.split(" (")[0] + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped" data-tooltip="Country summary" href="/#country=' + c.countryCode + '"><img src="' + c.countryFlag + '">' + c.countryCode + '</a><a class="chip">Founded: ' + c.founded + '</a></div><p class="flow-text">' + c.description + '</p></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div></div>';
 
-                for (var i in c.social) {
+                for (let i in c.social) {
                     if ($query.type == "failures") $list.style.display = "none";
 
                     $main.innerHTML += '<div id="news"><div class="card-tabs"><ul id="tabs" class="tabs tabs-fixed-width"></ul></div></div>';
@@ -459,10 +442,10 @@ function agency(m) {
                     //<div class="col s12"><div class="card"><div class="card-content"><h5><a>Subscribe to news & updates notifications</a></h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" onclick="subscribe()">Subscribe</a></div></div>
                     if (c.news.reddit) {
                         document.getElementById("tabs").innerHTML += '<li class="tab"><a class="active" href="#reddit">Reddit</a></li>';
-                        var a = document.createElement("div");
+                        let a = document.createElement("div");
                         a.id = "reddit";
-                        for (var b in c.news.reddit) {
-                            var h = c.news.reddit[b];
+                        for (let b in c.news.reddit) {
+                            let h = c.news.reddit[b];
                             a.innerHTML += '<div class="col s12"><div class="card"><div class="card-content"><img class="materialboxed circle" onerror=this.onerror=null;this.style.display="none" src="' + h.img + '" /><h5>' + h.title + '</h5><p class="flow-text">' + h.content + '</p></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="' + h.url + '" target="_blank">Read more</a></div></div></div></div>'
                         }
                         $list.appendChild(a)
@@ -470,10 +453,10 @@ function agency(m) {
 
                     if (c.news.youtube) {
                         document.getElementById("tabs").innerHTML += '<li class="tab"><a href="#youtube">YouTube</a></li>';
-                        var s = document.createElement("div");
+                        let s = document.createElement("div");
                         s.id = "youtube";
-                        for (var b in c.news.youtube) {
-                            var h = c.news.youtube[b];
+                        for (let b in c.news.youtube) {
+                            let h = c.news.youtube[b];
                             s.innerHTML += '<div class="col s12"><div class="card"><div class="video-container"><iframe src="' + h.url + '"></iframe></div><div class="card-content"><p class="flow-text">' + h.content + "</p></div></div></div>"
                         }
                         $list.appendChild(s)
@@ -481,7 +464,7 @@ function agency(m) {
 
                     if (c.news.twitter) {
                         document.getElementById("tabs").innerHTML += '<li class="tab"><a href="#twitter">Twitter</a></li>';
-                        var u = document.createElement("div");
+                        let u = document.createElement("div");
                         u.id = "twitter";
                         u.innerHTML += '<div class="col s12"><div class="card"><div class="video-container"><a class="twitter-timeline" data-dnt="true" href="https://twitter.com/' + c.social.twitter + '" ' + ($settings.dark ? " data-theme=\"dark\"" : "") + '></a></div></div></div>';
                         $list.appendChild(u);
@@ -504,38 +487,39 @@ function agency(m) {
             }
         });
     } else {
-        var p = parseInt($query.page) || 1;
-        var l = 30;
-        var j = l * (p - 1);
-        load("agency?limit=" + l + "&islsp=1&offset=" + j, function (c) {
+        let page = parseInt($query.page) || 1;
+        let perPage = 30;
+        let offset = perPage * (page - 1);
+        load("agency?limit=" + perPage + "&islsp=1&offset=" + offset, function (c) {
             if (c.agencies.length) {
                 $main.innerHTML = '';
-                $info.innerHTML = '<div class="card-content"><h1>Agencies</h1><div id="chips"><div style="display:' + ((p == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#agency&page=' + (p - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + p + '</a><div style="display:' + ((p == Math.ceil(c.total / l)) ? 'none' : 'unset') + '"><a  class="chip" href="/#agency&page=' + (p + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
-                for (var b in c.agencies) {
-                    var a = c.agencies[b];
+                $info.innerHTML = '<div class="card-content"><h1>Agencies</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#agency&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(c.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#agency&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
+                for (let b in c.agencies) {
+                    let a = c.agencies[b];
                     $main.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate">' + a.name + '</h5><a class="chip"><img src="' + a.icon + '" onerror=this.onerror=null;this.src="' + a.countryFlag + '">' + a.abbrev + '</a><a class="chip">' + a.type + ' Agency</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#agency=' + a.id + '">Details</a></div></div>'
                 }
-                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((p == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="/#agency&page=' + (p - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + p + "/" + Math.ceil(c.total / l) + ' <li class="' + ((p == Math.ceil(c.total / l)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="/#agency&page=' + (p + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
+                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="/#agency&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(c.total / perPage) + ' <li class="' + ((page == Math.ceil(c.total / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="/#agency&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
             } else {
                 $main.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">' + c.msg || c.status || "Error</h1>"
             }
 
             // preload NEXT
-            load("agency?limit=" + l + "&mode=verbose&islsp=1&offset=" + (l * p));
+            load("agency?limit=" + perPage + "&mode=verbose&islsp=1&offset=" + (perPage * page));
         });
     }
 }
 
 function nation(k) {
+    let $main = document.getElementsByTagName("main")[0];
     load("agency?islsp=1&countryCode=" + k, function (a) {
         if (a.agencies.length) {
-            var c = a.agencies[0];
+            let c = a.agencies[0];
             $info.innerHTML = '<div class="card-content"><img class="circle materialboxed" src="' + c.countryFlag + '" onerror=this.onerror=null;this.style.display="none"><h1>' + k + '</h1><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"><li class="tab"><a href="#agencies">Agencies</a></li></ul></div></div>';
             $main.innerHTML = '';
             let $agencies = document.createElement("div");
             $agencies.id = "agencies";
             $main.appendChild($agencies);
-            for (var c in a.agencies) {
+            for (let c in a.agencies) {
                 c = a.agencies[c];
                 $agencies.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate">' + c.name + '</h5><a class="chip"><img src="' + c.icon + '" onerror=this.onerror=null;this.style.display="none">' + c.abbrev + '</a><a class="chip">' + c.type + ' Agency</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#agency=' + c.id + '">Details</a></div>'
             }
@@ -549,8 +533,8 @@ function nation(k) {
             let $locations = document.createElement("div");
             $locations.id = "locations";
             $main.appendChild($locations);
-            for (var b in c.locations) {
-                var a = c.locations[b];
+            for (let b in c.locations) {
+                let a = c.locations[b];
                 $locations.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate">' + a.name + '</h5><a class="chip"><img src="' + a.countryFlag + '">' + a.countryCode + '</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#location=' + a.id + '">Details</a></div></div>'
             }
         }
@@ -559,9 +543,11 @@ function nation(k) {
 }
 
 function pad(m) {
-    var k = document.createElement("div");
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
+    let k = document.createElement("div");
     $main.appendChild(k);
-    var l = document.createElement("div");
+    let l = document.createElement("div");
     l.id = "information";
     l.className = "col s12"
     l.style.display = "none"
@@ -570,7 +556,7 @@ function pad(m) {
     if (m != "undefined") {
         load("pad/" + m + "?mode=verbose", function (g) {
             if (g.pads.length) {
-                var c = g.pads[0];
+                let c = g.pads[0];
 
                 document.getElementById("richEmbed").innerHTML = '{ "@context": "https://schema.org", "@type": "Organization", "name": "' + c.name + '", "url": "' + (c.infoURL || c.info) + '", "logo": "' + (c.icon || c.img) + '" }';
 
@@ -587,32 +573,35 @@ function pad(m) {
             }
         });
     } else {
-        var p = parseInt($query.page) || 1;
-        var l = 28;
-        var e = l * (p - 1);
-        load("pad?limit=" + l + "&mode=verbose&retired=0&offset=" + e, function (c) {
+        let page = parseInt($query.page) || 1;
+        let perPage = 28;
+        let offset = perPage * (page - 1);
+        load("pad?limit=" + perPage + "&mode=verbose&retired=0&offset=" + offset, function (c) {
             if (c.pads.length) {
-                $info.innerHTML = '<div class="card-content"><h1>Launch pads</h1><div id="chips"><div style="display:' + ((p == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#pad&page=' + (p - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + p + '</a><div style="display:' + ((p == Math.ceil(c.total / l)) ? 'none' : 'unset') + '"><a  class="chip" href="/#pad&page=' + (p + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
+                $info.innerHTML = '<div class="card-content"><h1>Launch pads</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#pad&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(c.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#pad&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
                 $main.innerHTML = ''
-                for (var b in c.pads) {
-                    var a = c.pads[b];
+                for (let b in c.pads) {
+                    let a = c.pads[b];
                     $main.innerHTML += '<div class="col s12 m6 l3"><div class="card"><div class="card-image"><img src="' + a.img + '"><span class="card-title">' + a.name + '</span></div><div class="card-content"><a class="chip" href="/#agency=' + a.agency.id + '">' + a.agency.abbrev + '</a><a class="chip">' + a.agency.type + ' Pad</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" class="tooltipped" data-tooltip="More info" href="/#pad=' + a.id + '">Details</a></div>'
                 }
-                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((p == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="#pad&page=' + (p - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + p + "/" + Math.ceil(c.total / l) + ' <li class="' + ((p == Math.ceil(c.total / l)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="#pad&page=' + (p + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
+                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="#pad&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(c.total / perPage) + ' <li class="' + ((page == Math.ceil(c.total / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="#pad&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
             } else {
                 $main.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">' + c.msg || c.status || "Error</h1>"
             }
 
             // preload next
-            load("pad?limit=" + l + "&mode=verbose&retired=0&offset=" + (l * p));
+            load("pad?limit=" + perPage + "&mode=verbose&retired=0&offset=" + (perPage * page));
         });
     }
 }
 
 function launchcentre(m) {
-    var k = document.createElement("div");
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
+    let $query = QueryString();
+    let k = document.createElement("div");
     $main.appendChild(k);
-    var l = document.createElement("div");
+    let l = document.createElement("div");
     l.id = "information";
     l.className = "col s12"
     l.style.display = "none"
@@ -621,7 +610,7 @@ function launchcentre(m) {
     if (m != "undefined") {
         load("location/" + m + "?mode=verbose", function (g) {
             if (g.locations.length) {
-                var c = g.locations[0];
+                let c = g.locations[0];
 
                 document.getElementById("richEmbed").innerHTML = '{ "@context": "https://schema.org", "@type": "Organization", "name": "' + c.name + '", "url": "' + (c.infoURL || c.info) + '", "logo": "' + (c.icon || c.img) + '" }';
 
@@ -638,33 +627,36 @@ function launchcentre(m) {
             }
         });
     } else {
-        var p = parseInt($query.page) || 1;
-        var l = 30;
-        var e = l * (p - 1);
-        load("location?limit=" + l + "&mode=verbose&retired=0&offset=" + e, function (c) {
+        let page = parseInt($query.page) || 1;
+        let perPage = 30;
+        let offset = perPage * (page - 1);
+        load("location?limit=" + perPage + "&mode=verbose&retired=0&offset=" + offset, function (c) {
             if (c.locations.length) {
-                $info.innerHTML = '<div class="card-content"><h1>Launch Centers</h1><div id="chips"><div style="display:' + ((p == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#location&page=' + (p - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + p + '</a><div style="display:' + ((p == Math.ceil(c.total / l)) ? 'none' : 'unset') + '"><a  class="chip" href="/#location&page=' + (p + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
+                $info.innerHTML = '<div class="card-content"><h1>Launch Centers</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#location&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(c.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#location&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
                 $main.innerHTML = ''
-                for (var b in c.locations) {
-                    var a = c.locations[b];
+                for (let b in c.locations) {
+                    let a = c.locations[b];
                     $main.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate">' + a.name + '</h5><a class="chip"><img src="' + a.countryFlag + '">' + a.countryCode + '</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#location=' + a.id + '">Details</a></div></div>'
                 }
-                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((p == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="#location&page=' + (p - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + p + "/" + Math.ceil(c.total / l) + ' <li class="' + ((p == Math.ceil(c.total / l)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="#location&page=' + (p + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
+                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="#location&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(c.total / perPage) + ' <li class="' + ((page == Math.ceil(c.total / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="#location&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
             } else {
                 $main.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">' + c.msg || c.status || "Error</h1>"
             }
 
             // preload next
-            load("location?limit=" + l + "&mode=verbose&retired=0&offset=" + (l * p));
+            load("location?limit=" + perPage + "&mode=verbose&retired=0&offset=" + (perPage * page));
         });
     }
 }
 
 function rocket(m) {
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
+    let $query = QueryString();
     if (m != "undefined") {
         load("rocket/" + m + "?mode=verbose", function (c) {
             if (c.rockets.length) {
-                var a = c.rockets[0];
+                let a = c.rockets[0];
                 document.getElementById("richEmbed").innerHTML = '{ "@context": "https://schema.org", "@type": "Organization", "name": "' + a.name + '", "url": "' + (a.info || a.infoURL) + '", "logo": "' + (a.icon || a.img) + '" }';
 
                 $info.innerHTML = '<div class="card-content"><img class="circle materialboxed" src="' + a.img + '" onerror=this.onerror=null;this.style.display="none"><h1>' + a.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped" data-tooltip="More info" href="/#country=' + a.agency.countryCode + '"><img src="' + a.agency.countryFlag + '">' + a.agency.countryCode + '</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=' + a.agency.id + '"><img src="' + a.agency.icon + '">' + a.agency.shortname + '</a></div><p class="flow-text">' + a.description + '</p></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
@@ -680,63 +672,66 @@ function rocket(m) {
             }
         });
     } else {
-        var k = parseInt($query.page) || 1;
-        var l = 27;
-        var j = l * (k - 1);
-        load("rocket?mode=verbose&limit=" + l + "&offset=" + j, function (c) {
+        let page = parseInt($query.page) || 1;
+        let perPage = 27;
+        let offset = perPage * (page - 1);
+        load("rocket?mode=verbose&limit=" + perPage + "&offset=" + offset, function (c) {
             if (c.rockets.length > 0) {
-                $info.innerHTML = '<div class="card-content"><h1>Rockets</h1><div id="chips"><div style="display:' + ((k == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#rocket&page=' + (k - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + k + '</a><div style="display:' + ((k == Math.ceil(c.total / l)) ? 'none' : 'unset') + '"><a  class="chip" href="/#rocket&page=' + (k + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
+                $info.innerHTML = '<div class="card-content"><h1>Rockets</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#rocket&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(c.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#rocket&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
                 $main.innerHTML = '';
-                for (var b in c.rockets) {
-                    var a = c.rockets[b];
+                for (let b in c.rockets) {
+                    let a = c.rockets[b];
                     $main.innerHTML += '<div class="col s12 m6 l4"><div class="card"><div class="card-image"><a href="/#rocket=' + a.id + '"><img src="' + (a.img || "https://rocket.watch/assets/rocket_placeholder.jpg") + '" ></a><span class="card-title"><a class="chip" href="/#agency=' + a.agency.id + '">' + a.agency.name + '</a><a class="chip" href="/#rocket=' + a.id + '">' + a.name + '</a></span></div></div></div>'
                 }
-                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((k == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="/#rocket&page=' + (k - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + k + "/" + Math.ceil(c.total / l) + ' <li class="' + ((k == Math.ceil(c.total / l)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="/#rocket&page=' + (k + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
+                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="/#rocket&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(c.total / perPage) + ' <li class="' + ((page == Math.ceil(c.total / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="/#rocket&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
             } else {
                 $main.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">' + c.msg || c.status || "Error</h1>"
             }
 
             // preload next
-            load("rocket?mode=verbose&limit=" + l + "&offset=" + (l * k));
+            load("rocket?mode=verbose&limit=" + perPage + "&offset=" + (perPage * page));
         });
     }
 }
 
-function timeline(k, l) {
-    var l = parseInt(l) || 1;
-    var m = 20;
-    var j = m * (l - 1);
+function timeline(k, page) {
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
+    page = parseInt(page) || 1;
+    let perPage = 20;
+    let offset = perPage * (page - 1);
     $main.innerHTML = ""
 
-    load("launch?mode=verbose&limit=" + m + (k ? "&sort=desc&status=3,4,7" : "&status=1,2,5,6") + "&offset=" + j, function (a) {
-        for (var c in a.launches) {
-            var b = a.launches[c];
+    load("launch?mode=verbose&limit=" + perPage + (k ? "&sort=desc&status=3,4,7" : "&status=1,2,5,6") + "&offset=" + offset, function (a) {
+        for (let c in a.launches) {
+            let b = a.launches[c];
             $main.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" |")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + b.agency.name + '" href="/#agency=' + b.agency.id + '"><img src="' + b.agency.icon + '?size=32" onerror=this.src="' + b.agency.countryFlag + '">' + b.agency.shortname + '</a><a class="chip tooltipped" data-tooltip="' + b.location.name + '" href="/#pad=' + b.location.pads[0].id + '"><i class="far fa-compass"></i>' + b.location.name.split(",")[0] + '</a></br><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + '</a><h5 id="countdown' + b.id + '">' + b.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">More</a></div></div>';
             if (b.statuscode == 1 || b.statuscode == 6) {
                 new Countdown(b.net, "countdown" + b.id)
             }
         }
         if (k) {
-            $info.innerHTML = '<div class="card-content"><h1>Historical launches</h1><div id="chips"><div style="display:' + ((l == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#history=' + (l - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + l + '</a><div style="display:' + ((l == Math.ceil(a.total / m)) ? 'none' : 'unset') + '"><a  class="chip" href="/#history=' + (l + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
-            $main.innerHTML += '<div class="col s12"><div class="card"><div style="display:' + ((l == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#history=' + (l - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + l + '</a><div style="display:' + ((l == Math.ceil(a.total / m)) ? 'none' : 'unset') + '"><a  class="chip" href="/#history=' + (l + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>'
+            $info.innerHTML = '<div class="card-content"><h1>Historical launches</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#history=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(a.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#history=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
+            $main.innerHTML += '<div class="col s12"><div class="card"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#history=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(a.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#history=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>'
 
         } else {
-            $info.innerHTML = '<div class="card-content"><h1>Planned launches</h1><div id="chips"><div style="display:' + ((l == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#future=' + (l - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + l + '</a><div style="display:' + ((l == Math.ceil(a.total / m)) ? 'none' : 'unset') + '"><a  class="chip" href="/#future=' + (l + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div></div>';
-            $main.innerHTML += '<div class="col s12"><div class="card"><div style="display:' + ((l == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#future=' + (l - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + l + '</a><div style="display:' + ((l == Math.ceil(a.total / m)) ? 'none' : 'unset') + '"><a  class="chip" href="/#future=' + (l + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>'
+            $info.innerHTML = '<div class="card-content"><h1>Planned launches</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#future=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(a.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#future=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div></div>';
+            $main.innerHTML += '<div class="col s12"><div class="card"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#future=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(a.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#future=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>'
         }
 
         //preload next action;
-        load("launch?mode=verbose&limit=" + m + (k ? "&sort=desc&status=3,4,7" : "&status=1,2,5,6") + "&offset=" + (m * l));
+        load("launch?mode=verbose&limit=" + perPage + (k ? "&sort=desc&status=3,4,7" : "&status=1,2,5,6") + "&offset=" + (perPage * page));
     });
-
-
-
 }
 
 function watch(j, k) {
     k = k || "live"
 
-    var $live = document.createElement("div");
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
+    let $live = document.createElement("div");
+    let $query = QueryString();
+
     $live.id = "live";
     $main.className = ""
     $main.innerHTML = "";
@@ -744,13 +739,13 @@ function watch(j, k) {
 
     load((k.match("custom")) ? (j + "?format=customlive") : ("launch?mode=verbose" + (parseInt(j) ? ("&id=" + j) : ("&limit=1&name=" + j)) + "&format=" + (($query.mode == "countdown") ? "" : k)), function (e) {
 
-        var a = e.launches[0];
+        let a = e.launches[0];
 
-        var changed = a.changed;
+        let changed = a.changed;
 
         let refreshLaunch = function () {
 
-            for (var d in countdowns) {
+            for (let d in countdowns) {
                 window.clearInterval(countdowns[d]);
             }
             watch(j, k);
@@ -765,7 +760,7 @@ function watch(j, k) {
                     if (b) {
                         console.log("Updating Countdown");
 
-                        for (var d in countdowns) {
+                        for (let d in countdowns) {
                             window.clearInterval(countdowns[d]);
                         }
 
@@ -778,7 +773,7 @@ function watch(j, k) {
                                 html: "Updated Countdown"
                             });
                             count = setInterval(function () {
-                                var o = Math.floor((Date.parse(b.net) - Date.parse(new Date())) / 1000);
+                                let o = Math.floor((Date.parse(b.net) - Date.parse(new Date())) / 1000);
                                 document.title = "[" + Countdown(b.net) + "] " + b.name.split("|")[1];
                                 countdown.innerHTML = Countdown(b.net)
                             }, 1000);
@@ -840,7 +835,7 @@ function watch(j, k) {
 
         if (a.statuscode == 1 || a.statuscode == 6) {
             let count = setInterval(function () {
-                var o = Math.floor((Date.parse(a.net) - Date.parse(new Date())) / 1000);
+                let o = Math.floor((Date.parse(a.net) - Date.parse(new Date())) / 1000);
                 document.title = "[" + Countdown(a.net) + "] " + a.name.split("|")[1];
                 countdown.innerHTML = Countdown(a.net)
             }, 1000);
@@ -859,28 +854,28 @@ function watch(j, k) {
             return
         }
 
-        for (var b in a.media.badge) {
-            var d = a.media.badge[b];
+        for (let b in a.media.badge) {
+            let d = a.media.badge[b];
             badges.innerHTML += '<a class="chip ' + (d.desc ? 'tooltipped" data-tooltip="' + d.desc + '"' : '"') + ' ' + (d.url ? 'href="' + d.url + '"' : '') + '>' + (d.img ? '<img src="' + d.img + '">' : '') + (d.name || '') + "</a>"
         }
 
-        for (var b in a.media.button) {
-            var d = a.media.button[b];
+        for (let b in a.media.button) {
+            let d = a.media.button[b];
             buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" href="' + d.url + '" target="_blank">' + d.name + '</a>';
         }
 
         if (navigator.onLine) {
 
-            var list = a.media.video.concat(a.media.info).concat(a.media.comments).concat(a.media.last);
-            var video = a.media.video;
-            var media = a.media.info.concat(a.media.comments).concat(a.media.last);
+            let list = a.media.video.concat(a.media.info).concat(a.media.comments).concat(a.media.last);
+            let video = a.media.video;
+            let media = a.media.info.concat(a.media.comments).concat(a.media.last);
 
             if (media.length) {
                 document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#live" class="active">Live</a></li><li class="tab"><a href="#information">Info</a></li>';
             } else {
                 document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#information">Info</a></li>';
             }
-            var $information = document.createElement("div");
+            let $information = document.createElement("div");
             $information.id = "information";
             $main.appendChild($information);
             materialize()
@@ -899,8 +894,8 @@ function watch(j, k) {
                 $information.innerHTML += '<div class="container"><div class="card"><div class="video-container"><iframe src="' + a.agency.wiki + '"  allow="autoplay; fullscreen"></iframe></div></div>';
             }
 
-            var medialist = "<option disabled selected>Select source</option>";
-            for (var e in list) {
+            let medialist = "<option disabled selected>Select source</option>";
+            for (let e in list) {
                 medialist += "<option value='" + e + "'>" + list[e].name.slice(0, 100) + "</option>";
             }
 
@@ -936,23 +931,23 @@ function watch(j, k) {
             }
 
             if (a.media.audio.length) {
-                var c = document.createElement("div");
+                let c = document.createElement("div");
                 c.className = "container row";
                 c.style = "padding: 0 !important";
-                for (var b in a.media.audio) {
+                for (let b in a.media.audio) {
                     c.innerHTML += '<div class="col s12 m' + Math.floor(12 / a.media.audio.length) + '"><div class="card-panel"><audio style="width:100%" controls preload="none"><source src="' + a.media.audio[b].embed + '"></audio></br><div class="cardnav"><a class="truncate">' + a.media.audio[b].name + "</a></div></div></div>"
                 }
                 $live.appendChild(c)
             }
 
             if (a.media.twitter.length) {
-                var y = document.createElement("div");
+                let y = document.createElement("div");
                 $live.appendChild(y);
 
                 if (!($query.mode == "tv" && media.length >= 2)) {
                     y.className = "container";
                 }
-                for (var b in a.media.twitter) {
+                for (let b in a.media.twitter) {
                     y.innerHTML += '<div class="col s12 m' + Math.floor(12 / a.media.twitter.length) + '"><div class="card"><div class="video-container"><a class="twitter-timeline" data-dnt="true" href="' + a.media.twitter[b].url + '" ' + ($settings.dark ? " data-theme=\"dark\"" : "") + '></a></div></div></div>';
                 }
                 if (typeof twttr != undefined) {
@@ -971,70 +966,53 @@ function watch(j, k) {
 }
 
 function settings() {
-
-    let restart = function () {
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-            for (let registration of registrations) {
-                console.log(registration)
-                registration.unregister()
-            }
-        });
-        localStorage.clear();
-        location.reload(true);
-    }
+    let $main = document.getElementsByTagName("main")[0];
+    let $info = document.getElementById("info");
 
     $info.innerHTML = '<div class="card-content"><img class="circle" src="assets/settings.png" onerror=this.onerror=null;this.display="none"><h1 class="header black-text truncate">Settings</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div>';
 
-    $main.innerHTML = '<div class="card"><div class="card-content"><a class="waves-effect waves-light btn hoverable" onclick="restart()">Clear Settings and Site Data</a><a class="waves-effect waves-light btn hoverable" onclick="location.reload(true);">Reload</a></div></div>';
+    $main.innerHTML = '<div class="card"><div class="card-content"><a class="waves-effect waves-light btn hoverable" id="restart">Clear Settings and Site Data</a><a class="waves-effect waves-light btn hoverable" onclick="location.reload(true);">Reload</a></div></div>';
 
-    $main.innerHTML += '<div class="card"><div class="card-content"> <h3 class="header">Preferences</h3><ul class="collection with-header" id="preferences"></ul></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" onclick="syncValues();location.reload(true);">Save</a></div></div>';
+    $main.innerHTML += '<div class="card"><div class="card-content"> <h3 class="header">Preferences</h3><ul class="collection with-header" id="preferences"></ul></div></div>';
 
-    var settings_names = {
+    document.getElementById("restart").onclick = restart;
+
+
+    let settings_names = {
         dark: "Dark Mode",
-        notifications_launches: "Launch Notifications",
-        notifications_launches_webcast: "Launches with webcasts only",
-        notifications_launches_60: "1 Hour Notification",
-        notifications_launches_24: "24 Hour Notification",
-        notifications_launches_20: "20 Minutes Notification",
-        notifications_news: "News Notifications"
     };
 
-    for (var i in $settings) {
-        document.getElementById("preferences").innerHTML += '<li class="collection-item"><p><label><input onclick="saveValue(this.id, this.checked)" type="checkbox" id="' + i + '" ' + (($settings[i]) ? "checked" : "") + ' /><span>' + (settings_names[i] ? settings_names[i] : i) + '</span></label></p></li>';
+    for (let i in $settings) {
+        document.getElementById("preferences").innerHTML += '<li class="collection-item"><p><label><input type="checkbox" id="' + i + '" ' + (($settings[i]) ? "checked" : "") + ' /><span>' + (settings_names[i] ? settings_names[i] : i) + '</span></label></p></li>';
+        document.getElementById(i).onclick = saveValue
     }
 
 }
 
-//Libs
-function saveValue(key, value) {
-    $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings.v2"));
+function restart() {
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (let registration of registrations) {
+            console.log(registration)
+            registration.unregister()
+        }
+    });
+    localStorage.clear();
+    location.reload(true);
+}
+
+function saveValue(e) {
+    let key = this.id;
+    let value = this.checked;
+    let $settings = JSON.parse(localStorage.getItem("rocketwatch.settings"));
     $settings[key] = value;
-    localStorage.setItem("rocketwatch.Settings.v2", JSON.stringify($settings));
+    localStorage.setItem("rocketwatch.settings", JSON.stringify($settings));
     M.toast({
         html: "Saved! " + key + ": " + value
     });
     console.log(key + ": " + value);
-    syncValues();
     location.reload(true);
 }
 
-function syncValues() {
-    (window.OneSignal = window.OneSignal || []).push(function () {
-        OneSignal.push(function () {
-            if (localStorage.getItem("rocketwatch.Settings.v2")) {
-                OneSignal.isPushNotificationsEnabled(function (isEnabled) {
-                    var $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings.v2"));
-                    if ($settings && isEnabled) {
-                        OneSignal.sendTags(Object.assign($settings)).then(function (tagsSent) {
-                            console.log("[Settings] Tags synchronised");
-                            console.log(tagsSent);
-                        });
-                    }
-                });
-            }
-        })
-    });
-}
 
 function materialize() {
     M.Sidenav.init(document.querySelector('.sidenav'));
@@ -1054,8 +1032,8 @@ function ISODateString(c) {
 }
 
 function ReadableDateString(f) {
-    var e = new Date(f);
-    var d = e.getFullYear() + "-" + ("0" + (e.getMonth() + 1)).slice(-2) + "-" + ("0" + e.getDate()).slice(-2) + " " + ("0" + e.getHours()).slice(-2) + ":" + ("0" + e.getMinutes()).slice(-2) + ":" + ("0" + e.getSeconds()).slice(-2);
+    let e = new Date(f);
+    let d = e.getFullYear() + "-" + ("0" + (e.getMonth() + 1)).slice(-2) + "-" + ("0" + e.getDate()).slice(-2) + " " + ("0" + e.getHours()).slice(-2) + ":" + ("0" + e.getMinutes()).slice(-2) + ":" + ("0" + e.getSeconds()).slice(-2);
     return d
     /*
     if (e.toLocaleString()) {
@@ -1064,7 +1042,7 @@ function ReadableDateString(f) {
       });
     } else {
 
-      var d = e.getFullYear() + "/" + ("0" + (e.getMonth() + 1)).slice(-2) + "/" + ("0" + e.getDate()).slice(-2) + ", " + ("0" + e.getHours()).slice(-2) + ":" + ("0" + e.getMinutes()).slice(-2) + ":" + ("0" + e.getSeconds()).slice(-2);
+      let d = e.getFullYear() + "/" + ("0" + (e.getMonth() + 1)).slice(-2) + "/" + ("0" + e.getDate()).slice(-2) + ", " + ("0" + e.getHours()).slice(-2) + ":" + ("0" + e.getMinutes()).slice(-2) + ":" + ("0" + e.getSeconds()).slice(-2);
       return d
     }
     */
@@ -1072,26 +1050,26 @@ function ReadableDateString(f) {
 
 function Countdown(c, d) {
     let padnumber = function (f, b) {
-        var a = f + "";
+        let a = f + "";
         while (a.length < b) {
             a = "0" + a
         }
         return a
     };
     let count = function (u) {
-        var r;
-        var a = Date.parse(u);
-        var q = new Date(Date.now());
-        var o = Math.floor((a - q) / 1000);
-        var s = "L- ";
+        let r;
+        let a = Date.parse(u);
+        let q = new Date(Date.now());
+        let o = Math.floor((a - q) / 1000);
+        let s = "L- ";
         if (o <= 0) {
             s = "L+ ";
             o = Math.floor((q - a) / 1000)
         }
-        var t = Math.floor(o / 60);
-        var p = Math.floor(t / 60);
-        var b = Math.floor(p / 24);
-        var v = padnumber((o % 60), 2);
+        let t = Math.floor(o / 60);
+        let p = Math.floor(t / 60);
+        let b = Math.floor(p / 24);
+        let v = padnumber((o % 60), 2);
         if (o < 60) {
             r = s + v
         }
@@ -1122,16 +1100,16 @@ function Countdown(c, d) {
 }
 
 function QueryString(callback, url) {
-    var g = {};
-    var l = (url && url.split("?")[1]) || (window.location.search || location.hash).substring(1);
-    var k = l.split("&");
-    for (var m = 0; m < k.length; m++) {
-        var j = k[m].split("=");
+    let g = {};
+    let l = (url && url.split("?")[1]) || (window.location.search || location.hash).substring(1);
+    let k = l.split("&");
+    for (let m = 0; m < k.length; m++) {
+        let j = k[m].split("=");
         if (typeof g[j[0]] === "undefined") {
             g[j[0]] = decodeURIComponent(j[1])
         } else {
             if (typeof g[j[0]] === "string") {
-                var h = [g[j[0]], decodeURIComponent(j[1])];
+                let h = [g[j[0]], decodeURIComponent(j[1])];
                 g[j[0]] = h
             } else {
                 g[j[0]].push(decodeURIComponent(j[1]))
@@ -1151,15 +1129,15 @@ function load(query, callback) {
 
 function getJSON(url, callback) {
     try {
-        var k = new XMLHttpRequest()
+        let k = new XMLHttpRequest()
         k.onreadystatechange = function () {
             if (k.readyState === 4) {
                 if (k.responseText.split()[0] == "{" || k.status == 200) {
-                    var a = JSON.parse(k.responseText);
+                    let a = JSON.parse(k.responseText);
                     a.timestamp = Date.now();
                     callback(a)
                 } else {
-                    var a = {
+                    let a = {
                         timestamp: Date.now(),
                         status: (k.status || "error"),
                         code: k.statusText,
