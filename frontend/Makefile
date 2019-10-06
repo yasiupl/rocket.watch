@@ -1,4 +1,4 @@
-deploy: install build 
+deploy: install copy build 
 
 install:
 	npm ci
