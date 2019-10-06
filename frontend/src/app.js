@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", init);
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
         navigator.serviceWorker
-            .register('./sw.js')
+            .register('./OneSignalSDKWorker.js')
             .then(function () {
                 console.log('rocket.watch serviceworker install successful');
             })
