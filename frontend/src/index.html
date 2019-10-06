@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html ⚡>
+
+<head>
+  <title>rocket.watch - Watch upcoming rocket launches live!</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+  <meta name="theme-color" content="#1c2530">
+  <meta name="referrer" content="same-origin">
+
+  <link rel="canonical" href="https://rocket.watch" />
+
+  <!-- for Google -->
+  <meta name="description" content="Interested in space? Want to live on Mars one day? rocket.watch let's you follow space rocket launches live: Falcon 9 & Heavy, Atlas, Delta and Ariane launches coming up! Join us on Discord and follow us on twitter."
+  />
+
+  <!-- for Facebook -->
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://rocket.watch" />
+  <meta property="og:image" content="https://rocket.watch/rocketwatch.png" />
+  <meta property="og:description" content="Watch Rocket Launches Live!" />
+
+
+  <!-- for Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="rocket.watch" />
+  <meta name="twitter:description" content="Watch Rocket Launches Live!" />
+  <meta name="twitter:image" content="https://rocket.watch/rocketwatch.png" />
+
+
+
+  <script id="richEmbed" type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "rocket.watch",
+      "url": "https://rocket.watch",
+      "logo": "https://rocket.watch/icon.png",
+      "sameAs": ["https://twitter.com/rocket_watch", "https://www.reddit.com/r/RocketWatch", "https://play.google.com/store/apps/details?id=pl.yasiu.rocketwatch"]
+    }
+  </script>
+</head>
+
+<body class="row">
+  <header class="navbar">
+    <nav id="nav_f" role="navigation">
+      <a data-target="slide-out" class="sidenav-trigger show-on-large"><i class="fas fa-bars"></i></a>
+
+      <a href="/#" class="brand-logo" title="Rocket Watch is not over.">rocket.watch</a>
+      <ul class="right hide-on-med-and-down">
+        <li>
+          <a class="tooltipped" href="/#" data-tooltip="Homepage"><i class="fas fa-home"></i></a>
+        </li>
+        <li>
+          <a href="/#agency=121">SpaceX</a>
+        </li>
+        <li>
+          <a href="/#agency=124">ULA</a>
+        </li>
+        <li>
+          <a href="/#agency=115">Ariane</a>
+        </li>
+        <li>
+          <a href="/#agency=63">Roscosmos</a>
+        </li>
+        <li>
+          <a class="tooltipped" href="/#agency" data-tooltip="More agencies"><i class="fas fa-chevron-circle-down"></i></a>
+        </li>
+        <li>
+          <a class="tooltipped" href="/#location" data-tooltip="Launch Centers"><i class="fas fa-map"></i></a>
+        </li>
+        <li>
+          <a class="tooltipped" href="/#rocket" data-tooltip="Rockets"><i class="fas fa-rocket"></i></a>
+        </li>
+        <li>
+          <a class="tooltipped" href="/#future" data-tooltip="Future launches"><i class="far fa-calendar-alt"></i></a>
+        </li>
+        <li>
+          <a class="tooltipped" href="/#history" data-tooltip="Historical launches"><i class="fas fa-history"></i></a>
+        </li>
+        <li>
+          <a class="tooltipped" href="/#search" data-tooltip="Search"><i class="fas fa-search"></i></a>
+        </li>
+      </ul>
+
+      </div>
+    </nav>
+
+    <ul id="slide-out" class="sidenav" >
+      <li>
+        <div class="user-view">
+          <div class="background"><img src="/assets/rocketwatch.png"></div>
+          <a><img class="circle" src="/assets/icon.png"></a>
+          <a><span class="white-text name">rocket.watch</span></a>
+          <a href="http://yasiu.pl" target="_blank"><span class="white-text email">by yasiu.pl</span></a>
+        </div>
+      </li>
+      <li>
+        <a href="/#"><i><i class="fas fa-home"></i></i>Home page</a>
+      </li>
+      <li>
+        <a href="/#agency=121">SpaceX</a>
+      </li>
+      <li>
+        <a href="/#agency=124">United Launch Aliance</a>
+      </li>
+      <li>
+        <a href="/#agency=115">Ariane</a>
+      </li>
+      <li>
+        <a href="/#agency=63">Roscosmos</a>
+      </li>
+      <li>
+        <a href="/#agency"><i><i class="fas fa-chevron-circle-down"></i></i>More agencies</a>
+      </li>
+      <li>
+        <a href="/#location"><i><i class="fas fa-map"></i></i>Launch Centers</a>
+      </li>
+      <li>
+        <a href="/#rocket"><i><i class="fas fa-rocket"></i></i>Rockets</a>
+      </li>
+      <li>
+        <a href="/#future"><i><i class="far fa-calendar-alt"></i></i>Upcoming launches</a>
+      </li>
+      <li>
+        <a href="/#history"><i><i class="fas fa-history"></i></i>Historical launches</a>
+      </li>
+      <li>
+        <a href="/#search"><i><i class="fas fa-search"></i></i>Search launches</a>
+      </li>
+      <li>
+        <a href="/#settings"><i><i class="fas fa-cogs"></i></i>Settings</a>
+      </li>
+      <li>
+        <a id="discordopen" href="https://discordapp.com/invite/5b8Xhny"><i><i class="fab fa-discord"></i></i>Contact us</a>
+      </li>
+      <li>
+        <a href="https://www.patreon.com/bePatron?u=3533463"><i><i class="fab fa-patreon"></i></i>Become a Patron</a>
+      </li>
+      <li>
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2102294932376201" data-ad-slot="9814271974" data-ad-format="auto"></ins>
+      </li>
+    </ul>
+
+  </header>
+
+  <div id="info" class="card">
+    <div class="card-content" id="loading">
+      <h3 class="white-text" id="loading-message">Loading...</h3>
+    </div>
+  </div>
+
+  <main>
+    <noscript><h1 class="white-text">rocket.watch relies on JavaScript, which your browser doesn't seem to to support :(</h1></noscript>
+  </main>
+
+  <footer class="container">
+    <div class="row">
+      <div class="col s12">
+        <div class="card center-align">
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2102294932376201" data-ad-slot="2430605979" data-ad-format="auto"></ins>
+
+          <a class="become-patron-button" role="button" href="https://www.patreon.com/bePatron?u=3533463">
+            <span class="patreon-icon"><svg viewBox="0 0 8 8" width="12px" height="12px" fill="#fff"><path d="M2.32061871,0.367894189 C3.18961652,-0.0376047918 4.20711396,-0.109604611 5.12711165,0.16039471 C5.93360962,0.39539412 6.6591078,0.894392865 7.17010651,1.55889119 C7.67510524,2.21138955 7.96860451,3.02288751 7.99660444,3.84638544 C8.03210435,4.6978833 7.78560497,5.55788114 7.30110618,6.25987938 C6.59110797,7.31187673 5.35311108,7.98687503 4.07861429,7.999375 C3.44061589,8.000375 2.80261749,7.999875 2.1651191,7.999375 C2.17011908,6.65887837 2.1656191,5.31838174 2.16811909,3.97788511 C2.17011908,3.47138639 2.39811851,2.97288764 2.77711756,2.63638849 C3.13911665,2.30838931 3.6371154,2.13588974 4.12461417,2.17238965 C4.6291129,2.20338957 5.11311169,2.45838893 5.42761089,2.85238794 C5.75061008,3.24938694 5.89160973,3.7853856 5.80860994,4.29038433 C5.72761014,4.82138299 5.39511098,5.30638177 4.93061214,5.57838109 C4.39361349,5.90388027 3.69011526,5.91288025 3.13711665,5.61888099 C3.13761665,6.05337989 3.13661665,6.4883788 3.13761665,6.92337771 C3.63111541,7.06737734 4.15961408,7.09187728 4.66161282,6.97737757 C5.40461095,6.81487798 6.07610926,6.35987912 6.50610818,5.73538069 C6.91610715,5.14988217 7.10560668,4.41738401 7.03460685,3.70738579 C6.97460701,3.05588743 6.69410771,2.42788901 6.25160882,1.94539022 C5.84160985,1.49439136 5.29311123,1.16939217 4.69811273,1.03189252 C4.01411445,0.869392928 3.27411631,0.952892718 2.64611789,1.26789193 C1.6451204,1.7543907 0.962622121,2.82088802 0.952122147,3.93238523 C0.950122152,5.28788182 0.951622148,6.64337841 0.95112215,7.999375 C0.634622945,8.000375 0.317623743,7.999875 0.000124540763,7.999875 C0.000124540763,6.67387833 0.000624539506,5.34838167 0.000124540763,4.022885 C-0.00437544792,3.45688642 0.113124257,2.89038785 0.344123676,2.37338915 C0.7321227,1.49639135 1.4476209,0.769393179 2.32061871,0.367894189"></path></svg></span>Support us on Patreon</br><p style="font-size: 0.6rem"></p></a>
+        </div>
+      </div>
+      <a>Made with 🖤 by </a><a href="https://yasiu.pl">yasiu.pl</a><a> | Data thanks to </a><a href="https://launchlibrary.net">launchlibrary.net</a>
+    </div>
+  </footer>
+
+  <div id="background">
+    <div class="rocket">
+      <div class="rocket-body">
+        <div class="body"></div>
+        <div class="fin fin-left"></div>
+        <div class="fin fin-right"></div>
+        <div class="window"></div>
+      </div>
+      <div class="exhaust-flame"></div>
+      <ul class="exhaust-fumes">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li><a></a></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+      <ul class="star">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+  </div>
+  <script src="https://platform.twitter.com/widgets.js" async=""></script>
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+</body>
+
+</html>

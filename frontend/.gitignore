@@ -1,5 +1,2 @@
 node_modules
-*.min.css
-*.min.js
-/static/css
-
+dist

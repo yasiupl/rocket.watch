@@ -1,0 +1,148 @@
+{
+    "featuring": [
+      {
+        "img": "./assets/gemini.png",
+        "name": "Project Gemini",
+        "desc": "Project Gemini was NASA's second human spaceflight program. Conducted between projects Mercury and Apollo, Gemini started in 1961 and concluded in 1966. The Gemini spacecraft carried a two-astronaut crew. Ten Gemini crews flew low Earth orbit (LEO) missions between 1965 and 1966 putting the United States in the lead during the Cold War Space Race against the Soviet Union.",
+        "action": "Watch",
+        "url": "/#collection=gemini"
+      },
+      {
+        "img": "./assets/crs.png",
+        "name": "Commercial Resupply Services",
+        "desc": "NASA-contracted ressuply missions to International Space Station",
+        "action": "Watch",
+        "url": "/#search=crs"
+      },
+      {
+        "img": "./assets/shuttle.png",
+        "name": "The History of Shuttle",
+        "desc": "All 135 missions of the most complicated man-made machine.",
+        "action": "Watch",
+        "url": "/#collection=shuttle"
+      },
+      {
+        "img": "./assets/nro.png",
+        "name": "Top Secret",
+        "desc": "Top secret launches for US' National Reconnaissance Office",
+        "action": "Watch",
+        "url": "/#collection=nro"
+      },
+      {
+        "img": "./assets/apollo.png",
+        "name": "Small Step",
+        "desc": "Collection of all Apollo missions",
+        "action": "Relive the Moon race",
+        "url": "/#collection=apollo"
+      },
+      {
+        "img": "./assets/soviet.png",
+        "name": "Soviet Space Program",
+        "desc": "The famous Russian engineering",
+        "action": "Watch",
+        "url": "/#agency=66"
+      }
+    ],
+    "info": {
+      "search": {
+        "gemini": {
+          "name": "Project Gemini",
+          "img": "https://i.imgur.com/v9oMlOo.png",
+          "desc": "Project Gemini was NASA's second human spaceflight program. Conducted between projects Mercury and Apollo, Gemini started in 1961 and concluded in 1966. The Gemini spacecraft carried a two-astronaut crew. Ten Gemini crews flew low Earth orbit (LEO) missions between 1965 and 1966 putting the United States in the lead during the Cold War Space Race against the Soviet Union.",
+          "badges": [
+            {
+              "img": "https://i.imgur.com/uaGrY32.png",
+              "name": "Titan II GLV",
+              "url": "/#rocket=Titan II GLV",
+              "tip": "More info"
+            }
+          ]
+        },
+        "skylab": {
+          "name": "Skylab",
+          "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Skylab_%28SL-4%29.jpg/240px-Skylab_%28SL-4%29.jpg",
+          "desc": "Skylab was the United States' first space station, orbiting Earth from 1973 to 1979.",
+          "badges": [
+            {
+              "img": "https://i.imgur.com/ysIE6fk.jpg",
+              "name": "Saturn V",
+              "url": "/#rocket=136",
+              "tip": "More info"
+            },
+            {
+              "img": "https://i.imgur.com/1jnf0ln.png",
+              "name": "Saturn IB",
+              "url": "/#rocket=135",
+              "tip": "More info"
+            }
+          ]
+        },
+        "nrol": {
+          "name": "NROL",
+          "img": "https://i.imgur.com/WVUYwu2.png",
+          "desc": "Top Secret payloads for US's National Reconnaissance Office."
+        },
+        "&status=4": {
+          "name": "Failures",
+          "img": "https://i.imgur.com/nbDk6TO.png"
+        },
+        "crs": {
+          "img": "https://i.imgur.com/yxixerU.png",
+          "name": "Commercial Resupply Services",
+          "desc": "Watch NASA-contracted ressuply missions launch to International Space Station",
+          "badges": [
+            {
+              "img": "https://i.imgur.com/yxa6EBQ.jpg",
+              "name": "ISS",
+              "url": "https://en.wikipedia.org/wiki/International_Space_Station",
+              "tip": "More Info"
+            }
+          ]
+        },
+        "apollo": {
+          "img": "https://i.imgur.com/hDb8Noi.png",
+          "name": "Small Step",
+          "desc": "Collection of all Apollo missions",
+          "badges": [
+            {
+              "img": "https://i.imgur.com/ysIE6fk.jpg",
+              "name": "Saturn V",
+              "url": "/#rocket=136",
+              "tip": "More info"
+            },
+            {
+              "img": "https://i.imgur.com/1jnf0ln.png",
+              "name": "Saturn IB",
+              "url": "/#rocket=135",
+              "tip": "More info"
+            }
+          ]
+        },
+        "shuttle": {
+          "img": "https://i.imgur.com/r9QBj3A.png",
+          "name": "The History of Shuttle",
+          "desc": "All 135 missions of the most complicated man-made machine.",
+          "badges": [
+            {
+              "img": "https://i.imgur.com/oNnvbRx.jpg",
+              "name": "Space Shuttle",
+              "url": "https://en.wikipedia.org/wiki/Space_Shuttle",
+              "tip": "More Info"
+            },
+            {
+              "img": "https://i.imgur.com/yYKDGf8.png",
+              "name": "NASA",
+              "url": "/#agency=NASA",
+              "tip": "Agency Info"
+            }
+          ]
+        },
+        "iridium": {
+          "img": "https://i.imgur.com/4ZpyqOA.png",
+          "name": "Iridium NEXT constellation",
+          "desc": "Iridium is launching during 2017 and 2018, Iridium NEXT, a second-generation worldwide network of telecommunications satellites, consisting of 66 active satellites, with another nine in-orbit spares and six on-ground spares. These satellites will incorporate features such as data transmission which were not emphasized in the original design.",
+          "badges": []
+        }
+      }
+    }
+  }

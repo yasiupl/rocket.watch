@@ -1,3 +1,10 @@
+[build]
+  base = "frontend/"
+  publish = "frontend/dist/"
+  command = "make deploy"
+
+[build.environment]
+  NODE_OPTIONS = "--max_old_space_size=4096"
 
 [[redirects]]
   from = "/discord"
