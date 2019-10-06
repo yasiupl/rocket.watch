@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://rocketwatch.yasiu.pl/sitemap.xml
