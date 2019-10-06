@@ -23,15 +23,15 @@ if ('serviceWorker' in navigator) {
 }
 
 var OneSignal = window.OneSignal || [];
-  OneSignal.push(function() {
+OneSignal.push(function () {
     OneSignal.init({
-      appId: "d15cb12b-085c-4f0b-a40a-45dbdcba9e7c",
-      notifyButton: {
-        enable: true,
-      },
-      allowLocalhostAsSecureOrigin: true,
+        appId: "d15cb12b-085c-4f0b-a40a-45dbdcba9e7c",
+        notifyButton: {
+            enable: true,
+        },
+        allowLocalhostAsSecureOrigin: true,
     });
-  });
+});
 
 if (localStorage.getItem("rocketwatch.Settings.v2")) {
     var $settings = JSON.parse(localStorage.getItem("rocketwatch.Settings.v2"));
