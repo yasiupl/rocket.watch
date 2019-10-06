@@ -11,7 +11,7 @@ const backendURL = "https://api.rocket.watch/";
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
         navigator.serviceWorker
-            .register('./serviceworker.js')
+            .register('./sw.js')
             .then(function () {
                 console.log('rocket.watch serviceworker install successful');
             })
