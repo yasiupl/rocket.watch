@@ -230,7 +230,7 @@ function search(c) {
 
         for (let i in sources.info.search) {
             if (c.toLowerCase().match(i) && !document.getElementById("maintabs")) {
-                data = sources.info.search[i]
+                let data = sources.info.search[i]
                 $info.innerHTML = '<div class="card-content"><img class="circle" src="' + data.img + '" onerror=this.onerror=null;this.src=""><h1 class="header black-text truncate">' + data.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></br><a class="flow-text">' + (data.desc || "") + '</a></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
                 for (let b in data.badges) {
                     badge = data.badges[b];
