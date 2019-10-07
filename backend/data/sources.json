@@ -155,13 +155,6 @@
     "media": [
       {
         "when": "go",
-        "is": "last",
-        "name": "Rocket Watch Discord",
-        "embed": "https://disweb.deploys.io/channels/590479766893887489/615819814841090048/",
-        "share": "https://discord.gg/VdCWxpQ"
-      },
-      {
-        "when": "go",
         "url": "https://twitter.com/rocket_watch/lists/spaceflight-news"
       }
     ]
