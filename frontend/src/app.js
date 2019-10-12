@@ -23,9 +23,6 @@ window.OneSignal.push(function () {
     });
 });
 
-window.adsbygoogle = window.adsbygoogle || [];
-window.adsbygoogle.push({});
-
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
         navigator.serviceWorker
