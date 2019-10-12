@@ -37,7 +37,8 @@ OneSignal.push(function () {
     });
 });
 
-(adsbygoogle = window.adsbygoogle || []).push({});
+let adsbygoogle = window.adsbygoogle || [];
+adsbygoogle.push({});
 
 if (localStorage.getItem("rocketwatch.settings")) {
     var $settings = JSON.parse(localStorage.getItem("rocketwatch.settings"));
