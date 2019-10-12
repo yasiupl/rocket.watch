@@ -12,6 +12,20 @@ let countdowns = [];
 window.addEventListener("hashchange", init);
 window.addEventListener("DOMContentLoaded", init);
 
+window.OneSignal = window.OneSignal || [];
+window.OneSignal.push(function () {
+    window.OneSignal.init({
+        appId: "d15cb12b-085c-4f0b-a40a-45dbdcba9e7c",
+        notifyButton: {
+            enable: true,
+        },
+        allowLocalhostAsSecureOrigin: true,
+    });
+});
+
+window.adsbygoogle = window.adsbygoogle || [];
+window.adsbygoogle.push({});
+
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
         navigator.serviceWorker
@@ -25,17 +39,6 @@ if ('serviceWorker' in navigator) {
             });
     });
 }
-
-let OneSignal = window.OneSignal || [];
-OneSignal.push(function () {
-    OneSignal.init({
-        appId: "d15cb12b-085c-4f0b-a40a-45dbdcba9e7c",
-        notifyButton: {
-            enable: true,
-        },
-        allowLocalhostAsSecureOrigin: true,
-    });
-});
 
 if (localStorage.getItem("rocketwatch.settings")) {
     var $settings = JSON.parse(localStorage.getItem("rocketwatch.settings"));
