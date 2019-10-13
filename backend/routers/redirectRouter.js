@@ -4,7 +4,7 @@ const routes =
 [
     {
         "slug": "/discord",
-        "url": "https://discord.gg/cExSaKZ",
+        "url": "https://discord.gg/4yvx5ta",
     },
     {
         "slug": "/reddit",
