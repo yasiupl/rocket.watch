@@ -5,7 +5,7 @@ const sources = require('./sources.json')
 
 console.log("rocket.watch");
 
-const backendURL = "https://api.rocket.watch/";
+const backendURL = "http://localhost:9000/api/";
 
 let countdowns = [];
 
@@ -658,7 +658,7 @@ function rocket(m) {
                 let a = c.rockets[0];
                 document.getElementById("richEmbed").innerHTML = '{ "@context": "https://schema.org", "@type": "Organization", "name": "' + a.name + '", "url": "' + (a.info || a.infoURL) + '", "logo": "' + (a.icon || a.img) + '" }';
 
-                $info.innerHTML = '<div class="card-content"><img class="circle materialboxed" src="' + a.img + '" onerror=this.onerror=null;this.style.display="none"><h1>' + a.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped" data-tooltip="More info" href="/#country=' + a.agency.countryCode + '"><img src="' + a.agency.countryFlag + '">' + a.agency.countryCode + '</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=' + a.agency.id + '"><img src="' + a.agency.icon + '">' + a.agency.shortname + '</a></div><p class="flow-text">' + a.description + '</p></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
+                $info.innerHTML = '<div class="card-content"><img class="circle materialboxed" src="' + a.img + '" onerror=this.onerror=null;this.style.display="none"><h1>' + a.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped" data-tooltip="More info" href="/#country=' + (a.agency.countryCode || 'UNK') + '"><img src="' + a.agency.countryFlag + '">' + (a.agency.countryCode || 'Unknown Country') + '</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=' + a.agency.id + '"><img src="' + a.agency.icon + '">' + (a.agency.shortname || 'Unknown Agency Name') + '</a></div><p class="flow-text">' + (a.description || '') + '</p></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
 
                 if (a.wiki.length) {
                     $main.innerHTML += '<div id="information"><div class="card"><div class="video-container"><iframe  src="' + a.wiki.replace("http://", "https://") + '"></iframe></div></div></div>'

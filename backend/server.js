@@ -13,7 +13,7 @@ const envargs = process.argv.slice(2);
 
 
 function load(query, callback) {
-  callback = callback || function () { };
+  callback = callback || function () {};
   var queryParams = QueryString(query);
   var query = query.replace(/(\?|&)(page=)([0-9])/g, "");
   var format = queryParams.format || "undefined";
@@ -23,9 +23,9 @@ function load(query, callback) {
 
   if (!cache || (cache && Date.now() - cache.expire > 0)) {
     getJSON(
-      format.match("custom")
-        ? "https://rocket.watch/data/custom/" + query.split("?")[0] + ".json"
-        : config.launchlibraryURL + query
+      format.match("custom") ?
+      "https://rocket.watch/data/custom/" + query.split("?")[0] + ".json" :
+      config.launchlibraryURL + query
     ).then(data => {
       if (data.status >= 500) {
         if (data) {
@@ -63,22 +63,24 @@ async function processData(data, query, callback) {
         await getJSON(
           "https://spacelaunchnow.me/3.0.0/launchers/" + f.id + "/?format=json"
         ).then(data => {
-          f.description = data.description || "";
-          f.img = data.image_url;
-          f.agency.name = data.agency.name;
-          f.agency.abbrev = data.agency.abbrev;
-          f.agency.shortname =
-            data.agency && data.agency.name.length > 11
-              ? data.agency.abbrev
-              : data.agency.name;
-          f.agency.type = data.agency.type;
-          f.agency.countryCode = data.agency.country_code;
-          f.agency.countryFlag =
-            config.deploymentURL + "flag/" +
-            data.agency.country_code.split(",")[0].toLowerCase();
-          f.agency.info = data.agency.info_url;
-          f.agency.wiki = data.agency.wiki_url;
-          f.agency.icon = data.agency.logo_url;
+          if (!data.detail) {
+            f.description = data.description || "";
+            f.img = data.image_url;
+            f.agency.name = data.agency.name;
+            f.agency.abbrev = data.agency.abbrev;
+            f.agency.shortname =
+              data.agency && data.agency.name.length > 11 ?
+              data.agency.abbrev :
+              data.agency.name;
+            f.agency.type = data.agency.type;
+            f.agency.countryCode = data.agency.country_code;
+            f.agency.countryFlag =
+              config.deploymentURL + "flag/" +
+              data.agency.country_code.split(",")[0].toLowerCase();
+            f.agency.info = data.agency.info_url;
+            f.agency.wiki = data.agency.wiki_url;
+            f.agency.icon = data.agency.logo_url;
+          }
         });
       }
 
@@ -105,26 +107,6 @@ async function processData(data, query, callback) {
         data.expire = Date.now() + 600000;
         f.news = {};
 
-        if (f.social.facebook) {
-          getJSON(
-            "https://graph.facebook.com/v2.11/" +
-            f.social.facebook.split("/")[0] +
-            "/posts?fields=message%2Ccreated_time%2Cid%2Clink%2Cfull_picture&limit=5&access_token=" + config.keys.facebook
-          ).then(async q => {
-            f.news.facebook = f.news.facebook || [];
-            for (var r in q.data) {
-              if (q.data[r].message) {
-                f.news.facebook.push({
-                  title: q.data[r].message,
-                  content: "",
-                  url: q.data[r].link || "https://facebook.com/" + q.data[r].id,
-                  img: q.data[r].full_picture || ""
-                });
-              }
-            }
-          });
-        }
-
         if (f.social.reddit) {
           await getJSON(
             "https://www.reddit.com/r/" + f.social.reddit + ".json?limit=5"
@@ -134,13 +116,11 @@ async function processData(data, query, callback) {
               f.news.reddit.push({
                 title: q.data.children[r].data.title,
                 content: "",
-                url:
-                  "https://www.reddit.com" + q.data.children[r].data.permalink,
-                img:
-                  q.data.children[r].data.preview &&
-                    q.data.children[r].data.preview.images[0].source.url
-                    ? q.data.children[r].data.preview.images[0].source.url
-                    : ""
+                url: "https://www.reddit.com" + q.data.children[r].data.permalink,
+                img: q.data.children[r].data.preview &&
+                  q.data.children[r].data.preview.images[0].source.url ?
+                  q.data.children[r].data.preview.images[0].source.url :
+                  ""
               });
             }
           });
@@ -284,19 +264,16 @@ async function processData(data, query, callback) {
           if (url.match(".reddit.com/r/")) {
             f.media.comments.push({
               name: "[Reddit] &nbsp; &nbsp; " + name,
-              embed:
-                "https://reddit-stream.com/comments/" +
+              embed: "https://reddit-stream.com/comments/" +
                 (url.split("/comments/")[1] || url),
-              share:
-                "https://reddit.com/comments/" +
+              share: "https://reddit.com/comments/" +
                 (url.split("/comments/")[1] || url)
             });
           } else {
             if (url.match("reddit.com/live/")) {
               f.media.comments.push({
                 name: "[Reddit] &nbsp; &nbsp; " + name,
-                embed:
-                  "https://www.redditmedia.com/live/" +
+                embed: "https://www.redditmedia.com/live/" +
                   url.split("reddit.com/live/")[1].split("/")[0] +
                   "/embed",
                 share: url
@@ -326,13 +303,12 @@ async function processData(data, query, callback) {
                 if (url.match("imgur.com")) {
                   f.media.photo.push({
                     name: "[Imgur] &nbsp; &nbsp; " + name,
-                    embed:
-                      "https://imgur.com/" +
+                    embed: "https://imgur.com/" +
                       url
-                        .match(
-                          /(https?:\/\/(?:i\.|)imgur\.com(?:\/(?:a|gallery)|)\/(.*?)(?:[#\/].*|$))/
-                        )[2]
-                        .split(".")[0] +
+                      .match(
+                        /(https?:\/\/(?:i\.|)imgur\.com(?:\/(?:a|gallery)|)\/(.*?)(?:[#\/].*|$))/
+                      )[2]
+                      .split(".")[0] +
                       "/embed",
                     share: url
                   });
@@ -345,8 +321,7 @@ async function processData(data, query, callback) {
                   } else {
                     if (url.match(".twitter.com/")) {
                       if (
-                        !url.match("/status/") &&
-                        [3, 4, 7].indexOf(f.statuscode) == -1
+                        !url.match("/status/") && [3, 4, 7].indexOf(f.statuscode) == -1
                       ) {
                         f.media.twitter.push({
                           name: name || "Twitter",
@@ -355,8 +330,7 @@ async function processData(data, query, callback) {
                       } else {
                         f.media.tweets.push({
                           name: "[Tweet] &nbsp; &nbsp; " + name,
-                          embed:
-                            "https://projects.yasiu.pl/twitterembed/?url=" +
+                          embed: "https://projects.yasiu.pl/twitterembed/?url=" +
                             url,
                           share: url
                         });
@@ -375,9 +349,9 @@ async function processData(data, query, callback) {
                         fallback &&
                         !RegExp(
                           custom[v].url
-                            .split("//")[1]
-                            .replace("www.", "")
-                            .split("/")[0]
+                          .split("//")[1]
+                          .replace("www.", "")
+                          .split("/")[0]
                         ).test(sources.embed_blacklist)
                       ) {
                         fallback();
@@ -409,18 +383,14 @@ async function processData(data, query, callback) {
         for (var v in custom) {
           if (
             custom[v].when == undefined ||
-            (custom[v].when.match("live") &&
-              [3, 4, 7].indexOf(f.statuscode) == -1 &&
+            (custom[v].when.match("live") && [3, 4, 7].indexOf(f.statuscode) == -1 &&
               f.tolaunch < 7200) ||
-            (custom[v].when.match("go") &&
-              [3, 4, 7].indexOf(f.statuscode) == -1) ||
+            (custom[v].when.match("go") && [3, 4, 7].indexOf(f.statuscode) == -1) ||
             (custom[v].when.match("recovery") && format.match("recovery"))
           ) {
             if (custom[v].is && f.media[custom[v].is]) {
               f.media[custom[v].is].push(
-                Object.assign(
-                  {},
-                  {
+                Object.assign({}, {
                     name: custom[v].name || "Source #" + v,
                     embed: custom[v].embed || custom[v].url,
                     share: custom[v].share || custom[v].url
@@ -508,27 +478,22 @@ async function processData(data, query, callback) {
                   f.media.video.unshift({
                     is: "video",
                     name: "Flightclub.io LIVE flight simulation",
-                    embed:
-                      "https://www.flightclub.io/live?w=1&code=" +
+                    embed: "https://www.flightclub.io/live?w=1&code=" +
                       q.data[r].code,
-                    share:
-                      "https://www.flightclub.io/result?tab=2&code=" +
+                    share: "https://www.flightclub.io/result?tab=2&code=" +
                       q.data[r].code
                   });
                 }
                 f.media.video.unshift({
                   is: "video",
                   name: "Flightclub.io flight simulation",
-                  embed:
-                    "https://www.flightclub.io/live?w=2&code=" + q.data[r].code,
-                  share:
-                    "https://www.flightclub.io/result?tab=2&code=" +
+                  embed: "https://www.flightclub.io/live?w=2&code=" + q.data[r].code,
+                  share: "https://www.flightclub.io/result?tab=2&code=" +
                     q.data[r].code
                 });
                 f.media.button.push({
                   name: "Flightclub.io",
-                  url:
-                    "https://www.flightclub.io/result?tab=2&code=" +
+                  url: "https://www.flightclub.io/result?tab=2&code=" +
                     q.data[r].code
                 });
                 break;
@@ -555,13 +520,10 @@ async function processData(data, query, callback) {
               }
               if (r.data.children[q].data.num_comments > 0) {
                 f.media.comments.push({
-                  name:
-                    "[Reddit] &nbsp; &nbsp; " + r.data.children[q].data.title,
-                  embed:
-                    "https://reddit-stream.com/comments/" +
+                  name: "[Reddit] &nbsp; &nbsp; " + r.data.children[q].data.title,
+                  embed: "https://reddit-stream.com/comments/" +
                     r.data.children[q].data.id,
-                  share:
-                    "https://reddit.com/comments/" + r.data.children[q].data.id
+                  share: "https://reddit.com/comments/" + r.data.children[q].data.id
                 });
               }
               if (!r.data.children[q].data.is_self) {
@@ -580,9 +542,8 @@ async function processData(data, query, callback) {
             var url = f.vidURLs[v];
             if (url.split("?v=")[1] != undefined) {
               f.media.video.unshift({
-                name: "YouTube feed #"+v,
-                embed:
-                  "https://www.youtube.com/embed/" +
+                name: "YouTube feed #" + v,
+                embed: "https://www.youtube.com/embed/" +
                   url.split("?v=")[1] +
                   "?rel=0&autoplay=1",
                 share: "https://www.youtube.com/watch?v=" + url.split("?v=")[1]
@@ -618,6 +579,22 @@ async function processData(data, query, callback) {
           }
           // Mixed content without working proxy
           /*
+
+          await getJSON(`https://api.weather.gov/points/${f.location.pads[0].latitude},${f.location.pads[0].longitude}`).then(r => { 
+            if (r && r.status != 404) {
+                f.media.comments.push({
+                  name: `[Weather] ${r.properties.relativeLocation.properties.city}, ${r.properties.relativeLocation.properties.state} weather forecast`,
+                  embed: `https://forecast.weather.gov/MapClick.php?lat=${f.location.pads[0].latitude}&lon=${f.location.pads[0].longitude}`,
+                  share: `https://forecast.weather.gov/MapClick.php?lat=${f.location.pads[0].latitude}&lon=${f.location.pads[0].longitude}`
+                });
+                f.media.comments.push({
+                  name: `[Weather] ${r.properties.radarStation} radar imagery`,
+                  embed: `https://radar.weather.gov/lite/N0R/${r.properties.radarStation.split("K")[1]}_loop.gif`,
+                  share: r.credit
+                });
+              }
+            })
+
           if (f.location.id == 9) {
             f.media.comments.push({
               name: "[Weather] JAXA TNSC Daily weather forecast",
@@ -669,9 +646,7 @@ async function processData(data, query, callback) {
         var b = new Date(data.launches[g].net);
         if (!data.stats.byYear[b.getUTCFullYear()]) {
           for (
-            i = b.getUTCFullYear();
-            i < new Date().getUTCFullYear() + 1;
-            i++
+            i = b.getUTCFullYear(); i < new Date().getUTCFullYear() + 1; i++
           ) {
             data.stats.byYear[i] = data.stats.byYear[i] || {
               "1": 0,
@@ -715,23 +690,20 @@ function processAgency(data) {
     id: data.id || -1,
     name: data.name || "Unknown",
     abbrev: (data.abbrev && data.abbrev.split("-")[0]) || "UNK",
-    shortname:
-      data.name && data.name.length > 11 ? data.abbrev : data.name || "UNK",
+    shortname: data.name && data.name.length > 11 ? data.abbrev : data.name || "UNK",
     description: "",
     founded: "",
     type: agencyType(data.type),
     typeCode: data.type || -1,
     islsp: data.islsp || 0,
     countryCode: data.countryCode || "UNK",
-    countryFlag:
-      config.deploymentURL + "flag/" +
+    countryFlag: config.deploymentURL + "flag/" +
       data.countryCode.split(",")[0].toLowerCase(),
     info: data.infoURL || (data.infoURLs && data.infoURLs[0]) || "",
     wiki: (data.wikiURL || "").replace("http://", "https://"),
-    icon:
-      data.infoURL || (data.infoURLs && data.infoURLs[0])
-        ? config.deploymentURL + "logo/" + (data.infoURL || data.infoURLs[0])
-        : "",
+    icon: data.infoURL || (data.infoURLs && data.infoURLs[0]) ?
+      config.deploymentURL + "logo/" + (data.infoURL || data.infoURLs[0]) :
+      "",
   };
   if (!data) return modelAgency;
   if (modelAgency.countryCode.split(",").length > 1) {
@@ -792,12 +764,10 @@ function processRocket(data) {
     family: {
       id: (data.family && (data.family && data.family.id)) || -1,
       name: data.familyname || (data.family && data.family.name) || "Unknown",
-      agencies: data.agencies || [
-        {
-          id: -1,
-          name: "Unknown"
-        }
-      ]
+      agencies: data.agencies || [{
+        id: -1,
+        name: "Unknown"
+      }]
     },
     agency: {
       id: -1,
@@ -829,20 +799,17 @@ function processPad(data) {
     name: data.name || "Unknown",
     info: data.infoURL || (data.infoURLs && data.infoURLs[0]) || "",
     wiki: (data.wikiURL || "").replace("http://", "https://"),
-    map:
-      "https://www.google.com/maps/embed/v1/place?key=" +
+    map: "https://www.google.com/maps/embed/v1/place?key=" +
       config.keys.google +
       "&maptype=satellite&q=" +
       data.latitude +
       "," +
       data.longitude,
-    img:
-      config.deploymentURL + "map/?zoom=16&maptype=satellite&size=256x256&scale=1&center=" +
+    img: config.deploymentURL + "map/?zoom=16&maptype=satellite&size=256x256&scale=1&center=" +
       data.latitude +
       "," +
       data.longitude,
-    icon:
-      config.deploymentURL + "map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
+    icon: config.deploymentURL + "map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=" +
       data.latitude +
       "," +
       data.longitude,
@@ -863,16 +830,13 @@ function processLocation(data) {
     id: data.id || -1,
     name: data.name || "Unknown",
     countryCode: data.countrycode || "UNK",
-    countryFlag:
-      config.deploymentURL + "flag/" +
+    countryFlag: config.deploymentURL + "flag/" +
       data.countrycode.split(",")[0].toLowerCase(),
-    map:
-      "https://www.google.com/maps/embed/v1/place?key=" +
+    map: "https://www.google.com/maps/embed/v1/place?key=" +
       config.keys.google +
       "&maptype=satellite&q=Launch+Centre+" +
       data.name.replace(" ", "+"),
-    img:
-      config.deploymentURL + "map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=Launch+Centre+" +
+    img: config.deploymentURL + "map/?zoom=16&maptype=satellite&size=128x128&scale=1&center=Launch+Centre+" +
       data.name.replace(" ", "+"),
     info: data.infoURL || data.infoURLs[0] || "",
     wiki: (data.wikiURL || "").replace("http://", "https://")
@@ -903,10 +867,12 @@ function QueryString(url, callback) {
 
 function getJSON(url) {
   return new Promise((resolve, reject) => {
-    request(
-      {
+    request({
         url: url,
-        json: true
+        json: true,
+        headers: {
+          'User-Agent': 'rocket.watch'
+        }
       },
       function (error, response, body) {
         if (error) reject(error);

@@ -20,7 +20,7 @@ const routes = [
     suffix: "&key=" + keys.google
   },
   {
-    slug: "/rocket/*",
+    slug: "/rocketimg/*",
     url: "https://s3.amazonaws.com/launchlibrary/RocketImages/",
     suffix: ""
   }
