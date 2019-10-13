@@ -5,7 +5,7 @@ const sources = require('./sources.json')
 
 console.log("rocket.watch");
 
-const backendURL = "http://localhost:9000/api/";
+const backendURL = "https://api.rocket.watch/";
 
 let countdowns = [];
 
