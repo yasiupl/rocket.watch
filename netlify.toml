@@ -23,7 +23,7 @@
   to = "https://www.youtube.com/channel/UCpY48ts_nCvlBRAVlbJePgg" 
   
 [[redirects]]
-  from = "https://ocketwatch.yasiu.pl"
+  from = "https://rocketwatch.yasiu.pl"
   to = "https://rocket.watch"
   status = 301
 
