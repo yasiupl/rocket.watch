@@ -21,3 +21,18 @@
 [[redirects]]
   from = "/youtube"
   to = "https://www.youtube.com/channel/UCpY48ts_nCvlBRAVlbJePgg" 
+  
+[[redirects]]
+  from = "https://ocketwatch.yasiu.pl"
+  to = "https://rocket.watch"
+  status = 301
+
+[[redirects]]
+  from = "https://spacex.yasiu.pl"
+  to = "https://rocket.watch/#agency=121"
+  status = 301
+  
+[[redirects]]
+  from = "https://ula.yasiu.pl"
+  to = "https://rocket.watch/#agency=124"
+  status = 301
