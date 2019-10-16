@@ -763,7 +763,7 @@ function watch(j, k) {
                             M.toast({
                                 html: "Updated Countdown"
                             });
-                            count = setInterval(function () {
+                            let count = setInterval(function () {
                                 let o = Math.floor((Date.parse(b.net) - Date.parse(new Date())) / 1000);
                                 document.title = "[" + Countdown(b.net) + "] " + b.name.split("|")[1];
                                 countdown.innerHTML = Countdown(b.net)
@@ -968,7 +968,7 @@ function settings() {
     let $main = document.getElementsByTagName("main")[0];
     let $info = document.getElementById("info");
 
-    $info.innerHTML = '<div class="card-content"><img class="circle" src="assets/settings.png" onerror=this.onerror=null;this.display="none"><h1 class="header black-text truncate">Settings</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div>';
+    $info.innerHTML = '<div class="card-content"><img class="circle" src="assets/settings.png" =this.onerror=null;this.display="none"><h1 class="header black-text truncate">Settings</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div>';
 
     $main.innerHTML = '<div class="card"><div class="card-content"><a class="waves-effect waves-light btn hoverable" id="restart">Clear Settings and Site Data</a><a class="waves-effect waves-light btn hoverable" onclick="location.reload(true);">Reload</a></div></div>';
 
