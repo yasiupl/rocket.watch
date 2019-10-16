@@ -742,19 +742,11 @@ function watch(j, k) {
 
         let changed = a.changed;
 
-        let refreshLaunch = function () {
-
-            for (let d in countdowns) {
-                window.clearInterval(countdowns[d]);
-            }
-            watch(j, k);
-        }
-
         let updateCountdown = function () {
             load("launch?mode=summary" + (parseInt(j) ? ("&id=" + j) : ("&limit=1&name=" + j)) + "&changed=" + ISODateString(Date.parse(changed) + 1000).replace("T", " ").split(".")[0], function (refreshdata) {
 
                 if (refreshdata.status != "error") {
-                    b = refreshdata.launches[0];
+                    let b = refreshdata.launches[0];
 
                     if (b) {
                         console.log("Updating Countdown");
@@ -793,7 +785,7 @@ function watch(j, k) {
         //document.getElementById("richEmbed").innerHTML = '{ "@context": "https://schema.org", "@type": "Event", "name": "' + a.name + '", "startDate": "' + a.isostart + '", "url": "' + location.href + '", "location": { "@type": "Place", "name": "' + a.location.name + '", "address": { "@type": "GeoCoordinates", "latitude": "' + a.location.pads[0].latitude + '", "longitude": "' + a.location.pads[0].longitude + '" } }, "image": "' + a.location.img + '", "description": "' + a.description + '", "endDate": "' + a.isoend + '", "performer": { "@type": "PerformingGroup", "name": "' + a.agency.name + '" } }';
 
 
-        $info.innerHTML = '<div id="video"></div><div id="details" class="card-content"><h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + a.rocket.id + '">' + a.name.replace("|", "</a> | ") + '</h1><h3 id="countdown' + a.id + '">' + a.status + '</h3><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip" onclick="refreshLaunch()"><i class="fas fa-sync"></i>Refresh</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=' + a.agency.id + '"><img src="' + a.agency.icon + '?size=32" onerror=this.onerror=null;this.src="' + a.agency.countryFlag + '">' + a.agency.name + '</a><a class="chip tooltipped" data-tooltip="More info" href="/#pad=' + (a.location.pads && a.location.pads[0].id) + '"><i class="far fa-compass"></i>' + a.location.pads[0].name + '</a><a class="chip tooltipped" id="launchdate" data-tooltip="' + a.net + '"><i class="far fa-clock"></i>' + ReadableDateString(a.net) + '</a></div><p class="flow-text" id="description">' + a.description + '</p></div><div id="buttons"></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div></div>';
+        $info.innerHTML = '<div id="video"></div><div id="details" class="card-content"><h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + a.rocket.id + '">' + a.name.replace("|", "</a> | ") + '</h1><h3 id="countdown' + a.id + '">' + a.status + '</h3><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip" id="refreshLaunch"><i class="fas fa-sync"></i>Refresh</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=' + a.agency.id + '"><img src="' + a.agency.icon + '?size=32" onerror=this.onerror=null;this.src="' + a.agency.countryFlag + '">' + a.agency.name + '</a><a class="chip tooltipped" data-tooltip="More info" href="/#pad=' + (a.location.pads && a.location.pads[0].id) + '"><i class="far fa-compass"></i>' + a.location.pads[0].name + '</a><a class="chip tooltipped" id="launchdate" data-tooltip="' + a.net + '"><i class="far fa-clock"></i>' + ReadableDateString(a.net) + '</a></div><p class="flow-text" id="description">' + a.description + '</p></div><div id="buttons"></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div></div>';
 
         let livevideo = document.querySelector("#video");
         let details = document.querySelector("#details");
@@ -813,6 +805,14 @@ function watch(j, k) {
                     url: location.href
                 })
             }
+        }
+
+        document.getElementById("refreshLaunch").onclick = function () {
+
+            for (let d in countdowns) {
+                window.clearInterval(countdowns[d]);
+            }
+            watch(j, k);
         }
 
         if (a.tbdtime != 1) {
