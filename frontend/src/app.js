@@ -151,15 +151,14 @@ function home() {
     let total = 0;
     $main.innerHTML = '';
     let $upcoming = document.createElement("div");
-    $upcoming.style = "padding: 0 !important";
+    $upcoming.id = "upcoming";
     $main.appendChild($upcoming);
 
     let $successful = document.createElement("div");
-    $successful.style = "padding: 0 !important";
+    $successful.id = "successful"
     $main.appendChild($successful);
     let $featured = document.createElement("div");
     $featured.id = "featured";
-    $featured.style = "padding: 0 !important";
     $main.appendChild($featured);
 
     let refreshHome = function () {
