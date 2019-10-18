@@ -23,7 +23,32 @@ html {
     text-align: center;
     flex: 1 0 auto;
     max-width: 100%;
-    padding: 0 !important
+    padding: 0 !important;
+    
+    .col {
+      padding: 0 !important;
+    }
+
+    #upcoming {
+      display: flex;
+      flex-direction: column;
+      @media only screen and (min-width: 992px) {
+        flex-direction: row;
+      }
+      .col {
+        flex-direction: column;
+        display: flex;
+        flex: 1;
+        .card {
+          flex: 1;
+          flex-direction: column;
+          display: flex;
+          .card-content {
+            flex: 1;
+          }
+        }
+      }
+    }
   }
 
   footer .card-panel {
@@ -414,9 +439,6 @@ html {
     font-size: 4rem;
     height: 6rem;
     text-align: center;
-  }
-  main.col {
-    padding: 0 !important;
   }
   .tabs {
     background-color: transparent;
