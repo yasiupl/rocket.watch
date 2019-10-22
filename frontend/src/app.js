@@ -2,6 +2,7 @@ import Chart from 'chart.js';
 import 'materialize-css/dist/js/materialize.min.js'
 import './js/fontawesome'
 import {QueryString} from './js/utils'
+
 import home from './pages/home.js'
 import watch from './pages/watch'
 import agency from './pages/agency'
@@ -54,7 +55,6 @@ if (localStorage.getItem("rocketwatch.settings")) {
     };
     localStorage.setItem("rocketwatch.settings", JSON.stringify(window.$settings))
 }
-
 
 
 function init() {
@@ -147,7 +147,6 @@ function init() {
         } else {
             document.getElementById("loading-message").innerHTML = '<h1>You\'re offline</h1><h5>Check your internet connection</h5>';
         }
-        //window.history.pushState(undefined, undefined, (location.search || location.hash).replace("#", "?"));
     });
 
 }
