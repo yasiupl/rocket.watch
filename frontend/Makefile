@@ -6,7 +6,7 @@ install:
 copy:
 	mkdir -p dist/assets
 	cp -r src/assets dist
-	cp src/ads.txt dist
+	cp -r src/static/* dist
 
 build:
 	node_modules/.bin/webpack 
