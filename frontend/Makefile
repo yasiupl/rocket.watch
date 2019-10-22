@@ -8,8 +8,8 @@ copy:
 	cp -r src/assets dist
 	cp -r src/static/* dist
 
-build:
+build: copy
 	node_modules/.bin/webpack 
 
-serve: 
+serve: copy
 	node_modules/.bin/webpack-dev-server
