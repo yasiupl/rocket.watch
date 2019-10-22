@@ -83,7 +83,7 @@ function init() {
     if (document.querySelector('.sidenav-overlay'))
         document.querySelector('.sidenav-overlay').style.display = "none";
 
-
+    // This is what you would call a "router"
 
     QueryString(function (b) {
         let launched = 0;
