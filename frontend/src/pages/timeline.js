@@ -1,4 +1,4 @@
-import {load, ReadableDateString} from '../js/utils'
+import {load, ReadableDateString, Countdown} from '../js/utils'
 
 export default function timeline(k, page) {
     let $main = document.getElementsByTagName("main")[0];
