@@ -10,11 +10,7 @@ export function materialize() {
 
 export function ISODateString(c) {
     c = new Date(c)
-
-    function d(a) {
-        return a < 10 ? "0" + a : a
-    }
-    return c.toISOString() || (c.getUTCFullYear() + "-" + d(c.getUTCMonth() + 1) + "-" + d(c.getUTCDate()) + "T" + d(c.getUTCHours()) + ":" + d(c.getUTCMinutes()) + ":" + d(c.getUTCSeconds()) + "Z")
+    return c.toISOString() || (c.getUTCFullYear() + "-" + padnumber(c.getUTCMonth() + 1) + "-" + padnumber(c.getUTCDate()) + "T" + padnumber(c.getUTCHours()) + ":" + padnumber(c.getUTCMinutes()) + ":" + padnumber(c.getUTCSeconds()) + "Z")
 }
 
 export function ReadableDateString(f) {
@@ -23,55 +19,48 @@ export function ReadableDateString(f) {
     return d
 }
 
-export function Countdown(c, d) {
-    let padnumber = function (f, b) {
-        let a = f + "";
-        while (a.length < b) {
-            a = "0" + a
+export function Countdown(date, element) {
+    let count = function (date) {
+        let final, string;
+        let then = Date.parse(date) || date;
+        let now = new Date(Date.now());
+        let seconds = Math.floor((then - now) / 1000);
+        if (seconds < 0) {
+            string = "L+ ";
+            seconds = Math.floor((now - then) / 1000) + 1; // +1 because we want to have one 0 on the countdown
+        } else string = "L- ";
+        console.log(seconds);
+        let minutes = Math.floor(seconds / 60);
+        let hours = Math.floor(minutes / 60);
+        let days = Math.floor(hours / 24);
+        let part = padnumber((seconds % 60), 2);
+        if (seconds < 60) {
+            final = string + part
         }
-        return a
-    };
-    let count = function (u) {
-        let r;
-        let a = Date.parse(u);
-        let q = new Date(Date.now());
-        let o = Math.floor((a - q) / 1000);
-        let s = "L- ";
-        if (o <= 0) {
-            s = "L+ ";
-            o = Math.floor((q - a) / 1000)
+        part = padnumber((minutes % 60), 2) + ":" + part;
+        if (minutes < 60) {
+            final = string + part
         }
-        let t = Math.floor(o / 60);
-        let p = Math.floor(t / 60);
-        let b = Math.floor(p / 24);
-        let v = padnumber((o % 60), 2);
-        if (o < 60) {
-            r = s + v
+        part = padnumber((hours % 24), 2) + ":" + part;
+        if (hours < 24) {
+            final = string + part
         }
-        v = padnumber((t % 60), 2) + ":" + v;
-        if (t < 60) {
-            r = s + v
-        }
-        v = padnumber((p % 24), 2) + ":" + v;
-        if (p < 24) {
-            r = s + v
-        }
-        if (b > 1) {
-            r = s + b + " days " + v
+        if (days > 1) {
+            final = string + days + " days " + part
         } else {
-            if (b == 1) {
-                r = s + b + " day " + v
+            if (days == 1) {
+                final = string + days + " day " + part
             }
         }
-        return r
+        return final
     };
-    if (d) {
+    if (element) {
         let countdown = setInterval(function () {
-            (document.getElementById(d) || d).innerHTML = count(c)
+            (document.getElementById(element) || element).innerHTML = count(date);
         }, 1000);
         countdowns.push(countdown)
     }
-    return count(c)
+    return count(date)
 }
 
 export function QueryString(callback, url) {
@@ -153,3 +142,11 @@ export function saveValue(e) {
     console.log(key + ": " + value);
     location.reload(true);
 }
+
+function padnumber(number, zeros=2) {
+    let string = number + "";
+    while (string.length < zeros) {
+        string = "0" + string
+    }
+    return string
+};
