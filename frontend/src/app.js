@@ -58,6 +58,9 @@ if (localStorage.getItem("rocketwatch.settings")) {
 
 
 function init() {
+    document.title = "rocket.watch";
+    window.scrollTo(0, 0);
+
     let $main = document.getElementsByTagName("main")[0];
     let $info = document.getElementById("info");
     document.getElementById("background").innerHTML = "";
@@ -66,10 +69,13 @@ function init() {
     $main.className = "container";
     delete $main.id;
 
+    // Delete all countdowns
     window.countdowns = window.countdowns || [];
-    for (let d in countdowns) {
-        window.clearInterval(countdowns[d])
+    for (let countdown of countdowns) {
+        window.clearInterval(countdown)
     }
+
+    // Delete all MaterializeCSS tooltips
     let tooltips = document.querySelectorAll('.material-tooltip');
     if (tooltips.length) {
         for (let i in tooltips) {
@@ -77,68 +83,69 @@ function init() {
             tooltips[i].parentElement.removeChild(tooltips[i]);
         }
     }
-    document.title = "rocket.watch";
-    window.scrollTo(0, 0);
+    
+    // Close side-nav and hide side-nav overlay when a link is clicked.
     document.querySelector('.sidenav').style.transform = "translateX(-105%)";
     if (document.querySelector('.sidenav-overlay'))
         document.querySelector('.sidenav-overlay').style.display = "none";
 
     // This is what you would call a "router"
-
-    QueryString(function (b) {
+    QueryString(function (query) {
         let launched = 0;
-        if (b.id) {
-            watch(b.id);
+        if (query.id) {
+            watch(query.id);
             launched++
         }
-        if (b.event) {
-            watch(b.event, "customlive");
+        if (query.event) {
+            watch(query.event, "customlive");
             launched++
         }
-        if (b.agency) {
-            agency(b.agency);
+        if (query.agency) {
+            agency(query.agency);
             launched++
         }
-        if (b.pad) {
-            pad(b.pad);
+        if (query.pad) {
+            pad(query.pad);
             launched++
         }
-        if (b.location) {
-            launchcenter(b.location);
+        if (query.location) {
+            launchcenter(query.location);
             launched++
         }
-        if (b.rocket) {
-            rocket(b.rocket);
+        if (query.rocket) {
+            rocket(query.rocket);
             launched++
         }
-        if (b.search) {
-            search(b.search);
+        if (query.search) {
+            search(query.search);
             launched++
         }
-        if (b.collection) {
-            search(b.collection + '&sort=asc');
+        if (query.collection) {
+            search(query.collection + '&sort=asc');
             launched++
         }
-        if (b.country) {
-            nation(b.country);
+        if (query.country) {
+            nation(query.country);
             launched++
         }
-        if (b.history) {
-            timeline(1, b.history || b.page || 1);
+        if (query.history) {
+            timeline(1, query.history || query.page || 1);
             launched++
         }
-        if (b.future) {
-            timeline(0, b.future || b.page || 1);
+        if (query.future) {
+            timeline(0, query.future || query.page || 1);
             launched++
         }
-        if (b.settings) {
+        if (query.settings) {
             settings();
             launched++
         }
+        // If nothing maches a query string, launch home page.
         if (!launched) {
             home();
         }
 
+        // Display error message after 6 seconds of nothing. Bandaid solution for lack of error handling in the rest of the codebase
         if (navigator.onLine) {
             setTimeout(function () {
                 if (document.getElementById("loading-message"))

@@ -13,6 +13,7 @@ export default function watch(id, mode="live") {
     $main.innerHTML = "";
     $main.appendChild($live);
 
+    // fetch launch with an ID if the ID is a number, or fetch a custom file if the ID is a string. fetch lite version if only countdown should be displayed.
     load((mode.match("custom")) ? (id + "?format=customlive") : ("launch?mode=verbose" + (parseInt(id) ? ("&id=" + id) : ("&limit=1&name=" + id)) + "&format=" + (($query.mode == "countdown") ? "" : mode)), function (data) {
 
         let launch = data.launches[0];
@@ -28,8 +29,8 @@ export default function watch(id, mode="live") {
                     if (newLaunch) {
                         console.log("Updating Countdown");
 
-                        for (let d in countdowns) {
-                            window.clearInterval(countdowns[d]);
+                        for (let count of countdowns) {
+                            window.clearInterval(count);
                         }
 
                         countdown.innerHTML = newLaunch.status;
@@ -164,11 +165,11 @@ export default function watch(id, mode="live") {
             }
 
             let medialist = "<option disabled selected>Select source</option>";
-            for (let e in list) {
-                medialist += `<option value='${e}'>${list[e].name.slice(0, 100)}</option>`;
+            for (let item in list) {
+                medialist += `<option value='${item}'>${list[item].name.slice(0, 100)}</option>`;
             }
 
-            let selectSource = function (source) {
+            window.selectSource = function (source) {
                 id = parseInt(document.getElementById(source + "_select").value);
                 window.open(list[id].embed, source);
                 document.getElementById(source + "_reload").href = list[id].embed;
