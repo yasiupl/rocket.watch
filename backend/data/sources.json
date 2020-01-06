@@ -173,13 +173,7 @@
           "when": "live",
           "is": "audio",
           "name": "Hosted webcast audio",
-          "url": "https://rocket.watch/proxy/http://audiorelay.spacetechnology.net:21211/hosted"
-        },
-        {
-          "when": "never",
-          "is": "audio",
-          "name": "Technical webcast audio",
-          "url": "//audiorelay.spacetechnology.net:2120/technical"
+          "url": "https://codav.de/icecast/spacex-low.mp3"
         },
         {
           "when": "go",
@@ -288,18 +282,6 @@
     "byLocationID": {
       "16": [
         {
-          "when": "live",
-          "name": "Kennedy Space Center",
-          "is": "audio",
-          "url": "https://listen.broadcastify.com/?t=AA86ED15E2074C752B1505E7F69F2FF7B5ABBB427CA4898DE69CFC6BF7DD9B228D00A4B2E9CED3A2952BB2B574ED0EA1"
-        },
-        {
-          "when": "live | recovery",
-          "name": "Port Canaveral [Range]",
-          "is": "audio",
-          "url": "https://listen.broadcastify.com/?t=DBE5DC4261F8C20EC7EC6CF6874BA6F6FFF1669077ABF84306B3763446A533F851E9E11D5D7C5FDACBE36C8D2D7DBE9E7E1AF914327385040C8031CDAC6DB8D1"
-        },
-        {
           "when": "recovery",
           "is": "video",
           "name": "ASDS \"Of Course I Still Love You\" Support Ship Location",
@@ -339,18 +321,6 @@
           "name": "SpaceFlightNow.com Live",
           "embed": "https://cdn.livestream.com/embed/spaceflightnow?layout=4&color=0x000000&autoPlay=true&mute=false&iconColorOver=0xe7e7e7&iconColor=0xcccccc&allowchat=true",
           "share": "http://livestre.am/rxR"
-        },
-        {
-          "when": "live",
-          "name": "Kennedy Space Center",
-          "is": "audio",
-          "url": "https://listen.broadcastify.com/?t=AA86ED15E2074C752B1505E7F69F2FF7B5ABBB427CA4898DE69CFC6BF7DD9B228D00A4B2E9CED3A2952BB2B574ED0EA1"
-        },
-        {
-          "when": "live | recovery",
-          "is": "audio",
-          "name": "Port Canaveral [Range]",
-          "url": "https://listen.broadcastify.com/?t=DBE5DC4261F8C20EC7EC6CF6874BA6F6FFF1669077ABF84306B3763446A533F851E9E11D5D7C5FDACBE36C8D2D7DBE9E7E1AF914327385040C8031CDAC6DB8D1"
         },
         {
           "when": "recovery",
