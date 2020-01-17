@@ -22,26 +22,27 @@ function load(query, callback) {
   var cache = storage.get(query);
 
   if (!cache || (cache && Date.now() - cache.expire > 0)) {
-    getJSON(
-      format.match("custom") ?
-      "https://rocket.watch/data/custom/" + query.split("?")[0] + ".json" :
-      config.launchlibraryURL + query
-    ).then(data => {
-      if (data.status >= 500) {
-        if (data) {
-          console.log(query);
-          console.log(
-            "Failed to request, Serving cache " + format + "|" + query
-          );
-          callback(cache);
+    if(format.match("custom")) {
+      const data = require(`./data/custom/${query.split("?")[0]}.json`);
+      processData(data, query, callback);
+    } else {
+      getJSON(config.launchlibraryURL + query).then(data => {
+        if (data.status >= 500) {
+          if (data) {
+            console.log(query);
+            console.log(
+              "Failed to request, Serving cache " + format + "|" + query
+            );
+            callback(cache);
+          } else {
+            console.error(query);
+            console.error("Database connection failed " + data.status);
+          }
         } else {
-          console.error(query);
-          console.error("Database connection failed " + data.status);
+          processData(data, query, callback);
         }
-      } else {
-        processData(data, query, callback);
-      }
-    });
+      });
+    }
   } else callback(cache);
 }
 

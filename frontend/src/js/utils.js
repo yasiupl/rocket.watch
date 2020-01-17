@@ -29,7 +29,6 @@ export function Countdown(date, element) {
             string = "L+ ";
             seconds = Math.floor((now - then) / 1000) + 1; // +1 because we want to have one 0 on the countdown
         } else string = "L- ";
-        console.log(seconds);
         let minutes = Math.floor(seconds / 60);
         let hours = Math.floor(minutes / 60);
         let days = Math.floor(hours / 24);
