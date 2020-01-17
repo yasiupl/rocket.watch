@@ -563,7 +563,7 @@ async function processData(data, query, callback) {
           if (f.location.countryCode == "USA") {
 
             await getJSON("https://forecast.weather.gov/MapClick.php?unit=1&lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude + "&FcstType=json").then(r => {
-              if (r && r.currentobservation.name) {
+              if (r && r.currentobservation && r.currentobservation.name) {
                 f.media.comments.push({
                   name: "[Weather] " + r.currentobservation.name + " weather forecast",
                   embed: "https://forecast.weather.gov/MapClick.php?lat=" + f.location.pads[0].latitude + "&lon=" + f.location.pads[0].longitude,

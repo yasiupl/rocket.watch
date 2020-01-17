@@ -1,0 +1,24 @@
+{
+    "webhooks": [],
+    "keys": {
+        "google": "*",
+        "facebook": "*",
+        "onesignal": "*",
+        "pushbullet": "*",
+        "twitter": {
+            "consumer_key": "*",
+            "consumer_secret": "*",
+            "access_token_key": "*",
+            "access_token_secret": "*"
+        },
+        "reddit": {
+            "userAgent": "*",
+            "clientId": "*",
+            "clientSecret": "*",
+            "username": "*",
+            "password": "*"
+        }
+    },
+    "launchlibraryURL": "https://launchlibrary.net/1.4.1/",
+    "deploymentURL": "http://localhost:9000/api/"
+}
