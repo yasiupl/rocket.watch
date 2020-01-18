@@ -1,6 +1,13 @@
 {
     "featuring": [
       {
+        "img": "./assets/rocketwatch.png",
+        "name": "SpaceX IFA",
+        "desc": "SpaceX Crew Dragon In Flight Abort Test.",
+        "action": "Watch",
+        "url": "/#event=spacex-ifa"
+      },
+      {
         "img": "./assets/gemini.png",
         "name": "Project Gemini",
         "desc": "Project Gemini was NASA's second human spaceflight program. Conducted between projects Mercury and Apollo, Gemini started in 1961 and concluded in 1966. The Gemini spacecraft carried a two-astronaut crew. Ten Gemini crews flew low Earth orbit (LEO) missions between 1965 and 1966 putting the United States in the lead during the Cold War Space Race against the Soviet Union.",
