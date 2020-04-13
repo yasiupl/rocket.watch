@@ -2,7 +2,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const WorkboxPlugin = require('workbox-webpack-plugin');
-const GoogleAnalyticsPlugin = require('google-analytics-webpack-plugin')
 const path = require('path');
 
 module.exports = {
@@ -63,9 +62,6 @@ module.exports = {
             swSrc: './src/serviceworker.js',
             swDest: 'OneSignalSDKWorker.js'
         }),
-        new GoogleAnalyticsPlugin({
-            id: 'UA-71778687-10'
-        })
     ],
     module: {
         rules: [{
