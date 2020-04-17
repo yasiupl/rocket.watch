@@ -1,6 +1,6 @@
 [build]
-  base = "frontend/"
-  publish = "frontend/dist/"
+  base = "/"
+  publish = "dist/"
   command = "make deploy"
 
 [build.environment]
