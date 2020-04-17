@@ -1,8 +1,0 @@
-node_modules
-
-# test coverage
-coverage
-# configuration/deploy specific files
-config.json
-cache.json
-keys.json
