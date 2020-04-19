@@ -64,7 +64,7 @@ module.exports = {
             swDest: 'OneSignalSDKWorker.js'
         }),
         new GoogleTagManagerPlugin({
-            id: 'GTM-WFFK2MP',
+            id: 'GTM-PBBB4LF',
             dataLayerName: 'dataLayer',
         }),
     ],
