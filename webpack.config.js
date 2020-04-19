@@ -65,6 +65,7 @@ module.exports = {
         }),
         new GoogleTagManagerPlugin({
             id: 'GTM-WFFK2MP',
+            dataLayer: 'dataLayer',
         }),
     ],
     module: {
