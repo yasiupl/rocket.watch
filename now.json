@@ -1,6 +1,6 @@
 {
 	"name": "rocket.watch",
-	"version": "2",
+	"version": 2,
 	"alias": ["rocket.watch", "rocketwatch.now.sh"],
 	"routes": [
 		{"src": "/discord", "dest": "https://discord.gg/4yvx5ta"},
