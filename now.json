@@ -3,7 +3,7 @@
 	"version": 2,
 	"alias": ["rocket.watch", "rocketwatch.now.sh"],
 	"routes": [
-		{"src": "/discord", "dest": "https://discord.gg/4yvx5ta"},
+		{"src": "/discord", "dest": "https://discord.gg/cExSaKZ"},
 		{"src": "/reddit", "dest": "https://reddit.com/r/rocketwatch"},
 		{"src": "/twitter", "dest": "https://twitter.com/rocket_watch"},
 		{"src": "/youtube", "dest": "https://www.youtube.com/channel/UCpY48ts_nCvlBRAVlbJePgg"}
