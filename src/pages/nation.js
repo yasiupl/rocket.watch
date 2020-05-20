@@ -13,7 +13,7 @@ export default function nation(k) {
             $main.appendChild($agencies);
             for (let c in a.agencies) {
                 c = a.agencies[c];
-                $agencies.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate">' + c.name + '</h5><a class="chip"><img src="' + c.icon + '" onerror=this.onerror=null;this.style.display="none">' + c.abbrev + '</a><a class="chip">' + c.type + ' Agency</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#agency=' + c.id + '">Details</a></div>'
+                $agencies.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate">' + c.name + '</h5><a class="chip"><img src="' + c.icon + '" onerror=this.onerror=null;this.style.display="none">' + c.abbrev + '</a><a class="chip">' + c.type + ' Agency</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#agency=' + c.id + '">Details</a></div>'
             }
         } else {
             $main.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">Not found</h1>'
@@ -26,7 +26,7 @@ export default function nation(k) {
                 $main.appendChild($locations);
                 for (let b in c.locations) {
                     let a = c.locations[b];
-                    $locations.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate">' + a.name + '</h5><a class="chip"><img src="' + a.countryFlag + '">' + a.countryCode + '</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#location=' + a.id + '">Details</a></div></div>'
+                    $locations.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate">' + a.name + '</h5><a class="chip"><img src="' + a.countryFlag + '">' + a.countryCode + '</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#location=' + a.id + '">Details</a></div></div>'
                 }
             }
             materialize();

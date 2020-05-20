@@ -69,13 +69,14 @@ export default function watch(id, mode="live") {
         let badges = document.querySelector("#chips");
         let tabs = document.querySelector("#maintabs");
 
+        buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>';
 
         if (navigator.share) {
             buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="window.share()"><i class="fas fa-share-alt"></i></a>';
             window.share = function () {
                 navigator.share({
                     title: launch.name,
-                    text: launch.description,
+                    text: launch.description.substring(0,100) + '...',
                     url: location.href
                 })
             }

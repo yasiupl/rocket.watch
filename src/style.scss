@@ -94,7 +94,7 @@ html {
     display: none;
   }
   a {
-    color: gray;
+    color: black;
   }
   @media (max-width: 600px) {
     .row .col {
@@ -135,7 +135,7 @@ html {
     }
   }
   body {
-    background-color: #e7e7e7 !important;
+    background-color: #e7e7e7;
   }
   nav {
     background-color: #1c2530;
@@ -156,7 +156,7 @@ html {
     right: 24px;
   }
   #background {
-    background-color: #e7e7e7 !important;
+    background-color: #e7e7e7;
     z-index: -9999;
     position: fixed;
     width: 110%;
@@ -177,11 +177,11 @@ html {
     text-align: center;
     margin: 0;
     border-radius: unset;
-    background-color: #1c2530 !important;
-    color: #fff !important;
+    background-color: #1c2530;
+    color: #fff;
   }
   #info .pinned {
-    background-color: #1c2530 !important;
+    background-color: #1c2530;
   }
   #info .indicator {
     background-color: #fff;
@@ -194,10 +194,10 @@ html {
   #info h4,
   #info h5 {
     font-weight: 100;
-    color: #fff !important;
+    color: #fff;
   }
   #info .tab a {
-    color: #fff !important;
+    color: #fff;
   }
   #info .chip {
     background-color: #151b23;
@@ -279,15 +279,15 @@ html {
     background-color: #151b23;
   }
   body.dark .card-panel {
-    background-color: #1c2530 !important;
-    color: #fff !important;
+    background-color: #1c2530;
+    color: #fff;
   }
   body.dark .card {
-    background-color: #1c2530 !important;
-    color: #fff !important;
+    background-color: #1c2530;
+    color: #fff;
   }
   body.dark .card .pinned {
-    background-color: #1c2530 !important;
+    background-color: #1c2530;
   }
   body.dark .card .indicator {
     background-color: #fff;
@@ -300,13 +300,13 @@ html {
   body.dark .card h4,
   body.dark .card h5 {
     font-weight: 100;
-    color: #fff !important;
+    color: #fff;
   }
   body.dark .card .btn,
   body.dark .card .btn-large,
   body.dark .card .btn-small {
     margin: 0.5rem;
-    background-color: #151b23 !important;
+    background-color: #151b23;
   }
   body.dark .card .collection {
     border: 1px solid #151b23;
@@ -332,10 +332,10 @@ html {
     border-radius: 50%;
   }
   body.dark .tab a {
-    color: #fff !important;
+    color: #fff;
   }
   body.dark #background {
-    background-color: #151b23 !important;
+    background-color: #151b23;
   }
   .card-title .chip {
     background-color: #151b23;
@@ -345,12 +345,12 @@ html {
   .btn-large,
   .btn-small {
     margin: 0.5rem;
-    background-color: #151b23 !important;
+    background-color: #151b23;
   }
   .btn:hover,
   .btn-large:hover,
   .btn-small:hover {
-    background-color: #1c2530 !important;
+    background-color: #1c2530;
   }
   .sidenav {
     overflow-y: scroll;
@@ -804,4 +804,8 @@ html {
 
   .sidenav {
     transform: translateX(-105%);
+  }
+
+  .blurple {
+    background-color: #7289DA;
   }
