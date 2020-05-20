@@ -7,8 +7,7 @@ workbox.core.clientsClaim();
 
 workbox.routing.registerRoute(
   new RegExp(/.*/),
-  new workbox.strategies.CacheFirst({
-    cacheName: 'image-cache',
+  new workbox.strategies.StaleWhileRevalidate({
     plugins: [
       new workbox.expiration.Plugin({
         maxAgeSeconds: 24 * 60 * 60,
