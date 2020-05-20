@@ -42,7 +42,7 @@ export default function home() {
 
                 if (total == (f.count - 1)) break
                 //$main.innerHTML = `<ul class="tabs"><li class="tab"><a href="#future" target="_self" class="active">More Launches</a></li></ul>${$main.innerHTML}`;
-                $upcoming.innerHTML = `<div class="col s12 l${Math.floor(12 / (f.count - 1))}"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More Info" href="/#rocket=${g.rocket.name.split("/")[0]}">${g.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>").split(" (")[0]}</h4><a class="chip tooltipped" data-tooltip="${g.agency.name}" href="/#agency=${g.agency.id}"><img src="${g.agency.icon}?size=32" onerror=this.src="${g.agency.countryFlag}">${g.agency.shortname}</a><a class="chip tooltipped" data-tooltip="${g.location.name}" href="/#pad=${g.location.pads[0].id}"><i class="far fa-compass"></i>${g.location.name.split(",")[0]}</a></br><a class="chip tooltipped" data-tooltip="${g.net}"><i class="far fa-clock"></i>${ReadableDateString(g.net)}</a><h5 id="countdown${g.id}">${g.status}</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=${g.id}">Details</button></div></div></div>${$upcoming.innerHTML}`;
+                $upcoming.innerHTML = `<div class="col s12 l${Math.floor(12 / (f.count - 1))}"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More Info" href="/#rocket=${g.rocket.name.split("/")[0]}">${g.name.replace(" | ", "</a></h5><h4 class='header truncate'>").split(" (")[0]}</h4><a class="chip tooltipped" data-tooltip="${g.agency.name}" href="/#agency=${g.agency.id}"><img src="${g.agency.icon}?size=32" onerror=this.src="${g.agency.countryFlag}">${g.agency.shortname}</a><a class="chip tooltipped" data-tooltip="${g.location.name}" href="/#pad=${g.location.pads[0].id}"><i class="far fa-compass"></i>${g.location.name.split(",")[0]}</a></br><a class="chip tooltipped" data-tooltip="${g.net}"><i class="far fa-clock"></i>${ReadableDateString(g.net)}</a><h5 id="countdown${g.id}">${g.status}</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=${g.id}">Details</button></div></div></div>${$upcoming.innerHTML}`;
 
                 total++
 
@@ -58,7 +58,7 @@ export default function home() {
         for (let i in f.launches) {
             let g = f.launches[i];
             let days = Math.floor((new Date() - new Date(g.net)) / 86400000);
-            $successful.innerHTML += `<div class="col s12 m6 l3"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=${g.name.split(" |")[0].split("/")[0]}">${g.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>").split(" (")[0]}</h4><a class="chip tooltipped" data-tooltip="${g.net}"><i class="far fa-clock"></i>${ReadableDateString(g.net)}</a></br><a class="chip">${(days > 0) ? days + " Days ago" : "Today"}</a><h5>${g.status}</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=${g.id}">Watch</a></div></div>`;
+            $successful.innerHTML += `<div class="col s12 m6 l3"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=${g.name.split(" |")[0].split("/")[0]}">${g.name.replace(" | ", "</a></h5><h4 class='header truncate'>").split(" (")[0]}</h4><a class="chip tooltipped" data-tooltip="${g.net}"><i class="far fa-clock"></i>${ReadableDateString(g.net)}</a></br><a class="chip">${(days > 0) ? days + " Days ago" : "Today"}</a><h5>${g.status}</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=${g.id}">Watch</a></div></div>`;
         }
 
         for (let i = 1; i <= ($successful.childElementCount - 1); i++) {
@@ -70,7 +70,7 @@ export default function home() {
     if (sources.featuring) {
         $featured.innerHTML = `<ul class="tabs"><li class="tab"><a class="active">Featured</a></li></ul>`;
         for (let a in sources.featuring) {
-            $featured.innerHTML += `<div class="col s12 m6 l4"><div class="card"><div class="card-content"><img class="circle logo" src="${sources.featuring[a].img}" onerror=this.onerror=null;this.src=""><h5 class="header black-text truncate">${sources.featuring[a].name}</h5><a class="max2lines">${sources.featuring[a].desc}</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="${sources.featuring[a].url}">${sources.featuring[a].action}</a></div></div>`
+            $featured.innerHTML += `<div class="col s12 m6 l4"><div class="card"><div class="card-content"><img class="circle logo" src="${sources.featuring[a].img}" onerror=this.onerror=null;this.src=""><h5 class="header truncate">${sources.featuring[a].name}</h5><a class="max2lines">${sources.featuring[a].desc}</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="${sources.featuring[a].url}">${sources.featuring[a].action}</a></div></div>`
         }
     }
 

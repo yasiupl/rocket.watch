@@ -10,7 +10,7 @@ export default function search(c) {
         for (let i in sources.info.search) {
             if (c.toLowerCase().match(i) && !document.getElementById("maintabs")) {
                 let data = sources.info.search[i]
-                $info.innerHTML = '<div class="card-content"><img class="circle" src="' + data.img + '" onerror=this.onerror=null;this.src=""><h1 class="header black-text truncate">' + data.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></br><a class="flow-text">' + (data.desc || "") + '</a></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
+                $info.innerHTML = '<div class="card-content"><img class="circle" src="' + data.img + '" onerror=this.onerror=null;this.src=""><h1 class="header truncate">' + data.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></br><a class="flow-text">' + (data.desc || "") + '</a></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
                 for (let badge of data.badges) {
                     document.getElementById("chips").innerHTML += '<a class="chip tooltipped" data-tooltip="' + (badge.tip || "") + '" href="' + (badge.url || "") + '"><img src="' + (badge.img || "") + '">' + (badge.name || "") + "</a>"
                 }
@@ -19,7 +19,7 @@ export default function search(c) {
         }
 
         if (!document.getElementById("maintabs"))
-            $info.innerHTML = '<div class="card-content"><h1 class="header black-text truncate">Results for "' + c + '"</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>'
+            $info.innerHTML = '<div class="card-content"><h1 class="header truncate">Results for "' + c + '"</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>'
 
 
         load("launch?limit=200&mode=summary&sort=desc&name=" + c + "&format=stats" + (($query.type == "failures") ? "&status=4" : ""), function (a) {
@@ -37,7 +37,7 @@ export default function search(c) {
                 if (a.launches.length == 1) {
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#results" class="active">Launches</a></li>' + document.getElementById("maintabs").innerHTML;
                     let b = a.launches[0];
-                    document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + '</a><h4 id="countdown' + b.id + '">' + b.status + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Details</a></div></div></div>';
+                    document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + '</a><h4 id="countdown' + b.id + '">' + b.status + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Details</a></div></div></div>';
                 } else {
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#stats">Stats</a></li>' + document.getElementById("maintabs").innerHTML;
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#results" class="active">Launches</a></li>' + document.getElementById("maintabs").innerHTML;
@@ -45,13 +45,13 @@ export default function search(c) {
                     for (let g in a.launches) {
                         let b = a.launches[g];
                         if (Date.parse(b.net) < $today) {
-                            $past.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + "</a><h5>" + b.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Watch</a></div></div>'
+                            $past.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + "</a><h5>" + b.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Watch</a></div></div>'
                         } else {
                             if (Date.parse(b.net) > $today) {
-                                $future.innerHTML = '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header black-text truncate"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h5><h4 class='header black-text truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + "</a><h5>" + b.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Details</a></div></div></div>' + $future.innerHTML;
+                                $future.innerHTML = '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + "</a><h5>" + b.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Details</a></div></div></div>' + $future.innerHTML;
                             }
                             if (b.statuscode == 1 || b.statuscode == 5 || b.statuscode == 6) {
-                                document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a style="color:black" class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + '</a><h4 id="countdown' + b.id + '">' + b.status + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Details</a></div></div></div>';
+                                document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + b.name.split(" | ")[0].split("/")[0] + '">' + b.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + b.net + '"><i class="far fa-clock"></i>' + ReadableDateString(b.net) + '</a><h4 id="countdown' + b.id + '">' + b.status + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + b.id + '">Details</a></div></div></div>';
                                 if (b.statuscode == 1 || b.statuscode == 6)
                                     new Countdown(b.net, "countdown" + b.id);
                             }
@@ -191,7 +191,7 @@ export default function search(c) {
         })
 
     } else {
-        $info.innerHTML = '<div class="card-content"><h1 class="header black-text truncate">What are you looking for?</h1></div>';
+        $info.innerHTML = '<div class="card-content"><h1 class="header truncate">What are you looking for?</h1></div>';
         $main.innerHTML = '<div class="row"><div class="col s12"><div class="card"><div class="card-content"><div class="input-field"><input type="text" name="search"></div></div><div class="card-action"><a onclick="(location.hash = \'search=\' + document.getElementsByTagName(\'input\')[0].value)" class="waves-effect waves-light btn hoverable">Submit</a></div></div></div>';
     }
 }
