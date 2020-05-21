@@ -56,9 +56,7 @@ export default function watch(id, mode="live") {
 
 
         document.title = launch.name;
-
-        document.getElementById("richEmbed").innerHTML = `{ "@context": "https://schema.org", "@type": "Article", "name": "${launch.name}", "headline": "Live Launch Updates", "datePublished": "${launch.isostart}", "dateModified": "${ISODateString(new Date()).split(".")[0]}+00:00", "image": "${launch.agency.icon}", "url": "${location.href}", "articleBody": "${launch.description}", "author": { "@type": "Organization", "name": "${launch.agency.name}" }, "publisher" : { "@type" : "Organization", "name" : "rocket.watch", "logo": {"@type": "ImageObject", "url": "${location.origin}/logo.png"} }, "mainEntityOfPage": {"@type": "mainEntityOfPage", "@id":"${location.origin}/"} }`;
-
+        
         $info.innerHTML = `<div id="video"></div><div id="details" class="card-content"><h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.id}">${launch.name.replace("|", "</a> | ")}</h1><h3 id="countdown${launch.id}">${launch.status}</h3><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip" id="refreshLaunch"><i class="fas fa-sync"></i>Refresh</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.agency.id}"><img src="${launch.agency.icon}?size=32" onerror=this.onerror=null;this.src="${launch.agency.countryFlag}">${launch.agency.name}</a><a class="chip tooltipped" data-tooltip="More info" href="/#pad=${launch.location.pads && launch.location.pads[0].id}"><i class="far fa-compass"></i>${launch.location.pads[0].name}</a><a class="chip tooltipped" id="launchdate" data-tooltip="${launch.net}"><i class="far fa-clock"></i>${ReadableDateString(launch.net)}</a></div><p class="flow-text" id="description">${launch.description}</p></div><div id="buttons"></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div></div>`;
 
         let livevideo = document.querySelector("#video");

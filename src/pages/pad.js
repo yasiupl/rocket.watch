@@ -1,4 +1,5 @@
 import {QueryString, load, materialize} from '../js/utils'
+import search from './search'
 
 export default function pad(m) {
     let $main = document.getElementsByTagName("main")[0];
@@ -16,8 +17,6 @@ export default function pad(m) {
         load("pad/" + m + "?mode=verbose", function (g) {
             if (g.pads.length) {
                 let c = g.pads[0];
-
-                document.getElementById("richEmbed").innerHTML = '{ "@context": "https://schema.org", "@type": "Organization", "name": "' + c.name + '", "url": "' + (c.infoURL || c.info) + '", "logo": "' + (c.icon || c.img) + '" }';
 
                 $info.innerHTML = '<div class="card-content"><img class="circle materialboxed" src="' + c.img + '" onerror=this.onerror=null;this.style.display="none"><h1>' + c.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped"data-tooltip="Country summary" href="/#country=' + (c.agency && c.agency.countryCode) + '"><img src="' + (c.agency && c.agency.countryFlag) + '">' + (c.agency && c.agency.countryCode) + '</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=' + (c.agency && c.agency.id) + '"><img src="' + c.agency.icon + '?size=32" onerror=this.onerror=null;this.style.display="none">' + (c.agency && c.agency.name) + '</a></div></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
 

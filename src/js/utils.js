@@ -91,30 +91,48 @@ export function load(query, callback) {
 }
 
 export function getJSON(url, callback) {
-    try {
-        let k = new XMLHttpRequest()
-        k.onreadystatechange = function () {
-            if (k.readyState === 4) {
-                if (k.responseText.split()[0] == "{" || k.status == 200) {
-                    let a = JSON.parse(k.responseText);
-                    a.timestamp = Date.now();
-                    callback(a)
-                } else {
-                    let a = {
-                        timestamp: Date.now(),
-                        status: (k.status || "error"),
-                        code: k.statusText,
-                        msg: k.responseText
-                    };
-                    callback(a);
-                    console.log(a)
+    if (window.fetch) {
+        fetch(url)
+            .then(
+                function (response) {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ' +
+                            response.status);
+                        return;
+                    }
+
+                    response.json().then(callback);
                 }
-            }
-        };
-        k.open("GET", url);
-        k.send()
-    } catch (e) {
-        console.log(e)
+            )
+            .catch(function (err) {
+                console.log('Fetch Error :-S', err);
+            });
+    } else {
+        try {
+            let k = new XMLHttpRequest()
+            k.onreadystatechange = function () {
+                if (k.readyState === 4) {
+                    if (k.responseText.split()[0] == "{" || k.status == 200) {
+                        let a = JSON.parse(k.responseText);
+                        a.timestamp = Date.now();
+                        callback(a)
+                    } else {
+                        let a = {
+                            timestamp: Date.now(),
+                            status: (k.status || "error"),
+                            code: k.statusText,
+                            msg: k.responseText
+                        };
+                        callback(a);
+                        console.log(a)
+                    }
+                }
+            };
+            k.open("GET", url);
+            k.send()
+        } catch (e) {
+            console.log(e)
+        }
     }
 };
 
@@ -142,7 +160,7 @@ export function saveValue(e) {
     location.reload(true);
 }
 
-function padnumber(number, zeros=2) {
+function padnumber(number, zeros = 2) {
     let string = number + "";
     while (string.length < zeros) {
         string = "0" + string

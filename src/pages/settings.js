@@ -1,4 +1,4 @@
-import {saveValue} from '../js/utils'
+import {saveValue, restart} from '../js/utils'
 
 export default function settings() {
     let $main = document.getElementsByTagName("main")[0];
@@ -17,7 +17,7 @@ export default function settings() {
         dark: "Dark Mode",
     };
 
-    for (let i in $settings) {
+    for (let i in settings_names) {
         document.getElementById("preferences").innerHTML += '<li class="collection-item"><p><label><input type="checkbox" id="' + i + '" ' + (($settings[i]) ? "checked" : "") + ' /><span>' + (settings_names[i] ? settings_names[i] : i) + '</span></label></p></li>';
         document.getElementById(i).onclick = saveValue
     }
