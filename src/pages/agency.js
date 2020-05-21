@@ -10,8 +10,6 @@ export default function agency(m) {
             if (g.agencies.length) {
                 let c = g.agencies[0];
 
-                document.getElementById("richEmbed").innerHTML = '{ "@context": "https://schema.org", "@type": "Organization", "name": "' + c.name + '", "url": "' + (c.infoURL || c.info) + '", "logo": "' + (c.icon || c.img) + '" }';
-
                 $info.innerHTML = '<div class="card-content"><img class="circle logo materialboxed" src="' + c.icon + '" onerror=this.onerror=null;this.style.display="none";><h1 class="tooltipped" data-tooltip="' + c.shortname + '">' + c.name.split(" (")[0] + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped" data-tooltip="Country summary" href="/#country=' + c.countryCode + '"><img src="' + c.countryFlag + '">' + c.countryCode + '</a><a class="chip">Founded: ' + c.founded + '</a></div><p class="flow-text">' + c.description + '</p></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div></div>';
 
                 for (let i in c.social) {
