@@ -1,7 +1,7 @@
 import Chart from 'chart.js';
 import 'materialize-css/dist/js/materialize.min.js'
 import './js/fontawesome'
-import {QueryString} from './js/utils'
+import {QueryString, restart} from './js/utils'
 
 import home from './pages/home.js'
 import watch from './pages/watch'
@@ -15,6 +15,8 @@ import settings from './pages/settings'
 import search from './pages/search'
 
 console.log("rocket.watch");
+
+const version = "1.0"
 
 window.addEventListener("hashchange", init);
 window.addEventListener("DOMContentLoaded", init);
@@ -49,13 +51,16 @@ if (localStorage.getItem("rocketwatch.settings")) {
     if ($settings.dark) {
         document.querySelector("body").className += " dark";
     }
+    if(!$settings.version || $settings.version != version) {
+        restart()
+    }
 } else {
     window.$settings = {
+        version: version,
         dark: false,
     };
     localStorage.setItem("rocketwatch.settings", JSON.stringify(window.$settings))
 }
-
 
 function init() {
     document.title = "rocket.watch";
