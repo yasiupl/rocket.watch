@@ -1,4 +1,5 @@
 import {QueryString, load, materialize} from '../js/utils'
+import search from './search'
 
 export default function launchcenter(m) {
     let $main = document.getElementsByTagName("main")[0];
@@ -16,7 +17,7 @@ export default function launchcenter(m) {
         load("location/" + m + "?mode=verbose", function (g) {
             if (g.locations.length) {
                 let c = g.locations[0];
-                
+
                 $info.innerHTML = '<div class="card-content"><img class="circle materialboxed" src="' + c.img + '" onerror=this.onerror=null;this.style.display="none"><h1>' + c.name.split(", ")[0] + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped" data-tooltipped="Country summary" href="/#country=' + c.countryCode + '"><img src="' + c.countryFlag + '">' + c.name.split(", ")[1] + ", " + c.countryCode + '</a></div></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
 
                 document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#information">Info</a></li>' + document.getElementById("maintabs").innerHTML;

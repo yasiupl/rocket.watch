@@ -1,4 +1,5 @@
 import {QueryString, load, materialize} from '../js/utils'
+import search from './search'
 
 export default function pad(m) {
     let $main = document.getElementsByTagName("main")[0];
