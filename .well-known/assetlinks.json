@@ -1,0 +1,8 @@
+[{
+	"relation": ["delegate_permission/common.handle_all_urls"],
+	"target" : { 
+		"namespace": "android_app",
+		"package_name": "pl.yasiu.rocketwatch",
+		"sha256_cert_fingerprints": ["F6:72:F7:92:76:9A:BE:46:67:17:76:88:D5:03:85:CE:FC:22:51:40:DB:AE:B5:7E:49:66:FE:F4:E3:DA:64:FA"]
+	}
+}]
