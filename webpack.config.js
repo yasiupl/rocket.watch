@@ -35,7 +35,7 @@ module.exports = {
             background_color: '#151b23',
             theme_color: '#1c2530',
             start_url: '/?utm_source=a2hs',
-            display: 'standalone',
+            display: 'fullscreen',
             ios: {
                 'apple-mobile-web-app-status-bar-style': 'black'
             },
