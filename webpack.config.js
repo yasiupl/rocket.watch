@@ -31,7 +31,7 @@ module.exports = {
             fingerprints: false,
             name: 'rocket.watch',
             short_name: 'rocket.watch',
-            description: 'Mapa pozwoleń radiowych RRL UKE.',
+            description: 'Watch rocket launches live!',
             background_color: '#151b23',
             theme_color: '#1c2530',
             start_url: '/?utm_source=a2hs',
