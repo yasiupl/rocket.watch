@@ -395,7 +395,6 @@ html {
     max-height: calc(100vh - 250px);
     padding-bottom: unset;
     overflow: auto;
-    position: unset;
   }
   .video-container embed,
   .video-container iframe,
@@ -448,6 +447,20 @@ html {
     }
     .indicator {
       background-color: #1c2530;
+    }
+  }
+
+  body.dark .tabs {
+    background-color: transparent;
+    .tab a,
+    .tab a.active,
+    .tab a:hover,
+    .tab a:focus.active {
+      
+      color: #fff;
+    }
+    .indicator {
+      background-color: #fff;
     }
   }
   
