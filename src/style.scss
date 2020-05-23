@@ -449,6 +449,20 @@ html {
       background-color: #1c2530;
     }
   }
+
+  body.dark .tabs {
+    background-color: transparent;
+    .tab a,
+    .tab a.active,
+    .tab a:hover,
+    .tab a:focus.active {
+      
+      color: #fff;
+    }
+    .indicator {
+      background-color: #fff;
+    }
+  }
   
   .pinned {
     z-index: 2;

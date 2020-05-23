@@ -1,4 +1,5 @@
 import {QueryString, materialize, load, ReadableDateString, Countdown} from '../js/utils'
+import Chart from 'chart.js';
 const sources = require('../sources.json');
 
 export default function search(c) {
@@ -29,7 +30,7 @@ export default function search(c) {
             }
 
             if (data.launches.length) {
-                $main.innerHTML += '<div id="results"><div id="next"></div><div id="switch" style="display:none" class="card-tabs"><ul class="tabs"><li class="tab"><a href="#past">Launched</a></li><li class="tab"><a href="#future">Upcoming</a></li></ul></div><div id="past"></div><div id="future"></div></div>';
+                $main.innerHTML += '<div id="results"><div id="next"></div><div id="switch" style="display:none" class="card-tabs"><ul class="tabs"><li class="tab"><a href="#past" class="active">Launched</a></li><li class="tab"><a href="#future">Upcoming</a></li></ul></div><div id="past"></div><div id="future"></div></div>';
                 let $future = "";
                 let $past = "";
                 const $today = new Date();
