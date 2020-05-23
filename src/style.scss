@@ -395,6 +395,7 @@ html {
     max-height: calc(100vh - 250px);
     padding-bottom: unset;
     overflow: auto;
+    position: unset;
   }
   .video-container embed,
   .video-container iframe,
