@@ -1,7 +1,7 @@
-import {QueryString, load, materialize, ISODateString, ReadableDateString, Countdown} from '../js/utils'
+import { QueryString, load, materialize, ISODateString, ReadableDateString, Countdown } from '../js/utils'
 
 
-export default function watch(id, mode="live") {
+export default function watch(id, mode = "live") {
 
     let $query = QueryString();
 
@@ -15,6 +15,8 @@ export default function watch(id, mode="live") {
 
     // fetch launch with an ID if the ID is a number, or fetch a custom file if the ID is a string. fetch lite version if only countdown should be displayed.
     load((mode.match("custom")) ? (id + "?format=customlive") : ("launch?mode=verbose" + (parseInt(id) ? ("&id=" + id) : ("&limit=1&name=" + id)) + "&format=" + (($query.mode == "countdown") ? "" : mode)), function (data) {
+
+        console.log(data);
 
         let launch = data.launches[0];
 
@@ -56,7 +58,7 @@ export default function watch(id, mode="live") {
 
 
         document.title = launch.name;
-        
+
         $info.innerHTML = `<div id="video"></div><div id="details" class="card-content"><h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.id}">${launch.name.replace("|", "</a> | ")}</h1><h3 id="countdown${launch.id}">${launch.status}</h3><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip" id="refreshLaunch"><i class="fas fa-sync"></i>Refresh</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.agency.id}"><img src="${launch.agency.icon}?size=32" onerror=this.onerror=null;this.src="${launch.agency.countryFlag}">${launch.agency.name}</a><a class="chip tooltipped" data-tooltip="More info" href="/#pad=${launch.location.pads && launch.location.pads[0].id}"><i class="far fa-compass"></i>${launch.location.pads[0].name}</a><a class="chip tooltipped" id="launchdate" data-tooltip="${launch.net}"><i class="far fa-clock"></i>${ReadableDateString(launch.net)}</a></div><p class="flow-text" id="description">${launch.description}</p></div><div id="buttons"></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div></div>`;
 
         let livevideo = document.querySelector("#video");
@@ -74,7 +76,7 @@ export default function watch(id, mode="live") {
             window.share = function () {
                 navigator.share({
                     title: launch.name,
-                    text: launch.description.substring(0,100) + '...',
+                    text: launch.description.substring(0, 100) + '...',
                     url: location.href
                 })
             }
@@ -85,7 +87,7 @@ export default function watch(id, mode="live") {
             for (let countdown of countdowns) {
                 window.clearInterval(countdown);
             }
-            watch(id,mode);
+            watch(id, mode);
         }
 
         if (launch.tbdtime != 1) {
@@ -104,6 +106,10 @@ export default function watch(id, mode="live") {
         }
 
         buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="(details.style.display = details.style.display == \'none\' ? \'unset\' : \'none\')">Toggle Details</a>';
+
+        if (launch.agency.social.reddit) {
+            buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${launch.agency.social.reddit}" target="_blank">/r/${launch.agency.social.reddit} Subreddit</a>`;
+        }
 
         if (launch.statuscode == 1 || launch.statuscode == 6) {
             let count = setInterval(function () {
@@ -124,7 +130,7 @@ export default function watch(id, mode="live") {
         }
 
         for (let badge of launch.media.badge) {
-            badges.innerHTML += `<a class="chip ${(badge.desc ? 'tooltipped" data-tooltip="'+badge.desc+'"' : '"')} ${(badge.url ? 'href="${d.url}"' : '')}>${(badge.img ? '<img src="${d.img}">' : '') + (badge.name || '')}</a>`
+            badges.innerHTML += `<a class="chip ${(badge.desc ? 'tooltipped" data-tooltip="' + badge.desc + '"' : '"')} ${(badge.url ? 'href="${d.url}"' : '')}>${(badge.img ? '<img src="${d.img}">' : '') + (badge.name || '')}</a>`
         }
 
         for (let button of launch.media.button) {
@@ -181,7 +187,7 @@ export default function watch(id, mode="live") {
                     livevideo.innerHTML = `<div class="col s12 m10 offset-m1 l6"><div class="video-container" id="videoframe1"><iframe name="videoframe1" src="${((video[0].embed.match("\\?")) ? (video[0].embed + "&autoplay=1&enablejsapi=1") : (video[0].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe1_reload" href="${video[0].embed}" target="videoframe1"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[0].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="videoframe1_select" onchange="selectSource(\'videoframe1\')">${medialist}</select></div></div></div>${livevideo.innerHTML}`;
                     livevideo.innerHTML = `<div class="col s12 m10 offset-m1 l6"><div class="video-container" id="videoframe2"><iframe name="videoframe2" src="${((video[1].embed.match("\\?")) ? (video[1].embed + "&autoplay=1&enablejsapi=1") : (video[1].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe2_reload" href="${video[1].embed}" target="videoframe2"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[1].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="videoframe2_select" onchange="selectSource(\'videoframe2\')">${medialist}</select></div></div></div>${livevideo.innerHTML}`;
                 } else {
-                    livevideo.innerHTML = `<div class="video-container" id="videoframe1"><iframe name="videoframe1" src="${((video[0].embed.match("\\?")) ? (video[0].embed + "&autoplay=1&enablejsapi=1") : (video[0].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe1_reload" href="${video[0].embed}" target="videoframe1"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[0].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a>${((launch.media.video.length > 1) ? ('<select id="videoframe1_select" onchange="selectSource(\'videoframe1\')">'+medialist+'</select>') : '')}</div></div></div>${livevideo.innerHTML}`;
+                    livevideo.innerHTML = `<div class="video-container" id="videoframe1"><iframe name="videoframe1" src="${((video[0].embed.match("\\?")) ? (video[0].embed + "&autoplay=1&enablejsapi=1") : (video[0].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe1_reload" href="${video[0].embed}" target="videoframe1"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[0].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a>${((launch.media.video.length > 1) ? ('<select id="videoframe1_select" onchange="selectSource(\'videoframe1\')">' + medialist + '</select>') : '')}</div></div></div>${livevideo.innerHTML}`;
                 }
             }
 
