@@ -133,10 +133,6 @@ export default function watch(id, mode = "live") {
             badges.innerHTML += `<a class="chip ${(badge.desc ? 'tooltipped" data-tooltip="' + badge.desc + '"' : '"')} ${(badge.url ? 'href="${d.url}"' : '')}>${(badge.img ? '<img src="${d.img}">' : '') + (badge.name || '')}</a>`
         }
 
-        for (let button of launch.media.button) {
-            buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="${button.url}" target="_blank">${button.name}</a>`;
-        }
-
         if (navigator.onLine) {
 
             let list = launch.media.video.concat(launch.media.info).concat(launch.media.comments).concat(launch.media.last);
