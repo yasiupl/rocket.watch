@@ -1,4 +1,5 @@
 import {QueryString, materialize, load, ReadableDateString, Countdown} from '../js/utils'
+import Chart from 'chart.js';
 const sources = require('../sources.json');
 
 export default function search(c) {

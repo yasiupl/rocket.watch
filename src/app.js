@@ -1,4 +1,3 @@
-import Chart from 'chart.js';
 import 'materialize-css/dist/js/materialize.min.js'
 import './js/fontawesome'
 import {QueryString, restart} from './js/utils'
