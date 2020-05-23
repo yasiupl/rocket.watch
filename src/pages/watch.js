@@ -69,6 +69,10 @@ export default function watch(id, mode = "live") {
         let badges = document.querySelector("#chips");
         let tabs = document.querySelector("#maintabs");
 
+        if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.statuscode) == -1) {
+            badges.innerHTML += `<a class="chip tooltipped" data-tooltip="Launch probability %">${launch.probability}% probability</a>`
+        }
+
         buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>';
 
         if (navigator.share) {
