@@ -223,7 +223,7 @@ export default function watch(id, mode = "live") {
                     twitter.className = "container";
                 }
 
-                if(launch.agency.social.twitter && launch.media.twitter.length < 2) {
+                if(launch.statuscode != 3 && launch.statuscode != 4 && launch.statuscode != 7 && launch.agency.social.twitter && launch.media.twitter.length < 2) {
                     launch.media.twitter.push({url: `https://twitter.com/${launch.agency.social.twitter}` })
                 }
                 for (let tweet of launch.media.twitter) {
