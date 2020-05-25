@@ -143,7 +143,7 @@ export default function watch(id, mode = "live") {
             let video = launch.media.video;
             let media = launch.media.info.concat(launch.media.comments).concat(launch.media.last);
 
-            if (media.length) {
+            if (media.length || launch.media.twitter.length) {
                 document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#live" class="active">Live</a></li><li class="tab"><a href="#information">Info</a></li>';
             } else {
                 document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#information">Info</a></li>';
