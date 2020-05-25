@@ -215,12 +215,16 @@ export default function watch(id, mode = "live") {
                 $live.appendChild(audio)
             }
 
-            if (launch.media.twitter.length) {
+            if (launch.media.twitter.length || launch.agency.social.twitter) {
                 let twitter = document.createElement("div");
                 $live.appendChild(twitter);
 
                 if (!($query.mode == "tv" && media.length >= 2)) {
                     twitter.className = "container";
+                }
+
+                if(launch.agency.social.twitter && launch.media.twitter.length < 2) {
+                    launch.media.twitter.push({url: `https://twitter.com/${launch.agency.social.twitter}` })
                 }
                 for (let tweet of launch.media.twitter) {
                     twitter.innerHTML += `<div class="col s12 m${Math.floor(12 / launch.media.twitter.length)}"><div class="card"><div class="video-container"><a class="twitter-timeline" data-dnt="true" href="${tweet.url}" ${($settings.dark ? " data-theme=\"dark\"" : "")}></a></div></div></div>`;
