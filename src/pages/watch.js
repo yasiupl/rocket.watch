@@ -222,11 +222,12 @@ export default function watch(id, mode = "live") {
                 if (!($query.mode == "tv" && media.length >= 2)) {
                     twitter.className = "container";
                 }
-                for (let tweet of launch.media.twitter) {
-                    twitter.innerHTML += `<div class="col s12 m${Math.floor(12 / (launch.media.twitter.length + (launch.agency.social.twitter? 1: 0)))}"><div class="card"><div class="video-container"><a class="twitter-timeline" data-dnt="true" href="${tweet.url}" ${($settings.dark ? " data-theme=\"dark\"" : "")}></a></div></div></div>`;
-                }
+                console.log(launch.media.twitter.length);
                 if(launch.agency.social.twitter && launch.media.twitter.length < 2) {
-                    twitter.innerHTML += `<div class="col s12 m${Math.floor(12 / (launch.media.twitter.length + (launch.agency.social.twitter? 1: 0)))}"><div class="card"><div class="video-container"><a class="twitter-timeline" data-dnt="true" href="https://twitter.com/${launch.agency.social.twitter}" ${($settings.dark ? " data-theme=\"dark\"" : "")}></a></div></div></div>`;
+                    launch.media.twitter.length.push({url: launch.agency.social.twitter })
+                }
+                for (let tweet of launch.media.twitter) {
+                    twitter.innerHTML += `<div class="col s12 m${Math.floor(12 / launch.media.twitter.length)}"><div class="card"><div class="video-container"><a class="twitter-timeline" data-dnt="true" href="${tweet.url}" ${($settings.dark ? " data-theme=\"dark\"" : "")}></a></div></div></div>`;
                 }
                 if (typeof twttr != undefined) {
                     twttr.widgets.load();
