@@ -27,8 +27,14 @@ window.OneSignal.push(function () {
         notifyButton: {
             enable: true,
         },
+        promptOptions: {
+            actionMessage: "We'd like to show you notifications for the latest spaceflight news and updates.",
+            acceptButtonText: "ALLOW",
+            cancelButtonText: "NO THANKS"
+          },
         allowLocalhostAsSecureOrigin: true,
     });
+    window.OneSignal.showSlidedownPrompt();
 });
 
 if ('serviceWorker' in navigator) {
