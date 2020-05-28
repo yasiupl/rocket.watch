@@ -107,7 +107,17 @@ export default function watch(id, mode = "live") {
             $information.id = "information";
             $main.appendChild($information);
 
-            materialize()
+			materialize()
+
+            if (launch.media.audio.length) {
+                let audio = document.createElement("div");
+                audio.className = "container row";
+                audio.style = "padding: 0 !important";
+                for (let track of launch.media.audio) {
+                    audio.innerHTML += `<div class="col s12 m${Math.floor(12 / launch.media.audio.length)}"><div class="card-panel"><audio style="width:100%" controls preload="none"><source src="${track.embed}"></audio></br><div class="cardnav"><a class="truncate">${track.name}</a></div></div></div>`
+                }
+                $live.appendChild(audio)
+            }
 
             if (launch.missions[0] && launch.missions[0].wikiURL) {
                 $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.missions[0].wikiURL.replace("http://", "https://")}"  allow="autoplay; fullscreen"></iframe></div></div>`;
@@ -147,17 +157,7 @@ export default function watch(id, mode = "live") {
                 if (media.length > 1 && launch.statuscode != 3 && launch.statuscode != 4 && launch.statuscode != 7) {
                     $live.innerHTML += `<div class="container"><div class="card"><div class="video-container" id="contentframe2"><iframe name="contentframe2" src="${media[media.length - 1].embed}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="contentframe2_reload" href="${media[media.length - 1].embed}" target="contentframe2"><i class="fas fa-sync-alt"></i></a><a id="contentframe2_share" href="${media[media.length - 1].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="contentframe2_select" onchange="selectSource(\'contentframe2\')">${medialist}</select></div></div></div></div>`;
                 }
-            }
-
-            if (launch.media.audio.length) {
-                let audio = document.createElement("div");
-                audio.className = "container row";
-                audio.style = "padding: 0 !important";
-                for (let track of launch.media.audio) {
-                    audio.innerHTML += `<div class="col s12 m${Math.floor(12 / launch.media.audio.length)}"><div class="card-panel"><audio style="width:100%" controls preload="none"><source src="${track.embed}"></audio></br><div class="cardnav"><a class="truncate">${track.name}</a></div></div></div>`
-                }
-                $live.appendChild(audio)
-            }
+			}
 
             if (launch.media.twitter.length || launch.agency.social.twitter) {
                 let twitter = document.createElement("div");
