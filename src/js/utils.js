@@ -62,6 +62,37 @@ export function Countdown(date, element) {
     return count(date)
 }
 
+export function updateCountdown(launch) {
+    load("launch?mode=summary" + (parseInt(launch.id) ? ("&id=" + launch.id) : ("&limit=1&name=" + launch.id)), function (refreshdata) {
+
+        if (refreshdata.status != "error") {
+            let newLaunch = refreshdata.launches[0];
+            
+            if (newLaunch && (newLaunch.net != launch.net)) {
+
+                for (let count of countdowns) {
+                    window.clearInterval(count);
+                }
+
+                countdown.innerHTML = newLaunch.status;
+
+                if (newLaunch.statuscode == 1 || newLaunch.statuscode == 6) {
+                    M.toast({
+                        html: "Updated Countdown"
+                    });
+                    let count = setInterval(function () {
+                        document.title = `[${Countdown(newLaunch.net)}] ${newLaunch.name.split("|")[1]}`;
+                        countdown.innerHTML = Countdown(newLaunch.net)
+                    }, 1000);
+                    countdowns.push(count);
+                } else if (newLaunch.net != launch.net) {
+                    location.reload();
+                }
+            }
+        }
+    });
+}
+
 export function QueryString(callback, url) {
     let g = {};
     let l = (url && url.split("?")[1]) || (window.location.search || location.hash).substring(1);
@@ -100,7 +131,7 @@ export function getJSON(url, callback) {
                             response.status);
                         return;
                     }
-
+                    
                     response.json().then(callback);
                 }
             )
