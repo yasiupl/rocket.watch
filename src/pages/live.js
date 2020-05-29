@@ -133,15 +133,16 @@ export default function watch(id, mode = "live") {
 
 			if (video.length) {
 				if (launch.media.video.length > 1) {
-					livevideo.innerHTML = `<div class="col s12 m10 offset-m1 l6"><div class="video-container" id="videoframe1"><iframe name="videoframe1" src="${((video[0].embed.match("\\?")) ? (video[0].embed + "&autoplay=1&enablejsapi=1") : (video[0].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe1_reload" href="${video[0].embed}" target="videoframe1"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[0].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="videoframe1_select" onchange="selectSource(\'videoframe1\')">${medialist}</select></div></div></div>${livevideo.innerHTML}`;
-					livevideo.innerHTML = `<div class="col s12 m10 offset-m1 l6"><div class="video-container" id="videoframe2"><iframe name="videoframe2" src="${((video[1].embed.match("\\?")) ? (video[1].embed + "&autoplay=1&enablejsapi=1") : (video[1].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe2_reload" href="${video[1].embed}" target="videoframe2"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[1].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="videoframe2_select" onchange="selectSource(\'videoframe2\')">${medialist}</select></div></div></div>${livevideo.innerHTML}`;
+					$live.innerHTML = `<div class="col s12 m10 offset-m1 l6"><div class="card"><div class="video-container" id="videoframe1"><iframe name="videoframe1" src="${((video[0].embed.match("\\?")) ? (video[0].embed + "&autoplay=1&enablejsapi=1") : (video[0].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe1_reload" href="${video[0].embed}" target="videoframe1"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[0].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="videoframe1_select" onchange="selectSource(\'videoframe1\')">${medialist}</select></div></div></div></div>`;
+					$live.innerHTML += `<div class="col s12 m10 offset-m1 l6"><div class="card"><div class="video-container" id="videoframe2"><iframe name="videoframe2" src="${((video[1].embed.match("\\?")) ? (video[1].embed + "&autoplay=1&enablejsapi=1") : (video[1].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe2_reload" href="${video[1].embed}" target="videoframe2"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[1].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="videoframe2_select" onchange="selectSource(\'videoframe2\')">${medialist}</select></div></div></div></div>`;
 				} else {
-					livevideo.innerHTML = `<div class="video-container" id="videoframe1"><iframe name="videoframe1" src="${((video[0].embed.match("\\?")) ? (video[0].embed + "&autoplay=1&enablejsapi=1") : (video[0].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe1_reload" href="${video[0].embed}" target="videoframe1"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[0].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a>${((launch.media.video.length > 1) ? ('<select id="videoframe1_select" onchange="selectSource(\'videoframe1\')">' + medialist + '</select>') : '')}</div></div></div>${livevideo.innerHTML}`;
+					livevideo.innerHTML = `<div class="video-container" id="videoframe1"><iframe name="videoframe1" src="${((video[0].embed.match("\\?")) ? (video[0].embed + "&autoplay=1&enablejsapi=1") : (video[0].embed + "?autoplay=1&enablejsapi=1"))}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="videoframe1_reload" href="${video[0].embed}" target="videoframe1"><i class="fas fa-sync-alt"></i></a><a id="videoframe1_share" href="${video[0].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a>${((launch.media.video.length > 1) ? ('<select id="videoframe1_select" onchange="selectSource(\'videoframe1\')">' + medialist + '</select>') : '')}</div></div></div>`;
 				}
 			}
 
 			if (media.length) {
 				if (media.length > 1) {
+					$live.className = "live"
 					$live.innerHTML += `<div class="col s12 m10 offset-m1 l6"><div class="card"><div class="video-container" id="contentframe1"><iframe name="contentframe1" src="${media[0].embed}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="contentframe1_reload" href="${media[0].embed}" target="contentframe1"><i class="fas fa-sync-alt"></i></a><a id="contentframe1_share" href="${media[0].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="contentframe1_select" onchange="selectSource(\'contentframe1\')">${medialist}</select></div></div></div></div>`;
 					$live.innerHTML += `<div class="col s12 m10 offset-m1 l6"><div class="card"><div class="video-container" id="contentframe2"><iframe name="contentframe2" src="${media[media.length - 1].embed}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="contentframe2_reload" href="${media[media.length - 1].embed}" target="contentframe2"><i class="fas fa-sync-alt"></i></a><a id="contentframe2_share" href="${media[media.length - 1].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="contentframe2_select" onchange="selectSource(\'contentframe2\')">${medialist}</select></div></div></div></div>`;
 				} else {
@@ -152,16 +153,6 @@ export default function watch(id, mode = "live") {
 					}
 
 				}
-			}
-
-			if (launch.media.audio.length) {
-				let audio = document.createElement("div");
-				audio.className = "container row";
-				audio.style = "padding: 0 !important";
-				for (let track of launch.media.audio) {
-					audio.innerHTML += `<div class="col s12 m${Math.floor(12 / launch.media.audio.length)}"><div class="card-panel"><audio style="width:100%" controls preload="none"><source src="${track.embed}"></audio></br><div class="cardnav"><a class="truncate">${track.name}</a></div></div></div>`
-				}
-				$live.appendChild(audio)
 			}
 
 			if (launch.media.twitter.length || launch.agency.social.twitter) {
@@ -183,8 +174,15 @@ export default function watch(id, mode = "live") {
 				}
 			}
 
-
-
+			if (launch.media.audio.length) {
+				let audio = document.createElement("div");
+				audio.className = "container row";
+				audio.style = "padding: 0 !important";
+				for (let track of launch.media.audio) {
+					audio.innerHTML += `<div class="col s12 m${Math.floor(12 / launch.media.audio.length)}"><div class="card-panel"><audio style="width:100%" controls preload="none"><source src="${track.embed}"></audio></br><div class="cardnav"><a class="truncate">${track.name}</a></div></div></div>`
+				}
+				$live.appendChild(audio)
+			}
 		} else {
 			$main.className = "valign-wrapper";
 			$main.innerHTML += '<div class="container"><h1 class="white-text">You\'re offline :(</h1></div>'

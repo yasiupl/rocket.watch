@@ -392,7 +392,7 @@ html {
   }
   .video-container {
     height: calc((9 / 16) * 100vw);
-    max-height: calc(100vh - 250px);
+    max-height: calc(70vh);
     padding-bottom: unset;
     overflow: auto;
   }
@@ -818,4 +818,16 @@ html {
 
   .blurple {
     background-color: #7289DA;
+  }
+
+.live {
+    .video-container {
+      max-height: calc(50vh);
+    }
+    .card {
+      margin: unset;
+    }
+    .col {
+      padding: unset;
+    }
   }
