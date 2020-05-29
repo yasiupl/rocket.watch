@@ -4,6 +4,8 @@ import {QueryString, restart} from './js/utils'
 
 import home from './pages/home.js'
 import watch from './pages/watch'
+import countdown from './pages/countdown'
+import live from './pages/live'
 import agency from './pages/agency'
 import launchcenter from './pages/launchcenter'
 import nation from './pages/nation'
@@ -102,6 +104,14 @@ function init() {
     // This is what you would call a "router"
     QueryString(function (query) {
         let launched = 0;
+        if (query.countdown) {
+            countdown(query.countdown);
+            launched++
+        }
+        if (query.live) {
+            live(query.live);
+            launched++
+        }
         if (query.id) {
             watch(query.id);
             launched++
