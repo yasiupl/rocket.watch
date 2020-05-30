@@ -822,7 +822,7 @@ html {
 
 .live {
     .video-container {
-      max-height: calc(50vh);
+      max-height: calc(50vh - 20px);
     }
     .card {
       margin: unset;
