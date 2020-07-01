@@ -27,6 +27,9 @@ export default function home() {
 
     load("launch/next/4?status=1,2,5,6", function (f) {
         if (f.launches && f.launches.length) {
+            let g = f.launches[0];
+            $info.innerHTML = `<div id="video"></div><div class="card-content"><h1><a class="tooltipped" data-tooltip="More Info" href="/#rocket=${g.rocket.id}">${g.name.replace("|", "</a>|")}</h1><h3 id="countdown${g.id}">${g.status}</h3><div id="chips"><a class="chip" id="refreshHome"><i class="fas fa-sync"></i>Refresh</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=${g.agency.id}"><img src="${g.agency.icon}?size=32" onerror=this.onerror=null;this.src="${g.agency.countryFlag}">${g.agency.name}</a><a class="chip tooltipped" data-tooltip="More info" href="/#pad=${g.location.pads && g.location.pads[0].id}"><i class="far fa-compass"></i>${g.location.pads[0].name}</a><a class="chip tooltipped" id="launchdate" data-tooltip="${g.net}"><i class="far fa-clock"></i>${ReadableDateString(g.net)}</a></div><p class="flow-text">${g.description}</p></div><div id="card-action" class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=${g.id}">Details</a><a class="waves-effect waves-light btn hoverable" href="/#live=${g.id}">Live mode</a><a class="waves-effect waves-light btn hoverable" href="/#countdown=${g.id}">Countdown</a></div></div>`
+            
             for (let g of f.launches) {
                 if (g.statuscode == 1 || g.statuscode == 6) {
                     new Countdown(g.net, "countdown" + g.id)
@@ -43,10 +46,9 @@ export default function home() {
                     continue
                 }
 
-                if (total == (f.count - 1)) break
+                if (total == (f.count - active)) break
                 //$main.innerHTML = `<ul class="tabs"><li class="tab"><a href="#future" target="_self" class="active">More Launches</a></li></ul>${$main.innerHTML}`;
-                $upcoming.innerHTML += `<div class="col s12 l${Math.floor(12 / (f.count - 1))}"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More Info" href="/#rocket=${g.rocket.name.split("/")[0]}">${g.name.replace(" | ", "</a></h5><h4 class='header truncate'>").split(" (")[0]}</h4><a class="chip tooltipped" data-tooltip="${g.agency.name}" href="/#agency=${g.agency.id}"><img src="${g.agency.icon}?size=32" onerror=this.src="${g.agency.countryFlag}">${g.agency.shortname}</a><a class="chip tooltipped" data-tooltip="${g.location.name}" href="/#pad=${g.location.pads[0].id}"><i class="far fa-compass"></i>${g.location.name.split(",")[0]}</a></br><a class="chip tooltipped" data-tooltip="${g.net}"><i class="far fa-clock"></i>${ReadableDateString(g.net)}</a><h5 id="countdown${g.id}">${g.status}</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=${g.id}">Details</button></div></div></div>`;
-
+                $upcoming.innerHTML += `<div class="col s12 l${Math.floor(12 / (f.count - active))}"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More Info" href="/#rocket=${g.rocket.name.split("/")[0]}">${g.name.replace(" | ", "</a></h5><h4 class='header truncate'>").split(" (")[0]}</h4><a class="chip tooltipped" data-tooltip="${g.agency.name}" href="/#agency=${g.agency.id}"><img src="${g.agency.icon}?size=32" onerror=this.src="${g.agency.countryFlag}">${g.agency.shortname}</a><a class="chip tooltipped" data-tooltip="${g.location.name}" href="/#pad=${g.location.pads[0].id}"><i class="far fa-compass"></i>${g.location.name.split(",")[0]}</a></br><a class="chip tooltipped" data-tooltip="${g.net}"><i class="far fa-clock"></i>${ReadableDateString(g.net)}</a><h5 id="countdown${g.id}">${g.status}</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=${g.id}">Details</button></div></div></div>`;
                 total++;
             }
         } else {
