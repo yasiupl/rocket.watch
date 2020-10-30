@@ -1,5 +1,5 @@
-import { QueryString, load, materialize, ISODateString, ReadableDateString, Countdown } from '../js/utils'
-
+import { QueryString, load, materialize, embedify, ISODateString, ReadableDateString, Countdown } from '../js/utils'
+const sources = require('../sources.json');
 
 export default function watch(id, mode = "live") {
 
@@ -14,26 +14,25 @@ export default function watch(id, mode = "live") {
     $main.appendChild($live);
 
     // fetch launch with an ID if the ID is a number, or fetch a custom file if the ID is a string. fetch lite version if only countdown should be displayed.
-    load((mode.match("custom")) ? (id + "?format=customlive") : ("launch?mode=verbose" + (parseInt(id) ? ("&id=" + id) : ("&limit=1&name=" + id)) + "&format=" + mode), function (data) {
+    load(`launch/?mode=detailed${(parseInt(id) ? ("&launch_library_id=" + id) : ("&limit=1&name=" + id))}`, function (data) {
 
-        let launch = data.launches[0];
+        let launch = data.results[0] || data;
 
         document.title = launch.name;
 
-		$info.innerHTML = `<div id="video"></div>
+        $info.innerHTML = `<div id="video"></div>
 							<div id="details" class="card-content">
 								<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.id}">${launch.name.replace("|", "</a> | ")}</h1>
-								<h3 id="countdown${launch.id}">${launch.status}</h3>
+								<h3 id="countdown${launch.launch_library_id}">${launch.status.name}</h3>
 								<div id="chips">
 									<a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
-									<a class="chip tooltipped" data-tooltip="More info" href="/#pad=${launch.location.pads && launch.location.pads[0].id}"><i class="far fa-compass"></i>${launch.location.pads[0].name}</a>
+									<a class="chip tooltipped" data-tooltip="More info" href="/#pad=${launch.pad.id}"><i class="far fa-compass"></i>${launch.pad.name}</a>
 									<a class="chip tooltipped" id="launchdate" data-tooltip="${launch.net}"><i class="far fa-clock"></i>${ReadableDateString(launch.net)}</a>
 								</div>
-								<p class="flow-text" id="description">${launch.description}</p>
+								<p class="flow-text" id="description"></p>
 							</div>
 							<div id="buttons">
 								<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
-								<a class="waves-effect waves-light btn hoverable" onclick="(description.style.display = ((description.style.display == \'none\' )? \'unset\' : \'none\'))">Toggle Description</a>
 							</div>
 							<div class="card-tabs">
 								<ul id="maintabs" class="tabs tabs-fixed-width"></ul>
@@ -41,11 +40,11 @@ export default function watch(id, mode = "live") {
 
         let livevideo = document.querySelector("#video");
         let buttons = document.querySelector("#buttons");
-        let countdown = document.querySelector("#countdown" + launch.id);
-		let badges = document.querySelector("#chips");
-		let description = document.querySelector("#description");
+        let countdown = document.querySelector("#countdown" + launch.launch_library_id);
+        let badges = document.querySelector("#chips");
+        let description = document.querySelector("#description");
 
-        if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.statuscode) == -1) {
+        if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.status.id) == -1) {
             badges.innerHTML += `<a class="chip tooltipped" data-tooltip="Launch probability %">${launch.probability}% probability</a>`
         };
 
@@ -61,20 +60,21 @@ export default function watch(id, mode = "live") {
         }
 
         if (launch.tbdtime != 1) {
-            if (launch.statuscode != 3 && launch.statuscode != 4 && launch.statuscode != 7) {
-                buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="/#countdown=${launch.id}">Countdown only</a>`
-            }
-
-            if (launch.statuscode != 3 && launch.statuscode != 4 && launch.statuscode != 7 && (launch.media.video || launch.media.comments) && window.innerWidth >= 800) {
-                buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable tooltipped" href="/#live=${launch.id}" data-tooltip="Display more data on one screen">TV mode</a>`
+            if (launch.status.id != 3 && launch.status.id != 4 && launch.status.id != 7) {
+                buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="/#countdown=${launch.launch_library_id}">Countdown only</a>`
             }
         }
 
-        if (launch.agency.social.reddit) {
-            buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${launch.agency.social.reddit}" target="_blank">/r/${launch.agency.social.reddit} Subreddit</a>`;
+        if(launch.mission && launch.mission.description) {
+            description = launch.mission.description;
+            buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" onclick="(description.style.display = ((description.style.display == \'none\' )? \'unset\' : \'none\'))">Toggle Description</a>`;
         }
 
-        if (launch.statuscode == 1 || launch.statuscode == 6) {
+        if (sources.handles[launch.launch_service_provider.abbrev.toLowerCase()].reddit) {
+            buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${sources.handles[launch.launch_service_provider.abbrev.toLowerCase()].reddit}" target="_blank">/r/${sources.handles[launch.launch_service_provider.abbrev.toLowerCase()].reddit} Subreddit</a>`;
+        }
+
+        if (launch.status.id == 1 || launch.status.id == 6) {
             let count = setInterval(function () {
                 document.title = `[${Countdown(launch.net)}] ${launch.name.split("|")[1]}`;
                 countdown.innerHTML = Countdown(launch.net)
@@ -87,51 +87,69 @@ export default function watch(id, mode = "live") {
             countdowns.push(updatecount);
         }
 
-        for (let badge of launch.media.badge) {
-            badges.innerHTML += `<a class="chip ${(badge.desc ? 'tooltipped" data-tooltip="' + badge.desc + '"' : '"')} ${(badge.url ? 'href="${d.url}"' : '')}>${(badge.img ? '<img src="${d.img}">' : '') + (badge.name || '')}</a>`
-        }
+        
 
         if (navigator.onLine) {
 
-            let list = launch.media.video.concat(launch.media.info).concat(launch.media.comments).concat(launch.media.last);
-            let video = launch.media.video;
-            let media = launch.media.info.concat(launch.media.comments).concat(launch.media.last);
+            if (launch.vidURLs.length) {
+                let videolist = "<option disabled selected>Select source</option>";
+                let first_video = false;
+                for (let i in launch.vidURLs) {
+                    if (!new RegExp(sources.embed_blacklist.join("|")).test(launch.vidURLs[i].url)) {
+                        if (!first_video) first_video = i;
+                        videolist += `<option value='${i}'>${launch.vidURLs[i].title.slice(0, 100)}</option>`;
+                    }
+                }
 
-            if (media.length || launch.media.twitter.length) {
-                document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#live" class="active">Live</a></li><li class="tab"><a href="#information">Info</a></li>';
-            } else {
-                document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#information">Info</a></li>';
+                window.selectSource = function (source) {
+                    id = parseInt(document.getElementById(source + "_select").value);
+                    window.open(embedify(launch.vidURLs[id].url), source);
+                    document.getElementById(source + "_reload").href = embedify(launch.vidURLs[id].url);
+                    document.getElementById(source + "_share").href = launch.vidURLs[id].url
+                    document.getElementById(source).innerHTML = `<iframe name="${source}" src="${embedify(launch.vidURLs[id].url)}"  allow="autoplay; fullscreen"></iframe>`
+                };
+
+                livevideo.innerHTML =
+                    `<div class="video-container" id="videoframe1">
+                        <iframe name="videoframe1" src="${embedify(launch.vidURLs[first_video].url)}"  allow="autoplay; fullscreen"></iframe>
+                    </div>
+                    <div class="cardnav">
+                        <a id="videoframe1_reload" href="${embedify(launch.vidURLs[first_video].url)}" target="videoframe1">
+                            <i class="fas fa-sync-alt"></i>
+                        </a>
+                        <a id="videoframe1_share" href="${launch.vidURLs[first_video].url}" target="_blank">
+                            <i class="fas fa-external-link-square-alt"></i>
+                        </a>
+                        ${(launch.vidURLs.length > 1) ? ('<select id="videoframe1_select" onchange="selectSource(\'videoframe1\')">' + videolist + '</select>') : ''}
+                    </div>`;
             }
+
+            document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#information">Info</a></li>';
 
             let $information = document.createElement("div");
             $information.id = "information";
             $main.appendChild($information);
 
-			materialize()
+            materialize()
 
-            if (launch.media.audio.length) {
-                let audio = document.createElement("div");
-                audio.className = "container row";
-                audio.style = "padding: 0 !important";
-                for (let track of launch.media.audio) {
-                    audio.innerHTML += `<div class="col s12 m${Math.floor(12 / launch.media.audio.length)}"><div class="card-panel"><audio style="width:100%" controls preload="none"><source src="${track.embed}"></audio></br><div class="cardnav"><a class="truncate">${track.name}</a></div></div></div>`
-                }
-                $live.appendChild(audio)
+            if (launch.mission && launch.mission.wiki_url) {
+                $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.mission.wiki_url.replace("http://", "https://")}"  allow="autoplay; fullscreen"></iframe></div></div>`;
             }
+            if (launch.rocket.wiki_url) {
+                $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.rocket.wiki_url}" allow="autoplay; fullscreen"></iframe></div></div>`
+            }
+            $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDVnn_hI36-gqNndDceDStv2iLMRFvYTzE&maptype=satellite&q=${launch.pad.latitude},${launch.pad.longitude}"  allow="autoplay; fullscreen"></iframe></div></div>`;
+            if (launch.pad.wiki_url) {
+                $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.pad.wiki_url.replace("http://", "https://")}"  allow="autoplay; fullscreen"></iframe></div></div>`;
+            }
+            if (launch.launch_service_provider.wiki_url) {
+                $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.launch_service_provider.wiki_url}"  allow="autoplay; fullscreen"></iframe></div></div>`;
+            }
+            /*
 
-            if (launch.missions[0] && launch.missions[0].wikiURL) {
-                $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.missions[0].wikiURL.replace("http://", "https://")}"  allow="autoplay; fullscreen"></iframe></div></div>`;
-            }
-            if (launch.rocket.wiki) {
-                $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.rocket.wiki}" allow="autoplay; fullscreen"></iframe></div></div>`
-            }
-            $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.location.map}"  allow="autoplay; fullscreen"></iframe></div></div>`;
-            if (launch.location.wikiURL || launch.location.pads[0].wikiURL) {
-                $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${(launch.location.wikiURL || launch.location.pads[0].wikiURL).replace("http://", "https://")}"  allow="autoplay; fullscreen"></iframe></div></div>`;
-            }
-            if (launch.agency.wiki) {
-                $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.agency.wiki}"  allow="autoplay; fullscreen"></iframe></div></div>`;
-            }
+            let list = launch.media.video.concat(launch.media.info).concat(launch.media.comments).concat(launch.media.last);
+            let video = launch.media.video;
+            let media = launch.media.info.concat(launch.media.comments).concat(launch.media.last);
 
             let medialist = "<option disabled selected>Select source</option>";
             for (let item in list) {
@@ -154,10 +172,10 @@ export default function watch(id, mode = "live") {
 
                 $live.innerHTML += `<div class="container"><div class="card"><div class="video-container" id="contentframe1"><iframe name="contentframe1" src="${media[0].embed}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="contentframe1_reload" href="${media[0].embed}" target="contentframe1"><i class="fas fa-sync-alt"></i></a><a id="contentframe1_share" href="${media[0].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="contentframe1_select" onchange="selectSource(\'contentframe1\')">${medialist}</select></div></div></div></div>`;
 
-                if (media.length > 1 && launch.statuscode != 3 && launch.statuscode != 4 && launch.statuscode != 7) {
+                if (media.length > 1 && launch.status.id != 3 && launch.status.id != 4 && launch.status.id != 7) {
                     $live.innerHTML += `<div class="container"><div class="card"><div class="video-container" id="contentframe2"><iframe name="contentframe2" src="${media[media.length - 1].embed}"  allow="autoplay; fullscreen"></iframe></div><div class="cardnav"><a id="contentframe2_reload" href="${media[media.length - 1].embed}" target="contentframe2"><i class="fas fa-sync-alt"></i></a><a id="contentframe2_share" href="${media[media.length - 1].share}" target="_blank"><i class="fas fa-external-link-square-alt"></i></a><select id="contentframe2_select" onchange="selectSource(\'contentframe2\')">${medialist}</select></div></div></div></div>`;
                 }
-			}
+            }
 
             if (launch.media.twitter.length || launch.agency.social.twitter) {
                 let twitter = document.createElement("div");
@@ -165,7 +183,7 @@ export default function watch(id, mode = "live") {
 
                 twitter.className = "container";
             
-                if (launch.statuscode != 3 && launch.statuscode != 4 && launch.statuscode != 7 && launch.agency.social.twitter && launch.media.twitter.length < 2) {
+                if (launch.status.id != 3 && launch.status.id != 4 && launch.status.id != 7 && launch.agency.social.twitter && launch.media.twitter.length < 2) {
                     launch.media.twitter.push({ url: `https://twitter.com/${launch.agency.social.twitter}` })
                 }
                 for (let tweet of launch.media.twitter) {
@@ -176,7 +194,7 @@ export default function watch(id, mode = "live") {
                 }
             }
 
-
+            */
 
         } else {
             $main.className = "valign-wrapper";

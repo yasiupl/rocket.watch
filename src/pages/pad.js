@@ -1,54 +1,80 @@
-import {QueryString, load, materialize} from '../js/utils'
+import { QueryString, load, materialize } from '../js/utils'
 import search from './search'
 
-export default function pad(m) {
+export default function pad(id) {
     let $main = document.getElementsByTagName("main")[0];
     let $info = document.getElementById("info");
-    let k = document.createElement("div");
-    $main.appendChild(k);
-    let l = document.createElement("div");
-    l.id = "information";
-    l.className = "col s12"
-    l.style.display = "none"
-    $main.appendChild(l);
+    let $information_tab = document.createElement("div");
+    $information_tab.id = "information";
+    $information_tab.className = "col s12"
+    $main.appendChild($information_tab);
     let $query = QueryString();
 
-    if (m != "undefined") {
-        load("pad/" + m + "?mode=verbose", function (g) {
-            if (g.pads.length) {
-                let c = g.pads[0];
+    if (id != "undefined") {
+        load(`pad/${id}?mode=detailed`, function (pad) {
+            if (!pad.detail) {
 
-                $info.innerHTML = '<div class="card-content"><img class="circle materialboxed" src="' + c.img + '" onerror=this.onerror=null;this.style.display="none"><h1>' + c.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped"data-tooltip="Country summary" href="/#country=' + (c.agency && c.agency.countryCode) + '"><img src="' + (c.agency && c.agency.countryFlag) + '">' + (c.agency && c.agency.countryCode) + '</a><a class="chip tooltipped" data-tooltip="More info" href="/#agency=' + (c.agency && c.agency.id) + '"><img src="' + c.agency.icon + '?size=32" onerror=this.onerror=null;this.style.display="none">' + (c.agency && c.agency.name) + '</a></div></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
+                $info.innerHTML =
+                    `<div class="card-content">
+                    <img class="circle materialboxed" src="${pad.map_image}" onerror=this.onerror=null;this.style.display="none">
+                    <h1>${pad.name}</h1>
+                    <div id="chips">
+                        <a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
+                        <a class="chip tooltipped" data-tooltip="More info" href="/#location=${pad.location.id}">
+                            ${pad.location.name}
+                        </a>
+                    </div>
+                </div>
+                <div class="card-tabs">
+                    <ul id="maintabs" class="tabs tabs-fixed-width"></ul>
+                </div>`;
 
                 document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#information">Info</a></li>' + document.getElementById("maintabs").innerHTML;
-                l.innerHTML = '<div class="card"><div class="video-container"><iframe src="' + c.map + '"></iframe></div></div>';
-                if (c.info) {
-                    l.innerHTML += '<div class="card"><div class="video-container"><iframe  src="' + c.info + '"></iframe></div></div>';
+                $information_tab.innerHTML = `<div class="card"><div class="video-container"><iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDVnn_hI36-gqNndDceDStv2iLMRFvYTzE&maptype=satellite&q=${pad.latitude},${pad.longitude}"></iframe></div></div>`;
+                if (pad.wiki_url) {
+                    $information_tab.innerHTML += `<div class="card"><div class="video-container"><iframe  src="${pad.wiki_url}"></iframe></div></div>`;
                 }
-                search("&locationid=" + c.id);
+                //search("&pad__ids=" + pad.id);
+                let loading = document.getElementById("loading")
+                if (loading) {
+                    loading.parentNode.removeChild(loading)
+                }
+                materialize();
             } else {
-                r.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">' + g.msg || g.status || "Error</h1>"
+                $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${pad.detail}</h1>`;
             }
         });
     } else {
         let page = parseInt($query.page) || 1;
         let perPage = 28;
         let offset = perPage * (page - 1);
-        load("pad?limit=" + perPage + "&mode=verbose&retired=0&offset=" + offset, function (c) {
-            if (c.pads.length) {
-                $info.innerHTML = '<div class="card-content"><h1>Launch pads</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#pad&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(c.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#pad&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
+        load(`pad?limit=${perPage}&offset=${offset}`, function (data) {
+            if (!data.detail) {
+                $info.innerHTML = '<div class="card-content"><h1>Launch pads</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#pad&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(data.count / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#pad&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
                 $main.innerHTML = ''
-                for (let b in c.pads) {
-                    let a = c.pads[b];
-                    $main.innerHTML += '<div class="col s12 m6 l3"><div class="card"><div class="card-image"><img src="' + a.img + '"><span class="card-title">' + a.name + '</span></div><div class="card-content"><a class="chip" href="/#agency=' + a.agency.id + '">' + a.agency.abbrev + '</a><a class="chip">' + a.agency.type + ' Pad</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" class="tooltipped" data-tooltip="More info" href="/#pad=' + a.id + '">Details</a></div>'
+                for (let pad of data.results) {
+                    $main.innerHTML += 
+                    `<div class="col s12 m6 l3">
+                        <div class="card">
+                            <div class="card-image">
+                                <a href="#pad=${pad.id}">
+                                    <img src="${pad.map_image}">
+                                </a>
+                                <span class="card-title">
+                                    <a class="chip" href="#pad=${pad.id}">${pad.name}</a>
+                                    <a class="chip" href="#location=${pad.location.id}">${pad.location.name}</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>`;
                 }
-                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="#pad&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(c.total / perPage) + ' <li class="' + ((page == Math.ceil(c.total / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="#pad&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
+                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="#pad&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(data.count / perPage) + ' <li class="' + ((page == Math.ceil(data.count / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="#pad&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
             } else {
-                $main.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">' + c.msg || c.status || "Error</h1>"
+                $main.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`
             }
 
-            // preload next
-            load("pad?limit=" + perPage + "&mode=verbose&retired=0&offset=" + (perPage * page));
+            // preload next page
+            load(`pad?limit=${perPage}&offset=${offset * perPage}`);
         });
     }
     materialize();

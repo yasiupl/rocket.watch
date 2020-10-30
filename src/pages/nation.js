@@ -3,7 +3,7 @@ import {load, materialize} from '../js/utils'
 export default function nation(code) {
     let $main = document.getElementsByTagName("main")[0];
     let $info = document.getElementById("info");
-    load("agencies?country_code=" + code, function (data) {
+    load(`agencies?country_code=${code}`, function (data) {
         if (!data.detail) {
             let first_agency = data.results[0];
             $info.innerHTML = 
@@ -18,7 +18,8 @@ export default function nation(code) {
                             </li>
                         </ul>
                     </div>
-                </div>`;
+                </div>
+            </div>`;
             $main.innerHTML = '';
             let $agencies = document.createElement("div");
             $agencies.id = "agencies";
@@ -41,7 +42,7 @@ export default function nation(code) {
             $main.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail}</h1>`;
         }
 
-        load("location?country_code=" + code, function (data) {
+        load(`location?country_code=${code}`, function (data) {
             if (data.results.length) {
                 document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#locations">Launch Locations</a></li>';
                 let $locations = document.createElement("div");

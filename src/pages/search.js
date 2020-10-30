@@ -23,7 +23,7 @@ export default function search(term) {
             $info.innerHTML = '<div class="card-content"><h1 class="header truncate">Results for "' + term + '"</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>'
 
 
-        load("launch?limit=300&ordering=-id&search=" + term + (($query.type == "failures") ? "&status=4" : ""), function (data) {
+        load(`launch?limit=300&ordering=-net&search=${term}${($query.type == "failures") ? "&status=4" : ""}`, function (data) {
             let loading = document.getElementById("loading")
             if (loading) {
                 loading.parentNode.removeChild(loading)
@@ -43,7 +43,7 @@ export default function search(term) {
                     //document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#stats">Stats</a></li>' + document.getElementById("maintabs").innerHTML;
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#results" class="active">Launches</a></li>' + document.getElementById("maintabs").innerHTML;
 
-                    for (let launch of data.results.reverse()) {
+                    for (let launch of data.results) {
                         if (Date.parse(launch.net) < $today) {
                             $past += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + "</a><h5>" + launch.status.name + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + launch.launch_library_id + '">Watch</a></div></div></div>'
                         } else {
@@ -191,7 +191,7 @@ export default function search(term) {
 
             } else {
                 if (document.getElementById("chips")) {
-                    document.getElementById("chips").innerHTML += '<a class="chip">No launches</a>';
+                    document.getElementById("chips").innerHTML += '<a class="chip">No launches in database</a>';
                 }
                 if (!document.getElementById("news") && !document.getElementById("information")) {
                     $main.innerHTML = '<h1 class="white-text">' + data.detail + '</h1></br>';

@@ -63,11 +63,11 @@ export function Countdown(date, element) {
 }
 
 export function updateCountdown(launch) {
-    load("launch?mode=summary" + (parseInt(launch.id) ? ("&id=" + launch.id) : ("&limit=1&name=" + launch.id)), function (refreshdata) {
+    load(`launch?mode=summary${parseInt(launch.id) ? ("&id=" + launch.id) : ("&limit=1&name=" + launch.id)}`, function (refreshdata) {
 
         if (refreshdata.status != "error") {
             let newLaunch = refreshdata.launches[0];
-            
+
             if (newLaunch && (newLaunch.net != launch.net)) {
 
                 for (let count of countdowns) {
@@ -130,7 +130,7 @@ export function getJSON(url, callback) {
                         console.log('Looks like there was a problem. Status Code: ' +
                             response.status);
                     }
-                    
+
                     response.json().then(callback);
                 }
             )
@@ -197,3 +197,41 @@ function padnumber(number, zeros = 2) {
     }
     return string
 };
+
+export function embedify(url) {
+
+    url = (url || "").replace("http://", "https://");
+
+    if (url.match(".reddit.com/r/")) {
+        return `https://reddit-stream.com/comments/${url.split("/comments/")[1]}`
+    }
+    if (url.match("reddit.com/live/")) {
+        return `https://www.redditmedia.com/live/${url.split("reddit.com/live/")[1].split("/")[0]}/embed`
+    }
+    if(url.match("youtube.com")) {
+        return url
+        .replace("/watch?v=", "/embed/")
+        .replace("youtu.be/", "youtube.com/embed/");
+    }
+    if(url.match("dailymotion.com")) {
+        return url.replace(
+            "www.dailymotion.com/video/",
+            "www.dailymotion.com/embed/video/"
+        )
+    }
+    if(url.match("streamable.com") && !url.match("streamable.com/s/")) {
+        return url.replace("streamable.com/", "streamable.com/s/");
+    }
+
+    if (url.match("imgur.com")) {
+        return `https://imgur.com/${url.match(/(https?:\/\/(?:i\.|)imgur\.com(?:\/(?:a|gallery)|)\/(.*?)(?:[#\/].*|$))/)[2].split(".")[0]}/embed`
+    }
+    if (url.match("archive.org/details/")) {
+        return url.replace(
+            "archive.org/details/",
+            "archive.org/embed/"
+        )
+    }
+
+    return url;
+}

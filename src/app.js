@@ -7,7 +7,7 @@ import watch from './pages/watch'
 import countdown from './pages/countdown'
 import live from './pages/live'
 import agency from './pages/agency'
-import launchcenter from './pages/launchcenter'
+import location from './pages/location'
 import nation from './pages/nation'
 import pad from './pages/pad'
 import rocket from './pages/rocket'
@@ -105,7 +105,7 @@ function init() {
     QueryString(function (query) {
         let launched = 0;
         if (query.countdown) {
-            load(`launch?mode=verbose&${(parseInt(query.countdown) ? ("id=" + query.countdown) : ("limit=1&name=" + query.countdown))}`, countdown);
+            countdown(query.countdown)
             launched++
         }
         if (query.live) {
@@ -129,7 +129,7 @@ function init() {
             launched++
         }
         if (query.location) {
-            launchcenter(query.location);
+            location(query.location);
             launched++
         }
         if (query.rocket) {

@@ -1,7 +1,7 @@
 import { QueryString, load, materialize } from '../js/utils'
 import search from './search'
 
-export default function launchcenter(id) {
+export default function location(id) {
     let $main = document.getElementsByTagName("main")[0];
     let $info = document.getElementById("info");
     let $query = QueryString();
@@ -14,7 +14,7 @@ export default function launchcenter(id) {
     $main.appendChild(l);
 
     if (id != "undefined") {
-        load("location/" + id, function (location) {
+        load(`location/${id}`, function (location) {
             if (!location.detail) {
                 $info.innerHTML = 
                 `<div class="card-content">
@@ -60,20 +60,66 @@ export default function launchcenter(id) {
         let page = parseInt($query.page) || 1;
         let perPage = 30;
         let offset = perPage * (page - 1);
-        load("location?limit=" + perPage + "&offset=" + offset, function (data) {
+        load(`location?limit=${perPage}&offset=${offset}`, function (data) {
             if (data.results.length) {
-                $info.innerHTML = `<div class="card-content"><h1>Launch Centers</h1><div id="chips"><div style="display:${((page == 1) ? 'none' : 'unset')}" ><a class="chip" href="/#location&page=${(page - 1)}"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ${page}</a><div style="display:${((page == Math.ceil(data.count / perPage)) ? 'none' : 'unset')}"><a  class="chip" href="/#location&page=${(page + 1)}"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>`;
+                $info.innerHTML = 
+                `<div class="card-content">
+                    <h1>Launch Centers</h1>
+                    <div id="chips">
+                        <div style="display:${((page == 1) ? 'none' : 'unset')}" >
+                            <a class="chip" href="/#location&page=${(page - 1)}">
+                                <i id="pagination" class="fas fa-chevron-left"></i>
+                            </a>
+                        </div>
+                        <a class="chip">Page ${page}</a><div style="display:${((page == Math.ceil(data.count / perPage)) ? 'none' : 'unset')}">
+                        <a  class="chip" href="/#location&page=${(page + 1)}">
+                            <i id="pagination" class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>`;
+
                 $main.innerHTML = ``;
                 for (let location of data.results) {
-                    $main.innerHTML += `<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate">${location.name}</h5><a class="chip">${location.country_code}</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#location=${location.id}">Details</a></div></div>`;
+                    $main.innerHTML += 
+                    `<div class="col s12 m6">
+                        <div class="card">
+                            <div class="card-content">
+                                <h5 class="header truncate">${location.name}</h5>
+                                <a class="chip">${location.country_code}</a>
+                            </div>
+                            <div class="card-action">
+                                <a class="waves-effect waves-light btn hoverable" href="/#location=${location.id}">
+                                    Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>`;
                 }
-                $main.innerHTML += `<div class="col s12"><div class="card"><ul class="pagination"><li class="${((page == 1) ? 'disabled" style="pointer - events: none; "' : "waves - effect")}" > <a href="#location&page=${(page - 1)}"><i id="pagination" class="fas fa-chevron-left"></i></a></li > Page ${ page + "/" + Math.ceil(data.count / perPage) } <li class="${((page == Math.ceil(data.count / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect")}"><a href="#location&page=${(page + 1)}"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>`;
+
+                $main.innerHTML += 
+                `<div class="col s12">
+                    <div class="card">
+                        <ul class="pagination">
+                            <li class="${((page == 1) ? 'disabled" style="pointer - events: none; "' : "waves - effect")}" >
+                                <a href="#location&page=${(page - 1)}">
+                                    <i id="pagination" class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                            Page ${page} / ${Math.ceil(data.count / perPage)}
+                            <li class="${((page == Math.ceil(data.count / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect")}">
+                                <a href="#location&page=${(page + 1)}">
+                                    <i id="pagination" class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>`;
             } else {
                 $main.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`
             }
 
-            // preload next
-            load("location?limit=" + perPage + "&offset=" + (perPage * page));
+            // preload next page
+            load(`location?limit=${perPage}&offset=${offset * perPage}`);
         });
     }
     materialize();
