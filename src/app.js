@@ -1,6 +1,6 @@
 import 'materialize-css/dist/js/materialize.min.js'
 import './js/fontawesome'
-import {QueryString, restart} from './js/utils'
+import {load, QueryString, restart} from './js/utils'
 
 import home from './pages/home.js'
 import watch from './pages/watch'
@@ -105,7 +105,7 @@ function init() {
     QueryString(function (query) {
         let launched = 0;
         if (query.countdown) {
-            countdown(query.countdown);
+            load(`launch?mode=verbose&${(parseInt(query.countdown) ? ("id=" + query.countdown) : ("limit=1&name=" + query.countdown))}`, countdown);
             launched++
         }
         if (query.live) {

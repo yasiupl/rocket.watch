@@ -1,4 +1,4 @@
-const backendURL = "https://api.rocket.watch/";
+const backendURL = "https://lldev.thespacedevs.com/2.0.0/";
 
 export function materialize() {
     M.Sidenav.init(document.querySelector('.sidenav'));
@@ -129,7 +129,6 @@ export function getJSON(url, callback) {
                     if (response.status !== 200) {
                         console.log('Looks like there was a problem. Status Code: ' +
                             response.status);
-                        return;
                     }
                     
                     response.json().then(callback);

@@ -1,22 +1,22 @@
-import { load, materialize, updateCountdown, ReadableDateString, Countdown } from '../js/utils'
+import { materialize, updateCountdown, ReadableDateString, Countdown } from '../js/utils'
 
-export default function countdown(id) {
-	
-    let $main = document.getElementsByTagName("main")[0];
-    let $info = document.getElementById("info");
-    let $live = document.createElement("div");
-    $live.id = "live";
-    $main.className = "";
-    $main.innerHTML = "";
+export default function countdown(data) {
+
+	let $main = document.getElementsByTagName("main")[0];
+	let $info = document.getElementById("info");
+	let $live = document.createElement("div");
+	$live.id = "live";
+	$main.className = "";
+	$main.innerHTML = "";
 	$main.appendChild($live);
-	
-	load(`launch?mode=verbose&${(parseInt(id) ? ("id=" + id) : ("limit=1&name=" + id))}`, function (data) {
 
-		let launch = data.launches[0];
 
-		document.title = launch.name;
 
-		$info.innerHTML = 	`<div id="video"></div>
+	let launch = data.launches[0];
+
+	document.title = launch.name;
+
+	$info.innerHTML = `<div id="video"></div>
 							<div id="details" class="card-content">
 								<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.id}">${launch.name.replace("|", "</a> | ")}</h1>
 								<h3 id="countdown${launch.id}" style="font-size: 10rem">${launch.status}</h3>
@@ -34,41 +34,40 @@ export default function countdown(id) {
 							</div>
 							</br>`;
 
-		let buttons = document.querySelector("#buttons");
-		let countdown = document.querySelector("#countdown" + launch.id);
-		let badges = document.querySelector("#chips");
+	let buttons = document.querySelector("#buttons");
+	let countdown = document.querySelector("#countdown" + launch.id);
+	let badges = document.querySelector("#chips");
 
-		if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.statuscode) == -1) {
-			badges.innerHTML += `<a class="chip tooltipped" data-tooltip="Launch probability %">${launch.probability}% probability</a>`
+	if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.statuscode) == -1) {
+		badges.innerHTML += `<a class="chip tooltipped" data-tooltip="Launch probability %">${launch.probability}% probability</a>`
+	}
+
+	if (navigator.share) {
+		buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="window.share()"><i class="fas fa-share-alt"></i></a>';
+		window.share = function () {
+			navigator.share({
+				title: launch.name,
+				text: launch.description.substring(0, 100) + '...',
+				url: location.href
+			})
 		}
+	}
 
-		if (navigator.share) {
-			buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="window.share()"><i class="fas fa-share-alt"></i></a>';
-			window.share = function () {
-				navigator.share({
-					title: launch.name,
-					text: launch.description.substring(0, 100) + '...',
-					url: location.href
-				})
-			}
-		}
+	if (launch.agency.social.reddit) {
+		buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${launch.agency.social.reddit}" target="_blank">/r/${launch.agency.social.reddit} Subreddit</a>`;
+	}
 
-		if (launch.agency.social.reddit) {
-			buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${launch.agency.social.reddit}" target="_blank">/r/${launch.agency.social.reddit} Subreddit</a>`;
-		}
+	if (launch.statuscode == 1 || launch.statuscode == 6) {
+		let count = setInterval(function () {
+			document.title = `[${Countdown(launch.net)}] ${launch.name.split("|")[1]}`;
+			countdown.innerHTML = Countdown(launch.net)
+		}, 1000);
+		countdowns.push(count);
 
-		if (launch.statuscode == 1 || launch.statuscode == 6) {
-			let count = setInterval(function () {
-				document.title = `[${Countdown(launch.net)}] ${launch.name.split("|")[1]}`;
-				countdown.innerHTML = Countdown(launch.net)
-			}, 1000);
-			countdowns.push(count);
-
-			let updatecount = setInterval(function () {
-				updateCountdown(launch);
-			}, 60000);
-			countdowns.push(updatecount);
-		}
-		materialize()
-	});
+		let updatecount = setInterval(function () {
+			updateCountdown(launch);
+		}, 60000);
+		countdowns.push(updatecount);
+	}
+	materialize();
 }

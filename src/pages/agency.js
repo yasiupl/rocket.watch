@@ -1,17 +1,16 @@
 import { QueryString, load } from '../js/utils'
 import search from './search'
 
-export default function agency(m) {
+export default function agency(name) {
     let $main = document.getElementsByTagName("main")[0];
     let $info = document.getElementById("info");
     let $query = QueryString();
-    if (m != "undefined") {
-        load("agency/" + m + "?mode=verbose&format=news", function (g) {
-            if (g.agencies.length) {
-                let c = g.agencies[0];
-
-                $info.innerHTML = '<div class="card-content"><img class="circle logo materialboxed" src="' + c.icon + '" onerror=this.onerror=null;this.style.display="none";><h1 class="tooltipped" data-tooltip="' + c.shortname + '">' + c.name.split(" (")[0] + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped" data-tooltip="Country summary" href="/#country=' + c.countryCode + '"><img src="' + c.countryFlag + '">' + c.countryCode + '</a><a class="chip">Founded: ' + c.founded + '</a></div><p class="flow-text">' + c.description + '</p></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div></div>';
-
+    if (name != "undefined") {
+        const id = parseInt(name);
+        load("agencies/" + id, function (agency) {
+            if (!agency.detail) {
+                    $info.innerHTML = '<div class="card-content"><img class="circle logo materialboxed" src="' + agency.image_url + '" onerror=this.onerror=null;this.style.display="none";><h1 class="tooltipped" data-tooltip="' + agency.name + '">' + agency.name.split(" (")[0] + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a><a class="chip tooltipped" data-tooltip="Country summary" href="/#country=' +  (agency.country_code.match(",")? "UNK" : agency.country_code)  + '">' +  (agency.country_code.match(",")? "Multinational" : agency.country_code)  + '</a><a class="chip">Founded: ' + agency.founding_year + '</a></div><p class="flow-text">' + agency.description + '</p></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div></div>';
+                /*
                 if (c.news && Object.keys(c.news).length) {
                     $main.innerHTML += '<div id="news"><div class="card-tabs"><ul id="tabs" class="tabs tabs-fixed-width"></ul></div></div>';
                     document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#news">News</a></li>';
@@ -54,37 +53,36 @@ export default function agency(m) {
                         }
                     }
                 }
-
-                if (c.wiki.length) {
+                */
+                if (agency.wiki_url) {
                     document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#information">Info</a></li>';
 
-                    $main.innerHTML += '<div id="information"><div class="card"><div class="video-container"><iframe  src="' + c.wiki.replace("http://", "https://") + '"></iframe></div></div></div>'
+                    $main.innerHTML += '<div id="information"><div class="card"><div class="video-container"><iframe src="' + agency.wiki_url.replace("http://", "https://") + '"></iframe></div></div></div>'
                 }
 
-                search((c.islsp ? "&lsp=" : "&agency=") + c.id);
+                search("&lsp__id="+agency.id);
             } else {
-                $main.innerHTML = '<h1 class="white-text" ="location.reload(true)">' + g.msg || g.status || "Error</h1>"
+                $main.innerHTML = '<h1 class="white-text" ="location.reload(true)">' + agency.detail || "Error</h1>"
             }
         });
     } else {
         let page = parseInt($query.page) || 1;
         let perPage = 30;
         let offset = perPage * (page - 1);
-        load("agency?limit=" + perPage + "&islsp=1&offset=" + offset, function (c) {
-            if (c.agencies.length) {
+        load("agencies?limit=" + perPage + "&offset=" + offset, function (data) {
+            if (data.results.length) {
                 $main.innerHTML = '';
-                $info.innerHTML = '<div class="card-content"><h1>Agencies</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#agency&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(c.total / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#agency&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
-                for (let b in c.agencies) {
-                    let a = c.agencies[b];
-                    $main.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate">' + a.name + '</h5><a class="chip"><img src="' + a.icon + '" onerror=this.onerror=null;this.src="' + a.countryFlag + '">' + a.abbrev + '</a><a class="chip">' + a.type + ' Agency</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#agency=' + a.id + '">Details</a></div></div>'
+                $info.innerHTML = '<div class="card-content"><h1>Agencies</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#agency&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(data.count / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#agency&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
+                for (let agency of data.results) {
+                    $main.innerHTML += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate">' + agency.name + '</h5><a class="chip">' + (agency.country_code.match(",")? "Multinational" : agency.country_code) + '</a><a class="chip">' + agency.type + ' Agency</a></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#agency=' + agency.id + '">Details</a></div></div>'
                 }
-                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="/#agency&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(c.total / perPage) + ' <li class="' + ((page == Math.ceil(c.total / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="/#agency&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
+                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="/#agency&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(data.count / perPage) + ' <li class="' + ((page == Math.ceil(data.count / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="/#agency&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
             } else {
-                $main.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">' + c.msg || c.status || "Error</h1>"
+                $main.innerHTML = '<h1 class="white-text" onclick="location.reload(true)">' + data.detail || "Error</h1>"
             }
 
             // preload NEXT
-            load("agency?limit=" + perPage + "&mode=verbose&islsp=1&offset=" + (perPage * page));
+            load("agencies?limit=" + perPage + "&offset=" + (perPage * page));
         });
     }
 }
