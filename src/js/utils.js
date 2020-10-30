@@ -1,4 +1,4 @@
-const backendURL = "https://lldev.thespacedevs.com/2.0.0/";
+const backendURL = "https://ll.thespacedevs.com/2.0.0/";
 
 export function materialize() {
     M.Sidenav.init(document.querySelector('.sidenav'));
