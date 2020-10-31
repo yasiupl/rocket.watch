@@ -1,4 +1,4 @@
-import { QueryString, load, materialize, embedify, ISODateString, ReadableDateString, Countdown, getLongStatusName } from '../js/utils'
+import { QueryString, load, materialize, embedify, getJSON, ReadableDateString, Countdown, getLongStatusName } from '../js/utils'
 const sources = require('../sources.json');
 
 export default function watch(id, mode = "live") {
@@ -70,10 +70,50 @@ export default function watch(id, mode = "live") {
                 $buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" onclick="(description.style.display = ((description.style.display == \'none\' )? \'unset\' : \'none\'))">Toggle Description</a>`;
             }
         }   
+
+        // REDDIT
         const agency_sources = sources.handles[launch.launch_service_provider.abbrev.toLowerCase()];
         if (agency_sources && agency_sources.reddit) {
             $buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${agency_sources.reddit}" target="_blank">/r/${agency_sources.reddit} Subreddit</a>`;
+            
+            document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#live" class="active">Live</a></li>';
+
+            getJSON(`https://www.reddit.com/r/${agency_sources.reddit}.json?limit=5`, function (reddit) {
+                let reddit_list = "<option disabled selected>Select post</option>";
+                window.reddit_posts = reddit.data.children;
+                for (var i in reddit.data.children) {
+                    reddit_list += `<option value='${i}'>${reddit.data.children[i].data.title}</option>`;
+                }
+
+                window.selectReddit = function (source) {
+                    id = parseInt(document.getElementById(source + "_select").value);
+                    window.open(embedify(`https://reddit.com${reddit_posts[id].data.permalink}`), source);
+                    document.getElementById(source + "_reload").href = embedify(`https://reddit.com${reddit_posts[id].data.permalink}`);
+                    document.getElementById(source + "_share").href = `https://reddit.com${reddit_posts[id].data.permalink}`;
+                    document.getElementById(source).innerHTML = `<iframe name="${source}" src="${embedify(`https://reddit.com${reddit_posts[id].data.permalink}`)}"  allow="autoplay; fullscreen"></iframe>`
+                };
+
+                $live.innerHTML =
+                    `<div class="container">
+                        <div class="card">
+                            <div class="video-container" id="reddit_frame">
+                                <iframe name="reddit_frame" src="${embedify(`https://reddit.com${reddit_posts[0].data.permalink}`)}"  allow="autoplay; fullscreen"></iframe>
+                            </div>
+                            <div class="cardnav">
+                                <a id="reddit_frame_reload" href="${embedify(`https://reddit.com${reddit_posts[0].data.permalink}`)}" target="feature_frame">
+                                    <i class="fas fa-sync-alt"></i>
+                                </a>
+                                <a id="reddit_frame_share" href="https://reddit.com${reddit_posts[0].data.permalink}" target="_blank">
+                                    <i class="fas fa-external-link-square-alt"></i>
+                                </a>
+                                ${(reddit.data.children.length > 1) ? ('<select id="reddit_frame_select" onchange="selectReddit(\'reddit_frame\')">' + reddit_list + '</select>') : ''}
+                            </div>
+                        </div>
+                    </div>`;
+              });
         }
+
+        
 
         if (launch.status.id == 1 || launch.status.id == 6) {
             let count = setInterval(function () {
@@ -92,6 +132,7 @@ export default function watch(id, mode = "live") {
 
         if (navigator.onLine) {
 
+            // VIDEO
             if (launch.vidURLs.length) {
                 let videolist = "<option disabled selected>Select source</option>";
                 let first_video = false;
@@ -129,6 +170,8 @@ export default function watch(id, mode = "live") {
                     <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDVnn_hI36-gqNndDceDStv2iLMRFvYTzE&maptype=satellite&q=${launch.pad.latitude},${launch.pad.longitude}"  allow="autoplay; fullscreen"></iframe>
                 </div>`;
             }
+
+            // INFO CARD
 
             document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#information">Info</a></li>';
 
