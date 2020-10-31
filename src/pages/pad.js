@@ -41,7 +41,7 @@ export default function pad(id) {
                 }
                 materialize();
             } else {
-                $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${pad.detail}</h1>`;
+                $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${pad.detail || "Error"}</h1>`;
             }
         });
     } else {
@@ -72,9 +72,6 @@ export default function pad(id) {
             } else {
                 $main.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`
             }
-
-            // preload next page
-            load(`pad?limit=${perPage}&offset=${offset * perPage}`);
         });
     }
     materialize();

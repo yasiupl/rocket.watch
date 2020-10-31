@@ -22,11 +22,11 @@ export default function agency(name) {
                                 ${agency.country_code.match(",")? "Multinational" : agency.country_code}
                             </a>
                             <a class="chip">
-                                Founded: ${agency.founding_year}
+                                Founded: ${agency.founding_year || "Unknown"}
                             </a>
                         </div>
                         <p class="flow-text">
-                            ${agency.description}
+                            ${agency.description || ""}
                         </p>
                     </div>
                     <div class="card-tabs">
@@ -89,7 +89,9 @@ export default function agency(name) {
                         `<div class="col s12 m6 l4">
                             <div class="card">
                                 <div class="card-image">
+                                    <a  href="/#rocket=${launcher.id}">
                                         <img src="${launcher.image_url || "https://rocket.watch/assets/rocket_placeholder.jpg"}">
+                                    </a>
                                     <span class="card-title">
                                         <a class="chip" href="/#rocket=${launcher.id}">${launcher.name}</a>
                                         <a class="chip">${launcher.successful_launches + launcher.failed_launches} Launches</a>
@@ -116,7 +118,7 @@ export default function agency(name) {
 
                 search("&lsp__id="+agency.id);
             } else {
-                $main.innerHTML = `<h1 class="white-text" ="location.reload(true)">${agency.detail || "Error"}</h1>`
+                $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${agency.detail || "Error"}</h1>`;
             }
         });
     } else {
@@ -124,7 +126,7 @@ export default function agency(name) {
         let perPage = 30;
         let offset = perPage * (page - 1);
         load(`agencies?limit=${perPage}&offset=${offset}`, function (data) {
-            if (data.results.length) {
+            if (!data.detail) {
                 $main.innerHTML = '';
                 $info.innerHTML = 
                 `<div class="card-content">
@@ -181,11 +183,8 @@ export default function agency(name) {
                     </div>
                 </div>`;
             } else {
-                $main.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`
+                $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`;
             }
-
-            // preload next page
-            load(`agencies?limit=${perPage}&offset=${offset * perPage}`);
         });
     }
 }

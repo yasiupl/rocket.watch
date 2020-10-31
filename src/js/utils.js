@@ -237,3 +237,9 @@ export function embedify(url) {
 
     return url;
 }
+
+export function getLongStatusName(status_id) {
+    const statuses = ["NO-GO for launch", "GO for launch", "To Be Determined", "Launch successful", "Launch failed", "Hold", "In Flight", "Partial Failure"];
+
+    return statuses[status_id] || statuses[0]
+}

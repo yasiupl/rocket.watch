@@ -16,8 +16,8 @@ export default function location(id) {
     if (id != "undefined") {
         load(`location/${id}`, function (location) {
             if (!location.detail) {
-                $info.innerHTML = 
-                `<div class="card-content">
+                $info.innerHTML =
+                    `<div class="card-content">
                     <img class="circle materialboxed" src="${location.map_image}" onerror=this.onerror=null;this.style.display="none">
                     <h1>${location.name.split(", ")[0]}</h1>
                     <div id="chips">
@@ -61,9 +61,9 @@ export default function location(id) {
         let perPage = 30;
         let offset = perPage * (page - 1);
         load(`location?limit=${perPage}&offset=${offset}`, function (data) {
-            if (data.results.length) {
-                $info.innerHTML = 
-                `<div class="card-content">
+            if (!data.detail) {
+                $info.innerHTML =
+                    `<div class="card-content">
                     <h1>Launch Centers</h1>
                     <div id="chips">
                         <div style="display:${((page == 1) ? 'none' : 'unset')}" >
@@ -80,8 +80,8 @@ export default function location(id) {
 
                 $main.innerHTML = ``;
                 for (let location of data.results) {
-                    $main.innerHTML += 
-                    `<div class="col s12 m6">
+                    $main.innerHTML +=
+                        `<div class="col s12 m6">
                         <div class="card">
                             <div class="card-content">
                                 <h5 class="header truncate">${location.name}</h5>
@@ -96,8 +96,8 @@ export default function location(id) {
                     </div>`;
                 }
 
-                $main.innerHTML += 
-                `<div class="col s12">
+                $main.innerHTML +=
+                    `<div class="col s12">
                     <div class="card">
                         <ul class="pagination">
                             <li class="${((page == 1) ? 'disabled" style="pointer - events: none; "' : "waves - effect")}" >
@@ -115,11 +115,8 @@ export default function location(id) {
                     </div>
                 </div>`;
             } else {
-                $main.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`
+                $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`;
             }
-
-            // preload next page
-            load(`location?limit=${perPage}&offset=${offset * perPage}`);
         });
     }
     materialize();

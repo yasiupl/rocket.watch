@@ -1,4 +1,4 @@
-import { materialize, load, updateCountdown, ReadableDateString, Countdown } from '../js/utils'
+import { materialize, load, updateCountdown, ReadableDateString, Countdown, getLongStatusName} from '../js/utils'
 
 export default function countdown(id) {
 
@@ -20,7 +20,7 @@ export default function countdown(id) {
 		`<div id="video"></div>
 		<div id="details" class="card-content">
 			<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.id}">${launch.name.replace("|", "</a> | ")}</h1>
-			<h3 id="countdown-${launch.id}" style="font-size: 10rem">${launch.status.name}</h3>
+			<h3 id="countdown-${launch.id}" style="font-size: 10rem">${getLongStatusName(launch.status.id)}</h3>
 			<div id="chips">
 				<a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
 				<a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.launch_service_provider.id}">${launch.launch_service_provider.name}</a>

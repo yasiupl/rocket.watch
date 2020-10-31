@@ -1,4 +1,4 @@
-import { load, materialize, ReadableDateString, Countdown } from '../js/utils'
+import { load, materialize, ReadableDateString, Countdown, getLongStatusName } from '../js/utils'
 const sources = require('../sources.json');
 
 export default function home() {
@@ -26,7 +26,7 @@ export default function home() {
     }
 
     load(`launch/upcoming/?limit=4&mode=detailed`, function (data) {
-        if (data.results && data.results.length) {
+        if (!data.detail) {
             const launches = data.results;
             let featured_launch = launches[0];
           
@@ -62,7 +62,7 @@ export default function home() {
                                 ${ReadableDateString(launch.net)}
                             </a>
                             <h5 id="countdown-${launch.id}">
-                                ${launch.status.name}
+                                ${getLongStatusName(launch.status.id)}
                             </h5>
                         </div>
                         <div class="card-action">
@@ -81,7 +81,7 @@ export default function home() {
                     <a class="tooltipped" data-tooltip="More Info" href="/#rocket=${featured_launch.rocket.id}">${featured_launch.name.replace("|", "</a>|")}
                 </h1>
                 <h3 id="countdown-${featured_launch.id}">
-                    ${featured_launch.status.name}
+                    ${getLongStatusName(featured_launch.status.id)}
                 </h3>
                 <div id="chips">
                     <a class="chip" id="refreshHome">
@@ -121,12 +121,13 @@ export default function home() {
             }
             */
         } else {
-            $info.innerHTML = `<h1 class="white-text">${data.detail}</h1>`;
+            $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`;
         }
     });
 
     load(`launch/previous/?limit=4&status=3`, function (data) {
         $successful.innerHTML = `<ul class="tabs"><li class="tab"><a href="#history" target="_self" class="active">Recent Launches</a></li></ul>`;
+        if(data.detail) return;
         for (let launch of data.results) {
             let days = Math.floor((new Date() - new Date(launch.net)) / 86400000);
             $successful.innerHTML += 
@@ -142,7 +143,7 @@ export default function home() {
                         <a class="chip">
                             ${(days > 0) ? days + " Days ago" : "Today"}
                         </a>
-                        <h5>${launch.status.name}</h5>
+                        <h5>${getLongStatusName(launch.status.id)}</h5>
                     </div>
                     <div class="card-action">
                         <a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id}">

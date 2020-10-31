@@ -1,4 +1,4 @@
-import {QueryString, load, materialize} from '../js/utils'
+import { QueryString, load, materialize } from '../js/utils'
 import search from './search'
 
 export default function rocket(id) {
@@ -7,10 +7,10 @@ export default function rocket(id) {
     let $query = QueryString();
     if (id != "undefined") {
         load(`config/launcher/${id}`, function (launcher) {
-            if (!rocket.detail) {
+            if (!launcher.detail) {
 
-                $info.innerHTML = 
-                `<div class="card-content">
+                $info.innerHTML =
+                    `<div class="card-content">
                     <img class="circle materialboxed" src="${launcher.image_url}" onerror=this.onerror=null;this.style.display="none">
                     <h1>${launcher.name}</h1>
                     <div id="chips">
@@ -20,7 +20,7 @@ export default function rocket(id) {
                             ${launcher.manufacturer.name}
                         </a>
                         <a class="chip tooltipped" data-tooltip="More info" href="/#country=${launcher.manufacturer && launcher.manufacturer.country_code || 'UNK'}">
-                            ${launcher.manufacturer && launcher.manufacturer.country_code  || 'Unknown Country'}
+                            ${launcher.manufacturer && launcher.manufacturer.country_code || 'Unknown Country'}
                         </a>
                     </div>
                     <p class="flow-text">${launcher.description}</p>
@@ -30,8 +30,8 @@ export default function rocket(id) {
                 </div>`;
 
                 if (launcher.wiki_url) {
-                    $main.innerHTML += 
-                    `<div id="information">
+                    $main.innerHTML +=
+                        `<div id="information">
                         <div class="card">
                             <div class="video-container">
                                 <iframe  src="${launcher.wiki_url.replace("http://", "https://")}"></iframe>
@@ -43,7 +43,7 @@ export default function rocket(id) {
 
                 search("&launcher_config__id=" + launcher.id);
             } else {
-                $main.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${rocket.detail || "Error"}</h1>`;
+                $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${launcher.detail || "Error"}</h1>`;
             }
         });
     } else {
@@ -55,7 +55,7 @@ export default function rocket(id) {
                 $info.innerHTML = '<div class="card-content"><h1>Rockets</h1><div id="chips"><div style="display:' + ((page == 1) ? 'none' : 'unset') + '" ><a class="chip" href="/#rocket&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></div><a class="chip">Page ' + page + '</a><div style="display:' + ((page == Math.ceil(data.count / perPage)) ? 'none' : 'unset') + '"><a  class="chip" href="/#rocket&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></div></div></div>';
                 $main.innerHTML = '';
                 for (const launcher of data.results) {
-                    $main.innerHTML += 
+                    $main.innerHTML +=
                     `<div class="col s12 m6 l4">
                         <div class="card">
                             <div class="card-image">
@@ -70,13 +70,12 @@ export default function rocket(id) {
                         </div>
                     </div>`;
                 }
-                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="/#rocket&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(data.count / perPage) + ' <li class="' + ((page == Math.ceil(data.count / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="/#rocket&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>'
+                $main.innerHTML += '<div class="col s12"><div class="card"><ul class="pagination"><li class="' + ((page == 1) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '" ><a href="/#rocket&page=' + (page - 1) + '"><i id="pagination" class="fas fa-chevron-left"></i></a></li> Page ' + page + "/" + Math.ceil(data.count / perPage) + ' <li class="' + ((page == Math.ceil(data.count / perPage)) ? 'disabled" style="pointer-events:none;"' : "waves-effect") + '"><a href="/#rocket&page=' + (page + 1) + '"><i id="pagination" class="fas fa-chevron-right"></i></a></li></ul></div></div>';
             } else {
-                $main.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`
+                $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`
             }
 
-            // preload next page
-            load(`config/launcher?limit=${perPage}&offset=${offset * perPage}`);
+
         });
     }
     materialize();

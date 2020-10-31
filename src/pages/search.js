@@ -1,4 +1,4 @@
-import { QueryString, materialize, load, ReadableDateString, Countdown } from '../js/utils'
+import { QueryString, materialize, load, ReadableDateString, Countdown, getLongStatusName } from '../js/utils'
 import Chart from 'chart.js';
 const sources = require('../sources.json');
 
@@ -38,20 +38,20 @@ export default function search(term) {
                 if (data.results.length == 1) {
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#results" class="active">Launches</a></li>' + document.getElementById("maintabs").innerHTML;
                     let launch = data.results[0];
-                    document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + '</a><h4 id="countdown-' + launch.id + '">' + launch.status.name.name + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Details</a></div></div></div>';
+                    document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + '</a><h4 id="countdown-' + launch.id + '">' + getLongStatusName(launch.status.id).name + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Details</a></div></div></div>';
                 } else {
                     //document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#stats">Stats</a></li>' + document.getElementById("maintabs").innerHTML;
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#results" class="active">Launches</a></li>' + document.getElementById("maintabs").innerHTML;
 
                     for (let launch of data.results) {
                         if (Date.parse(launch.net) < $today) {
-                            $past += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + "</a><h5>" + launch.status.name + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Watch</a></div></div></div>'
+                            $past += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + "</a><h5>" + getLongStatusName(launch.status.id) + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Watch</a></div></div></div>'
                         } else {
                             if (Date.parse(launch.net) > $today) {
-                                $future = '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + "</a><h5>" + launch.status.name + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Details</a></div></div></div>' + $future;
+                                $future = '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + "</a><h5>" + getLongStatusName(launch.status.id) + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Details</a></div></div></div>' + $future;
                             }
                             if (launch.status.id == 1 || launch.status.id == 5 || launch.status.id == 6) {
-                                document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + '</a><h4 id="countdown-' + launch.id + '">' + launch.status.name + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Details</a></div></div></div>';
+                                document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + '</a><h4 id="countdown-' + launch.id + '">' + getLongStatusName(launch.status.id) + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Details</a></div></div></div>';
                                 if (launch.status.id == 1 || launch.status.id == 6)
                                     new Countdown(launch.net, "countdown-" + launch.id);
                             }
@@ -194,7 +194,7 @@ export default function search(term) {
                     document.getElementById("chips").innerHTML += '<a class="chip">No launches in database</a>';
                 }
                 if (!document.getElementById("news") && !document.getElementById("information")) {
-                    $main.innerHTML = '<h1 class="white-text">' + data.detail + '</h1></br>';
+                    $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`;
                 }
             }
             materialize()

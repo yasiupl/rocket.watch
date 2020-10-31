@@ -3,30 +3,28 @@ import {load, materialize} from '../js/utils'
 export default function nation(code) {
     let $main = document.getElementsByTagName("main")[0];
     let $info = document.getElementById("info");
+
+    $info.innerHTML = 
+    `<div class="card-content">
+        <h1>${code}</h1>
+        <a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
+        </div>
+            <div class="card-tabs">
+                <ul id="maintabs" class="tabs tabs-fixed-width"></ul>
+            </div>
+        </div>
+    </div>`;
+
     load(`agencies?country_code=${code}`, function (data) {
         if (!data.detail) {
-            let first_agency = data.results[0];
-            $info.innerHTML = 
-            `<div class="card-content">
-                <h1>${code}</h1>
-                <a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
-                </div>
-                    <div class="card-tabs">
-                        <ul id="maintabs" class="tabs tabs-fixed-width">
-                            <li class="tab">
-                                <a href="#agencies">Agencies</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>`;
             $main.innerHTML = '';
+            document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#agencies">Agencies</a></li>';
             let $agencies = document.createElement("div");
             $agencies.id = "agencies";
             $main.appendChild($agencies);
             for (let agency of data.results) {
                 $agencies.innerHTML += 
-                `<div class="col s12 m6">
+                `<div class="col s12 m4">
                     <div class="card">
                         <div class="card-content">
                             <h5 class="header truncate">${agency.name}</h5>
@@ -39,24 +37,27 @@ export default function nation(code) {
                 </div>`;
             }
         } else {
-            $main.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail}</h1>`;
+            $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`;
         }
-
         load(`location?country_code=${code}`, function (data) {
             if (data.results.length) {
                 document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#locations">Launch Locations</a></li>';
                 let $locations = document.createElement("div");
                 $locations.id = "locations";
                 $main.appendChild($locations);
-                for (let location of data.results) {
+                for (const location of data.results) {
                     $locations.innerHTML += 
-                    `<div class="col s12 m6">
+                    `<div class="col s12 m6 l4">
                         <div class="card">
-                            <div class="card-content">
-                                <h5 class="header truncate">${location.name}</h5>
-                            </div>
-                            <div class="card-action">
-                                <a class="waves-effect waves-light btn hoverable" href="/#location=${location.id}">Details</a>
+                            <div class="card-image">
+                                <a  href="/#location=${location.id}">
+                                    <img src="${location.map_image || "https://rocket.watch/assets/rocket_placeholder.jpg"}">
+                                </a>
+                                <span class="card-title">
+                                    <a class="chip" href="/#location=${location.id}">${location.name}</a>
+                                    <a class="chip">${location.total_launch_count || "No"} Launches</a>
+                                    <a class="chip">${location.total_landing_count || "No"} Landings</a>
+                                </span>
                             </div>
                         </div>
                     </div>`;
@@ -64,6 +65,5 @@ export default function nation(code) {
             }
             materialize();
         });
-        materialize();
     });
 }
