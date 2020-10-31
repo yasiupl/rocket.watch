@@ -15,12 +15,12 @@ export default function rocket(id) {
                     <h1>${launcher.name}</h1>
                     <div id="chips">
                         <a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
-                        <a class="chip tooltipped" data-tooltip="More info" href="/#country=${launcher.manufacturer && launcher.manufacturer.country_code || 'UNK'}">
-                            ${launcher.manufacturer && launcher.manufacturer.country_code  || 'Unknown Country'}
-                        </a>
                         <a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launcher.manufacturer && launcher.manufacturer.id}">
                             <img src="${launcher.manufacturer.logo_url}">
                             ${launcher.manufacturer.name}
+                        </a>
+                        <a class="chip tooltipped" data-tooltip="More info" href="/#country=${launcher.manufacturer && launcher.manufacturer.country_code || 'UNK'}">
+                            ${launcher.manufacturer && launcher.manufacturer.country_code  || 'Unknown Country'}
                         </a>
                     </div>
                     <p class="flow-text">${launcher.description}</p>

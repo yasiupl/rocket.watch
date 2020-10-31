@@ -32,7 +32,7 @@ export default function home() {
           
             for (const launch of launches) {
                 if (launch.status.id == 1 || launch.status.id == 6) {
-                    new Countdown(launch.net, "countdown" + launch.launch_library_id)
+                    new Countdown(launch.net, "countdown-" + launch.id)
                 }
                 if (launch.status.id != 2 && active == 0) {
                     featured_launch = launch;
@@ -61,12 +61,12 @@ export default function home() {
                                 <i class="far fa-clock"></i>
                                 ${ReadableDateString(launch.net)}
                             </a>
-                            <h5 id="countdown${launch.launch_library_id}">
+                            <h5 id="countdown-${launch.id}">
                                 ${launch.status.name}
                             </h5>
                         </div>
                         <div class="card-action">
-                            <a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id}">
+                            <a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id || launch.slug}">
                                 Details</a>
                         </div>
                     </div>
@@ -80,7 +80,7 @@ export default function home() {
                 <h1>
                     <a class="tooltipped" data-tooltip="More Info" href="/#rocket=${featured_launch.rocket.id}">${featured_launch.name.replace("|", "</a>|")}
                 </h1>
-                <h3 id="countdown${featured_launch.launch_library_id}">
+                <h3 id="countdown-${featured_launch.id}">
                     ${featured_launch.status.name}
                 </h3>
                 <div id="chips">
@@ -106,10 +106,10 @@ export default function home() {
                 </p>
             </div>
             <div id="card-action" class="card-action">
-                <a class="waves-effect waves-light btn hoverable" href="/#id=${featured_launch.launch_library_id}">
+                <a class="waves-effect waves-light btn hoverable" href="/#id=${featured_launch.launch_library_id || featured_launch.slug}">
                     Details
                 </a>
-                <a class="waves-effect waves-light btn hoverable" href="/#countdown=${featured_launch.launch_library_id}">
+                <a class="waves-effect waves-light btn hoverable" href="/#countdown=${featured_launch.launch_library_id || featured_launch.slug}">
                     Countdown
                 </a>
             </div>`;

@@ -20,7 +20,7 @@ export default function countdown(id) {
 		`<div id="video"></div>
 		<div id="details" class="card-content">
 			<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.id}">${launch.name.replace("|", "</a> | ")}</h1>
-			<h3 id="countdown${launch.launch_library_id}" style="font-size: 10rem">${launch.status.name}</h3>
+			<h3 id="countdown-${launch.id}" style="font-size: 10rem">${launch.status.name}</h3>
 			<div id="chips">
 				<a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
 				<a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.launch_service_provider.id}">${launch.launch_service_provider.name}</a>
@@ -31,11 +31,11 @@ export default function countdown(id) {
 		</div>
 		<div class="card-action" id="buttons">
 			<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
-			<a class="waves-effect waves-light btn hoverable tooltipped" href="/#id=${launch.launch_library_id}" data-tooltip="Load live sources">Exit countdown mode</a>
+			<a class="waves-effect waves-light btn hoverable tooltipped" href="/#id=${launch.launch_library_id || launch.slug}" data-tooltip="Load live sources">Exit countdown mode</a>
 		</div>`;
 
 		let buttons = document.querySelector("#buttons");
-		let countdown = document.querySelector("#countdown" + launch.launch_library_id);
+		let countdown = document.querySelector("#countdown-" + launch.id);
 		let badges = document.querySelector("#chips");
 
 		if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.status.id) == -1) {

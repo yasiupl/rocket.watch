@@ -21,7 +21,7 @@ export default function watch(id, mode = "live") {
 		$info.innerHTML = `<div id="video"></div>
 							<div id="details" class="card-content">
 								<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.id}">${launch.name.replace("|", "</a> | ")}</h1>
-								<h3 id="countdown${launch.id}">${launch.status}</h3>
+								<h3 id="countdown-${launch.id}">${launch.status}</h3>
 								<div id="chips">
 									<a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
 									<a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.agency.id}"><img src="${launch.agency.icon}?size=32" onerror=this.onerror=null;this.src="${launch.agency.countryFlag}">${launch.agency.name}</a>
@@ -31,7 +31,7 @@ export default function watch(id, mode = "live") {
 							</div>
 							<div id="buttons">
 								<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
-								<a class="waves-effect waves-light btn hoverable" href="/#id=${launch.id}">Exit TV mode</a>	
+								<a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id || launch.slug}">Exit TV mode</a>	
 							</div>
 							<div class="card-tabs">
 								<ul id="maintabs" class="tabs tabs-fixed-width"></ul>
@@ -39,7 +39,7 @@ export default function watch(id, mode = "live") {
 
 		let livevideo = document.querySelector("#video");
 		let buttons = document.querySelector("#buttons");
-		let countdown = document.querySelector("#countdown" + launch.id);
+		let countdown = document.querySelector("#countdown-" + launch.id);
 		let badges = document.querySelector("#chips");
 
 		if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.statuscode) == -1) {
@@ -59,7 +59,7 @@ export default function watch(id, mode = "live") {
 
 		if (launch.tbdtime != 1) {
 			if (launch.statuscode != 3 && launch.statuscode != 4 && launch.statuscode != 7) {
-				buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="/#countdown=${launch.id}">Countdown only</a>`
+				buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="/#countdown=${launch.launch_library_id || launch.slug}">Countdown only</a>`
 			}
 		}
 

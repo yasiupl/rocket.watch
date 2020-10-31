@@ -1,4 +1,4 @@
-import { QueryString, load } from '../js/utils'
+import { QueryString, load, materialize } from '../js/utils'
 import search from './search'
 
 export default function agency(name) {
@@ -76,6 +76,31 @@ export default function agency(name) {
                     }
                 }
                 */
+
+                if(agency.launcher_list.length) {
+
+                    $main.innerHTML += '<div id="launchers"></div>';
+                    document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#launchers">Launchers</a></li>';
+
+                    let $launchers = document.getElementById("launchers");
+
+                    for (const launcher of agency.launcher_list) {
+                        $launchers.innerHTML += 
+                        `<div class="col s12 m6 l4">
+                            <div class="card">
+                                <div class="card-image">
+                                        <img src="${launcher.image_url || "https://rocket.watch/assets/rocket_placeholder.jpg"}">
+                                    <span class="card-title">
+                                        <a class="chip" href="/#rocket=${launcher.id}">${launcher.name}</a>
+                                        <a class="chip">${launcher.successful_launches + launcher.failed_launches} Launches</a>
+                                        <a class="chip">${launcher.failed_launches || "No"} Failures</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>`;
+                    }
+                }
+
                 if (agency.wiki_url) {
                     document.getElementById("maintabs").innerHTML += `<li class="tab"><a href="#information">Info</a></li>`;
 

@@ -201,7 +201,9 @@ function padnumber(number, zeros = 2) {
 export function embedify(url) {
 
     url = (url || "").replace("http://", "https://");
-
+    if (url.match("wikipedia.org") && !url.match("m.wikipedia.org")) {
+        return url.replace("wikipedia.org", "m.wikipedia.org");
+    }
     if (url.match(".reddit.com/r/")) {
         return `https://reddit-stream.com/comments/${url.split("/comments/")[1]}`
     }
@@ -219,7 +221,7 @@ export function embedify(url) {
             "www.dailymotion.com/embed/video/"
         )
     }
-    if(url.match("streamable.com") && !url.match("streamable.com/s/")) {
+    if (url.match("streamable.com") && !url.match("streamable.com/s/")) {
         return url.replace("streamable.com/", "streamable.com/s/");
     }
 

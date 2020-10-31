@@ -31,10 +31,10 @@ export default function timeline(term, page) {
                             <i class="far fa-clock"></i>
                             ${ReadableDateString(launch.net)}
                         </a>
-                        <h5 id="countdown${launch.id}">${launch.status.name}</h5>
+                        <h5 id="countdown-${launch.id}">${launch.status.name}</h5>
                     </div>
                     <div class="card-action">
-                        <a class="waves-effect waves-light btn hoverable" href="/#id=${launch.status.name}">
+                        <a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id || launch.slug}">
                             More
                         </a>
                     </div>
