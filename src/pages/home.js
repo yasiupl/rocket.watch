@@ -167,7 +167,7 @@ export default function home() {
             `<div class="col s12 m6 l4">
                 <div class="card">
                     <div class="card-content">
-                        <img class="circle logo" src="${sources.featuring[a].img}" onerror=this.onerror=null;this.src="">
+                        <img class="circle" src="${sources.featuring[a].img}" onerror=this.onerror=null;this.src="">
                         <h5 class="header truncate">
                             ${sources.featuring[a].name}
                         </h5>
