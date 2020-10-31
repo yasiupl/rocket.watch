@@ -47,7 +47,7 @@ export default function home() {
                 `<div class="col s12 l${Math.floor(12 / (data.results.length - active))}">
                     <div class="card">
                         <div class="card-content">
-                            <h5 class="header truncate"><a class="tooltipped" data-tooltip="More Info" href="/#rocket=${launch.rocket.name}">${launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>").split(" (")[0]}</h4>
+                            <h5 class="header truncate"><a class="tooltipped" data-tooltip="More Info" href="/#rocket=${launch.rocket.configuration.id}">${launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>").split(" (")[0]}</h4>
                             <a class="chip tooltipped" data-tooltip="${launch.launch_service_provider.name}" href="/#agency=${launch.launch_service_provider.id}">
                                 <img src="${launch.launch_service_provider.logo_url}">
                                 ${launch.launch_service_provider.name}
@@ -78,7 +78,7 @@ export default function home() {
             `<div id="video"></div>
             <div class="card-content">
                 <h1>
-                    <a class="tooltipped" data-tooltip="More Info" href="/#rocket=${featured_launch.rocket.id}">${featured_launch.name.replace("|", "</a>|")}
+                    <a class="tooltipped" data-tooltip="More Info" href="/#rocket=${featured_launch.rocket.configuration.id}">${featured_launch.name.replace("|", "</a>|")}
                 </h1>
                 <h3 id="countdown-${featured_launch.id}">
                     ${getLongStatusName(featured_launch.status.id)}
@@ -134,7 +134,7 @@ export default function home() {
             `<div class="col s12 m6 l3">
                 <div class="card">
                     <div class="card-content">
-                        <h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.name.split(" |")[0].split("/")[0]}">${launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>").split(" (")[0]}</h4>
+                        <h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.configuration.id}">${launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>").split(" (")[0]}</h4>
                         <a class="chip tooltipped" data-tooltip="${launch.net}">
                             <i class="far fa-clock"></i>
                             ${ReadableDateString(launch.net)}

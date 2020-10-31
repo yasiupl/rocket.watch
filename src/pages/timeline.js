@@ -16,7 +16,7 @@ export default function timeline(term, page) {
                 <div class="card">
                     <div class="card-content">
                         <h5 class="header truncate">
-                            <a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.name.split(" |")[0].split("/")[0]}">
+                            <a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.configuration.id}">
                                 ${launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>")}
                                 </h4>
                         <a class="chip tooltipped" data-tooltip="${launch.launch_service_provider.name}" href="/#agency=${launch.launch_service_provider.id}">
