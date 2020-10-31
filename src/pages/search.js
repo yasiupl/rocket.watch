@@ -1,70 +1,74 @@
-import {QueryString, materialize, load, ReadableDateString, Countdown} from '../js/utils'
+import { QueryString, materialize, load, ReadableDateString, Countdown, getLongStatusName } from '../js/utils'
 import Chart from 'chart.js';
 const sources = require('../sources.json');
 
-export default function search(c) {
+export default function search(term) {
     let $main = document.getElementsByTagName("main")[0];
     let $info = document.getElementById("info");
     let $query = QueryString();
-    if (c != "undefined") {
+    if (term != "undefined") {
 
         for (let i in sources.info.search) {
-            if (c.toLowerCase().match(i) && !document.getElementById("maintabs")) {
+            if (term.toLowerCase().match(i) && !document.getElementById("maintabs")) {
                 let data = sources.info.search[i]
                 $info.innerHTML = '<div class="card-content"><img class="circle" src="' + data.img + '" onerror=this.onerror=null;this.src=""><h1 class="header truncate">' + data.name + '</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></br><a class="flow-text">' + (data.desc || "") + '</a></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>';
-                for (let badge of data.badges) {
-                    document.getElementById("chips").innerHTML += '<a class="chip tooltipped" data-tooltip="' + (badge.tip || "") + '" href="' + (badge.url || "") + '"><img src="' + (badge.img || "") + '">' + (badge.name || "") + "</a>"
+                if(data.badges) {
+                    for (let badge of data.badges) {
+                        document.getElementById("chips").innerHTML += '<a class="chip tooltipped" data-tooltip="' + (badge.tip || "") + '" href="' + (badge.url || "") + '"><img src="' + (badge.img || "") + '">' + (badge.name || "") + "</a>"
+                    }
                 }
                 break
             }
         }
 
         if (!document.getElementById("maintabs"))
-            $info.innerHTML = '<div class="card-content"><h1 class="header truncate">Results for "' + c + '"</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>'
+            $info.innerHTML = '<div class="card-content"><h1 class="header truncate">Results for "' + term + '"</h1><div id="chips"><a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a></div></div><div class="card-tabs"><ul id="maintabs" class="tabs tabs-fixed-width"></ul></div>'
 
 
-        load("launch?limit=200&mode=summary&sort=desc&name=" + c + "&format=stats" + (($query.type == "failures") ? "&status=4" : ""), function (data) {
+        load(`launch?limit=300&ordering=-net&search=${term}${($query.type == "failures") ? "&status=4" : ""}`, function (data) {
             let loading = document.getElementById("loading")
             if (loading) {
                 loading.parentNode.removeChild(loading)
             }
 
-            if (data.launches.length) {
+            if (data.results.length) {
                 $main.innerHTML += '<div id="results"><div id="next"></div><div id="switch" style="display:none" class="card-tabs"><ul class="tabs"><li class="tab"><a href="#past" class="active">Launched</a></li><li class="tab"><a href="#future">Upcoming</a></li></ul></div><div id="past"></div><div id="future"></div></div>';
                 let $future = "";
                 let $past = "";
                 const $today = new Date();
 
-                if (data.launches.length == 1) {
+                if (data.results.length == 1) {
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#results" class="active">Launches</a></li>' + document.getElementById("maintabs").innerHTML;
-                    let launch = data.launches[0];
-                    document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + '</a><h4 id="countdown' + launch.id + '">' + launch.status + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + launch.id + '">Details</a></div></div></div>';
+                    let launch = data.results[0];
+                    document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + '</a><h4 id="countdown-' + launch.id + '">' + getLongStatusName(launch.status.id).name + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Details</a></div></div></div>';
                 } else {
-                    document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#stats">Stats</a></li>' + document.getElementById("maintabs").innerHTML;
+                    //document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#stats">Stats</a></li>' + document.getElementById("maintabs").innerHTML;
                     document.getElementById("maintabs").innerHTML = '<li class="tab"><a href="#results" class="active">Launches</a></li>' + document.getElementById("maintabs").innerHTML;
 
-                    for (let launch of data.launches) {
+                    for (let launch of data.results) {
                         if (Date.parse(launch.net) < $today) {
-                            $past += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + "</a><h5>" + launch.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + launch.id + '">Watch</a></div></div></div>'
+                            $past += '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + "</a><h5>" + getLongStatusName(launch.status.id) + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Watch</a></div></div></div>'
                         } else {
                             if (Date.parse(launch.net) > $today) {
-                                $future = '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + "</a><h5>" + launch.status + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + launch.id + '">Details</a></div></div></div>' + $future;
+                                $future = '<div class="col s12 m6"><div class="card"><div class="card-content"><h5 class="header truncate"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h5><h4 class='header truncate'>") + '</h4><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + "</a><h5>" + getLongStatusName(launch.status.id) + '</h5></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Details</a></div></div></div>' + $future;
                             }
-                            if (launch.statuscode == 1 || launch.statuscode == 5 || launch.statuscode == 6) {
-                                document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + '</a><h4 id="countdown' + launch.id + '">' + launch.status + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + launch.id + '">Details</a></div></div></div>';
-                                if (launch.statuscode == 1 || launch.statuscode == 6)
-                                    new Countdown(launch.net, "countdown" + launch.id);
+                            if (launch.status.id == 1 || launch.status.id == 5 || launch.status.id == 6) {
+                                document.getElementById("next").innerHTML = '<div class="col s12"><div class="card"><div class="card-stacked"><div class="card-content"><h3 class="header black-text"><a class="tooltipped" data-tooltip="More info" href="/#rocket=' + launch.name.split(" | ")[0].split("/")[0] + '">' + launch.name.replace(" | ", "</a></h3><h2>") + '</h2><a class="chip tooltipped" data-tooltip="' + launch.net + '"><i class="far fa-clock"></i>' + ReadableDateString(launch.net) + '</a><h4 id="countdown-' + launch.id + '">' + getLongStatusName(launch.status.id) + '</h4></div><div class="card-action"><a class="waves-effect waves-light btn hoverable" href="/#id=' + (launch.launch_library_id || launch.slug) + '">Details</a></div></div></div>';
+                                if (launch.status.id == 1 || launch.status.id == 6)
+                                    new Countdown(launch.net, "countdown-" + launch.id);
                             }
                         }
                         if ($future && $past) {
                             document.getElementById("switch").style.display = "unset";
                         }
-                        
+
                     }
 
                     document.getElementById("past").innerHTML = $past
                     document.getElementById("future").innerHTML = $future
-                    
+
+                    /*
+                    TODO: Reimplement stats
                     let labels = [];
                     let togo = [];
                     let success = [];
@@ -170,8 +174,10 @@ export default function search(c) {
                             }
                         }
                     });
+                    */
                 }
 
+                /*
                 if (data.stats.byStatus[3])
                     document.getElementById("chips").innerHTML += '<a class="chip">' + data.stats.byStatus[3].length + ' successful launches</a>';
                 if (data.stats.byStatus[4] && $query.type != "failures") {
@@ -179,13 +185,18 @@ export default function search(c) {
                 } else if ($query.type == "failures") {
                     document.getElementById("chips").innerHTML += '<a class="chip">' + data.stats.byStatus[4].length + ' failures (Failures Only)</a>'
                 }
+                */
+
+                if ($query.type == "failures") {
+                    document.getElementById("chips").innerHTML += '<a class="chip">' + data.stats.byStatus[4].length + ' failures (Failures Only)</a>';
+                }
 
             } else {
                 if (document.getElementById("chips")) {
-                    document.getElementById("chips").innerHTML += '<a class="chip">No launches</a>';
+                    document.getElementById("chips").innerHTML += '<a class="chip">No launches in database</a>';
                 }
                 if (!document.getElementById("news") && !document.getElementById("information")) {
-                    $main.innerHTML = '<h1 class="white-text">' + (data.msg || data.code).replace("None found", "No Launches") + '</h1></br>';
+                    $info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`;
                 }
             }
             materialize()

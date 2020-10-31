@@ -1,13 +1,13 @@
 import 'materialize-css/dist/js/materialize.min.js'
 import './js/fontawesome'
-import {QueryString, restart} from './js/utils'
+import {load, QueryString, restart} from './js/utils'
 
 import home from './pages/home.js'
 import watch from './pages/watch'
 import countdown from './pages/countdown'
 import live from './pages/live'
 import agency from './pages/agency'
-import launchcenter from './pages/launchcenter'
+import location from './pages/location'
 import nation from './pages/nation'
 import pad from './pages/pad'
 import rocket from './pages/rocket'
@@ -105,7 +105,7 @@ function init() {
     QueryString(function (query) {
         let launched = 0;
         if (query.countdown) {
-            countdown(query.countdown);
+            countdown(query.countdown)
             launched++
         }
         if (query.live) {
@@ -129,7 +129,7 @@ function init() {
             launched++
         }
         if (query.location) {
-            launchcenter(query.location);
+            location(query.location);
             launched++
         }
         if (query.rocket) {

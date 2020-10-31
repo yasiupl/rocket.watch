@@ -21,7 +21,7 @@ export default function watch(id, mode = "live") {
 		$info.innerHTML = `<div id="video"></div>
 							<div id="details" class="card-content">
 								<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.id}">${launch.name.replace("|", "</a> | ")}</h1>
-								<h3 id="countdown${launch.id}">${launch.status}</h3>
+								<h3 id="countdown-${launch.id}">${launch.status}</h3>
 								<div id="chips">
 									<a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
 									<a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.agency.id}"><img src="${launch.agency.icon}?size=32" onerror=this.onerror=null;this.src="${launch.agency.countryFlag}">${launch.agency.name}</a>
@@ -31,7 +31,7 @@ export default function watch(id, mode = "live") {
 							</div>
 							<div id="buttons">
 								<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
-								<a class="waves-effect waves-light btn hoverable" href="/#id=${launch.id}">Exit TV mode</a>	
+								<a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id || launch.slug}">Exit TV mode</a>	
 							</div>
 							<div class="card-tabs">
 								<ul id="maintabs" class="tabs tabs-fixed-width"></ul>
@@ -39,7 +39,7 @@ export default function watch(id, mode = "live") {
 
 		let livevideo = document.querySelector("#video");
 		let buttons = document.querySelector("#buttons");
-		let countdown = document.querySelector("#countdown" + launch.id);
+		let countdown = document.querySelector("#countdown-" + launch.id);
 		let badges = document.querySelector("#chips");
 
 		if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.statuscode) == -1) {
@@ -47,7 +47,7 @@ export default function watch(id, mode = "live") {
 		}
 
 		if (navigator.share) {
-			buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="window.share()"><i class="fas fa-share-alt"></i></a>';
+			buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" onclick="window.share()"><i class="fas fa-share-alt"></i></a>`;
 			window.share = function () {
 				navigator.share({
 					title: launch.name,
@@ -59,14 +59,20 @@ export default function watch(id, mode = "live") {
 
 		if (launch.tbdtime != 1) {
 			if (launch.statuscode != 3 && launch.statuscode != 4 && launch.statuscode != 7) {
-				buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="/#countdown=${launch.id}">Countdown only</a>`
+				buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="/#countdown=${launch.launch_library_id || launch.slug}">Countdown only</a>`
 			}
 		}
 
-		buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="(details.style.display = details.style.display == \'none\' ? \'unset\' : \'none\')">Toggle Details</a>';
+		buttons.innerHTML += 
+		`<a class="waves-effect waves-light btn hoverable" onclick="(details.style.display = details.style.display == \'none\' ? \'unset\' : \'none\')">
+			Toggle Details
+		</a>`;
 
 		if (launch.agency.social.reddit) {
-			buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${launch.agency.social.reddit}" target="_blank">/r/${launch.agency.social.reddit} Subreddit</a>`;
+			buttons.innerHTML += 
+			`<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${launch.agency.social.reddit}" target="_blank">
+				/r/${launch.agency.social.reddit} Subreddit
+			</a>`;
 		}
 
 		if (launch.statuscode == 1 || launch.statuscode == 6) {
@@ -83,7 +89,10 @@ export default function watch(id, mode = "live") {
 		}
 
 		for (let badge of launch.media.badge) {
-			badges.innerHTML += `<a class="chip ${(badge.desc ? 'tooltipped" data-tooltip="' + badge.desc + '"' : '"')} ${(badge.url ? 'href="${d.url}"' : '')}>${(badge.img ? '<img src="${d.img}">' : '') + (badge.name || '')}</a>`
+			badges.innerHTML += 
+			`<a class="chip ${(badge.desc ? 'tooltipped" data-tooltip="' + badge.desc + '"' : '"')} ${(badge.url ? 'href="${d.url}"' : '')}>
+				${(badge.img ? '<img src="${d.img}">' : '') + (badge.name || '')}
+			</a>`
 		}
 
 		if (navigator.onLine) {
@@ -93,9 +102,24 @@ export default function watch(id, mode = "live") {
 			let media = launch.media.info.concat(launch.media.comments).concat(launch.media.last);
 
 			if (media.length || launch.media.twitter.length) {
-				document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#live" class="active">Live</a></li><li class="tab"><a href="#information">Info</a></li>';
+				document.getElementById("maintabs").innerHTML += 
+				`<li class="tab">
+					<a href="#live" class="active">
+						Live
+					</a>
+				</li>
+				<li class="tab">
+					<a href="#information">
+						Info
+					</a>
+				</li>`;
 			} else {
-				document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#information">Info</a></li>';
+				document.getElementById("maintabs").innerHTML += 
+				`<li class="tab">
+					<a href="#information">
+						Info
+					</a>
+				</li>`;
 			}
 
 			let $information = document.createElement("div");
@@ -105,20 +129,58 @@ export default function watch(id, mode = "live") {
 			materialize()
 
 			if (launch.missions[0] && launch.missions[0].wikiURL) {
-				$information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.missions[0].wikiURL.replace("http://", "https://")}"  allow="autoplay; fullscreen"></iframe></div></div>`;
-			}
-			if (launch.rocket.wiki) {
-				$information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.rocket.wiki}" allow="autoplay; fullscreen"></iframe></div></div>`
-			}
-			$information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.location.map}"  allow="autoplay; fullscreen"></iframe></div></div>`;
-			if (launch.location.wikiURL || launch.location.pads[0].wikiURL) {
-				$information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${(launch.location.wikiURL || launch.location.pads[0].wikiURL).replace("http://", "https://")}"  allow="autoplay; fullscreen"></iframe></div></div>`;
-			}
-			if (launch.agency.wiki) {
-				$information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${launch.agency.wiki}"  allow="autoplay; fullscreen"></iframe></div></div>`;
+				$information.innerHTML += 
+				`<div class="container">
+					<div class="card">
+						<div class="video-container">
+							<iframe src="${launch.missions[0].wikiURL.replace("http://", "https://")}"  allow="autoplay; fullscreen"></iframe>
+						</div>
+					</div>
+				</div>`;
 			}
 
-			let medialist = "<option disabled selected>Select source</option>";
+			if (launch.rocket.wiki) {
+				$information.innerHTML += 
+				`<div class="container">
+					<div class="card">
+						<div class="video-container">
+							<iframe src="${launch.rocket.wiki}" allow="autoplay; fullscreen"></iframe>
+						</div>
+					</div>
+				</div>`;
+			}
+
+			$information.innerHTML += 
+			`<div class="container">
+				<div class="card">
+					<div class="video-container">
+						<iframe src="${launch.location.map}"  allow="autoplay; fullscreen"></iframe>
+					</div>
+				</div>
+			</div>`;
+
+			if (launch.location.wikiURL || launch.location.pads[0].wikiURL) {
+				$information.innerHTML += 
+				`<div class="container">
+					<div class="card">
+						<div class="video-container">
+							<iframe src="${(launch.location.wikiURL || launch.location.pads[0].wikiURL).replace("http://", "https://")}"  allow="autoplay; fullscreen"></iframe>
+						</div>
+					</div>
+				</div>`;
+			}
+			if (launch.agency.wiki) {
+				$information.innerHTML += 
+				`<div class="container">
+					<div class="card">
+						<div class="video-container">
+							<iframe src="${launch.agency.wiki}"  allow="autoplay; fullscreen"></iframe>
+						</div>
+					</div>
+				</div>`;
+			}
+
+			let medialist = `<option disabled selected>Select source</option>`;
 			for (let item in list) {
 				medialist += `<option value='${item}'>${list[item].name.slice(0, 100)}</option>`;
 			}
