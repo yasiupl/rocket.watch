@@ -22,7 +22,7 @@ export default function watch(id, mode = "live") {
 
         $info.innerHTML = `<div id="feature"></div>
 							<div id="details" class="card-content">
-								<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.id}">${launch.name.replace("|", "</a> | ")}</h1>
+								<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.configuration.id}">${launch.name.replace("|", "</a> | ")}</h1>
 								<h3 id="countdown-${launch.id}">${getLongStatusName(launch.status.id)}</h3>
 								<div id="chips">
                                     <a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
