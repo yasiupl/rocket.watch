@@ -102,7 +102,7 @@ export default function watch(id, mode = "live") {
                                 <iframe name="reddit_frame" src="${embedify(`https://reddit.com${reddit_posts[0].data.permalink}`)}"  allow="autoplay; fullscreen"></iframe>
                             </div>
                             <div class="cardnav">
-                                <a id="reddit_frame_reload" href="${embedify(`https://reddit.com${reddit_posts[0].data.permalink}`)}" target="feature_frame">
+                                <a id="reddit_frame_reload" href="${embedify(`https://reddit.com${reddit_posts[0].data.permalink}`)}" target="reddit_frame">
                                     <i class="fas fa-sync-alt"></i>
                                 </a>
                                 <a id="reddit_frame_share" href="https://reddit.com${reddit_posts[0].data.permalink}" target="_blank">
