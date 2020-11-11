@@ -210,9 +210,12 @@ export function embedify(url) {
     if (url.match("reddit.com/live/")) {
         return `https://www.redditmedia.com/live/${url.split("reddit.com/live/")[1].split("/")[0]}/embed`
     }
-    if(url.match("youtube.com")) {
+    if(url.match("youtube.com/")) {
         return url
         .replace("/watch?v=", "/embed/")
+    }
+    if(url.match("youtu.be/")) {
+        return url
         .replace("youtu.be/", "youtube.com/embed/");
     }
     if(url.match("dailymotion.com")) {
