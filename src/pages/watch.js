@@ -122,11 +122,6 @@ export default function watch(id, mode = "live") {
                     $countdown.innerHTML = Countdown(launch.net)
                 }, 1000);
                 countdowns.push(count);
-
-                let updatecount = setInterval(function () {
-                    updateCountdown(launch);
-                }, 60000);
-                countdowns.push(updatecount);
             }
 
 
