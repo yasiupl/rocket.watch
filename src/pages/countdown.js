@@ -1,4 +1,4 @@
-import { materialize, load, updateCountdown, ReadableDateString, Countdown, getLongStatusName} from '../js/utils'
+import { materialize, load, updateCountdown, ReadableDateString, Countdown, getLongStatusName } from '../js/utils'
 
 export default function countdown(id) {
 
@@ -11,13 +11,13 @@ export default function countdown(id) {
 	$main.appendChild($live);
 
 	load(`launch/${(parseInt(id) ? ("?launch_library_id=" + id) : ("?search=" + id))}`, function (data) {
+		if (!data.detail) {
+			const launch = data.results && data.results[0] || data;
 
-		const launch = data.results && data.results[0] || data;
+			document.title = launch.name;
 
-		document.title = launch.name;
-
-		$info.innerHTML = 
-		`<div id="video"></div>
+			$info.innerHTML =
+				`<div id="video"></div>
 		<div id="details" class="card-content">
 			<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.configuration.id}">${launch.name.replace("|", "</a> | ")}</h1>
 			<h3 id="countdown-${launch.id}" style="font-size: 10rem">${getLongStatusName(launch.status.id)}</h3>
@@ -34,37 +34,40 @@ export default function countdown(id) {
 			<a class="waves-effect waves-light btn hoverable tooltipped" href="/#id=${launch.launch_library_id || launch.slug}" data-tooltip="Load live sources">Exit countdown mode</a>
 		</div>`;
 
-		let buttons = document.querySelector("#buttons");
-		let countdown = document.querySelector("#countdown-" + launch.id);
-		let badges = document.querySelector("#chips");
+			let buttons = document.querySelector("#buttons");
+			let countdown = document.querySelector("#countdown-" + launch.id);
+			let badges = document.querySelector("#chips");
 
-		if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.status.id) == -1) {
-			badges.innerHTML += `<a class="chip tooltipped" data-tooltip="Launch probability %">${launch.probability}% probability</a>`
-		}
-
-		if (navigator.share) {
-			buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="window.share()"><i class="fas fa-share-alt"></i></a>';
-			window.share = function () {
-				navigator.share({
-					title: launch.name,
-					text: launch.description.substring(0, 100) + '...',
-					url: location.href
-				})
+			if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.status.id) == -1) {
+				badges.innerHTML += `<a class="chip tooltipped" data-tooltip="Launch probability %">${launch.probability}% probability</a>`
 			}
-		}
 
-		if (launch.status.id == 1 || launch.status.id == 6) {
-			let count = setInterval(function () {
-				document.title = `[${Countdown(launch.net)}] ${launch.name.split("|")[1]}`;
-				countdown.innerHTML = Countdown(launch.net)
-			}, 1000);
-			countdowns.push(count);
+			if (navigator.share) {
+				buttons.innerHTML += '<a class="waves-effect waves-light btn hoverable" onclick="window.share()"><i class="fas fa-share-alt"></i></a>';
+				window.share = function () {
+					navigator.share({
+						title: launch.name,
+						text: launch.description.substring(0, 100) + '...',
+						url: location.href
+					})
+				}
+			}
 
-			let updatecount = setInterval(function () {
-				updateCountdown(launch);
-			}, 60000);
-			countdowns.push(updatecount);
+			if (launch.status.id == 1 || launch.status.id == 6) {
+				let count = setInterval(function () {
+					document.title = `[${Countdown(launch.net)}] ${launch.name.split("|")[1]}`;
+					countdown.innerHTML = Countdown(launch.net)
+				}, 1000);
+				countdowns.push(count);
+
+				let updatecount = setInterval(function () {
+					updateCountdown(launch);
+				}, 60000);
+				countdowns.push(updatecount);
+			}
+			materialize();
+		} else {
+			$info.innerHTML = `<h1 class="white-text" onclick="location.reload(true)">${data.detail || "Error"}</h1>`;
 		}
-		materialize();
 	});
 }
