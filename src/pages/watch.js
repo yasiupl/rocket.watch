@@ -1,7 +1,7 @@
 import { QueryString, load, materialize, embedify, getJSON, ReadableDateString, Countdown, getLongStatusName } from '../js/utils'
 const sources = require('../sources.json');
 
-export default function watch(id, mode = "live") {
+export default function watch(id) {
 
     let $query = QueryString();
 
@@ -24,8 +24,9 @@ export default function watch(id, mode = "live") {
 							<div id="details" class="card-content">
 								<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.configuration.id}">${launch.name.replace("|", "</a> | ")}</h1>
 								<h3 id="countdown-${launch.id}">${getLongStatusName(launch.status.id)}</h3>
-								<div id="chips">
+                                <div id="chips">
                                     <a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
+                                    <a class="chip" onclick="location.reload(true);"><i class="fas fa-sync"></i>Refresh</a>
                                     <a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.launch_service_provider.id}"><img src="${launch.launch_service_provider.logo_url}">${launch.launch_service_provider.name}</a>
 									<a class="chip tooltipped" data-tooltip="More info" href="/#pad=${launch.pad.id}"><i class="far fa-compass"></i>${launch.pad.name}</a>
 									<a class="chip tooltipped" id="launchdate" data-tooltip="${launch.net}"><i class="far fa-clock"></i>${ReadableDateString(launch.net)}</a>
