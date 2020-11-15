@@ -115,56 +115,13 @@ export function QueryString(callback, url) {
 }
 
 export function load(query, callback) {
-    getJSON(backendURL + query, function (data) {
+    fetch(backendURL + query)
+    .then(response => response.json())
+    .then(data => {
         if (callback) callback(data);
         return data;
     });
 }
-
-export function getJSON(url, callback) {
-    if (window.fetch) {
-        fetch(url)
-            .then(
-                function (response) {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' +
-                            response.status);
-                    }
-
-                    response.json().then(callback);
-                }
-            )
-            .catch(function (err) {
-                console.log('Fetch Error :-S', err);
-            });
-    } else {
-        try {
-            let k = new XMLHttpRequest()
-            k.onreadystatechange = function () {
-                if (k.readyState === 4) {
-                    if (k.responseText.split()[0] == "{" || k.status == 200) {
-                        let a = JSON.parse(k.responseText);
-                        a.timestamp = Date.now();
-                        callback(a)
-                    } else {
-                        let a = {
-                            timestamp: Date.now(),
-                            status: (k.status || "error"),
-                            code: k.statusText,
-                            msg: k.responseText
-                        };
-                        callback(a);
-                        console.log(a)
-                    }
-                }
-            };
-            k.open("GET", url);
-            k.send()
-        } catch (e) {
-            console.log(e)
-        }
-    }
-};
 
 export function restart() {
     navigator.serviceWorker.getRegistrations().then(function (registrations) {
@@ -205,7 +162,7 @@ export function embedify(url) {
         return url.replace("wikipedia.org", "m.wikipedia.org");
     }
     if (url.match(".reddit.com/r/")) {
-        return `https://reddit-stream.com/comments/${url.split("/comments/")[1]}`
+        return `https://reddit-stream.com/comments/${url.split("/comments/")[1].split("/")[0]}`
     }
     if (url.match("reddit.com/live/")) {
         return `https://www.redditmedia.com/live/${url.split("reddit.com/live/")[1].split("/")[0]}/embed`

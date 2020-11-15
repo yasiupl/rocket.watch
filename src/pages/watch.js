@@ -1,7 +1,7 @@
-import { QueryString, load, materialize, embedify, getJSON, ReadableDateString, Countdown, getLongStatusName } from '../js/utils'
+import { QueryString, load, materialize, embedify, ReadableDateString, Countdown, getLongStatusName } from '../js/utils'
 const sources = require('../sources.json');
 
-export default function watch(id) {
+export default async function watch(id) {
 
     let $query = QueryString();
 
@@ -17,6 +17,8 @@ export default function watch(id) {
     load(`launch/?mode=detailed${(parseInt(id) ? ("&launch_library_id=" + id) : ("&limit=1&slug=" + id))}`, function (data) {
         if (!data.detail) {
             let launch = data.results[0] || data;
+
+            const launchDate = Date.parse(launch.net);
 
             document.title = launch.name;
 
@@ -44,7 +46,7 @@ export default function watch(id) {
             let $badges = document.querySelector("#chips");
             let $description = document.querySelector("#description");
 
-            if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.status.id) == -1) {
+            if (launch.probability != null && [3, 4, 7].indexOf(launch.status.id) == -1) {
                 $badges.innerHTML += `<a class="chip tooltipped" data-tooltip="Launch probability %">${launch.probability}% probability</a>`
             };
 
@@ -72,62 +74,113 @@ export default function watch(id) {
                 }
             }
 
-            // REDDIT
-            const agency_sources = sources.handles[launch.launch_service_provider.abbrev.toLowerCase()];
-            if (agency_sources && agency_sources.reddit) {
-                $buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${agency_sources.reddit}" target="_blank">/r/${agency_sources.reddit} Subreddit</a>`;
-
-                if ((new Date(launch.net) > new Date("2009-01-01"))) {
-                    document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#live" class="active">Live</a></li>';
-
-                    getJSON(`https://www.reddit.com/r/${agency_sources.reddit}/search.json?sort=relevance&restrict_sr=on&q=${encodeURIComponent(launch.name.split("| ")[1].replace("SpX ", ""))}`, function (reddit) {
-                        let reddit_list = "<option disabled selected>Select post</option>";
-                        window.reddit_posts = reddit.data.children;
-                        for (var i in reddit.data.children) {
-                            if (reddit.data.children[i].data.created_utc * 1000 < Date.parse(launch.window_end))
-                                reddit_list += `<option value='${i}'>${reddit.data.children[i].data.title}</option>`;
-                        }
-
-                        window.selectReddit = function (source) {
-                            id = parseInt(document.getElementById(source + "_select").value);
-                            window.open(embedify(`https://reddit.com${reddit_posts[id].data.permalink}`), source);
-                            document.getElementById(source + "_reload").href = embedify(`https://reddit.com${reddit_posts[id].data.permalink}`);
-                            document.getElementById(source + "_share").href = `https://reddit.com${reddit_posts[id].data.permalink}`;
-                            document.getElementById(source).innerHTML = `<iframe name="${source}" src="${embedify(`https://reddit.com${reddit_posts[id].data.permalink}`)}"  allow="autoplay; fullscreen"></iframe>`
-                        };
-
-                        $live.innerHTML =
-                            `<div class="container">
-                        <div class="card">
-                            <div class="video-container" id="reddit_frame">
-                                <iframe name="reddit_frame" src="${embedify(`https://reddit.com${reddit_posts[0].data.permalink}`)}"  allow="autoplay; fullscreen"></iframe>
-                            </div>
-                            <div class="cardnav">
-                                <a id="reddit_frame_reload" href="${embedify(`https://reddit.com${reddit_posts[0].data.permalink}`)}" target="reddit_frame">
-                                    <i class="fas fa-sync-alt"></i>
-                                </a>
-                                <a id="reddit_frame_share" href="https://reddit.com${reddit_posts[0].data.permalink}" target="_blank">
-                                    <i class="fas fa-external-link-square-alt"></i>
-                                </a>
-                                ${(reddit.data.children.length > 1) ? ('<select id="reddit_frame_select" onchange="selectReddit(\'reddit_frame\')">' + reddit_list + '</select>') : ''}
-                            </div>
-                        </div>
-                    </div>`;
-                    });
-                }
-            }
-
-            if (launch.status.id == 1 || launch.status.id == 6) {
-                let count = setInterval(function () {
-                    document.title = `[${Countdown(launch.net)}] ${launch.name.split("|")[1]}`;
-                    $countdown.innerHTML = Countdown(launch.net)
-                }, 1000);
-                countdowns.push(count);
-            }
-
-
-
             if (navigator.onLine) {
+                // REDDIT
+                let resources_promises = [];
+
+                window.reddit_posts = [];
+
+                window.selectReddit = function (source) {
+					let id = document.getElementById(source + "_select").value;
+					let post = window.reddit_posts.find(post => post.id == id);
+                    document.getElementById(source + "_reload").href = post.embed;
+                    document.getElementById(source + "_share").href = post.url;
+                    document.getElementById(source).innerHTML = `<iframe name="${source}" src="${post.embed}"  allow="autoplay; fullscreen"></iframe>`
+                };
+
+                const agency_sources = sources.handles[launch.launch_service_provider.abbrev.toLowerCase()];
+                if (agency_sources && agency_sources.reddit) {
+                    $buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${agency_sources.reddit}" target="_blank">/r/${agency_sources.reddit} Subreddit</a>`;
+
+                    if ((new Date(launch.net) > new Date("2009-01-01"))) {
+                        document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#live" class="active">Live</a></li>';
+
+                        let load_reddit_promise = fetch(`https://www.reddit.com/r/${agency_sources.reddit}/search.json?sort=relevance&restrict_sr=on&q=${encodeURIComponent(launch.name.split("| ")[1].replace("SpX ", ""))}`)
+                            .then(response => response.json())
+                            .then(reddit => {
+                                for (let post of reddit.data.children) {
+                                    if (post.data.created_utc * 1000 < Date.parse(launch.window_end)) {
+                                        window.reddit_posts.push({
+											priority: 10,
+											id: post.data.permalink.split("/comments/")[1].split("/")[0],
+                                            title: post.data.title,
+                                            url: `https://reddit.com${post.data.permalink}`,
+                                            embed: embedify(`https://reddit.com${post.data.permalink}`),
+                                        });
+                                    }
+                                }
+                            });
+                        resources_promises.push(load_reddit_promise);
+                    }
+                }
+
+                // r/SpaceX API
+                if (launch.launch_service_provider.abbrev == "SpX") {
+                    let r_spacex_api_promise = fetch(`https://api.spacexdata.com/v2/launches${(launchDate > Date.now()) ? `/upcoming` : ``}?start=${(new Date(launchDate - (12 * 60 * 60 * 1000))).toISOString()}&final=${(new Date(launchDate + (12 * 60 * 60 * 1000))).toISOString()}`)
+                        .then(response => response.json())
+                        .then(body => {
+                            let data = body[0];
+                            if (data) {
+                                const reddit_frame_select = document.getElementById("reddit_frame_select");
+                                if (data.reuse && data.reuse.core) {
+                                    $badges.innerHTML += `<a class="chip tooltipped"><img src="https://rocket.watch/res/reuse.png">Reused booster</a>`
+                                }
+                                if (data.reuse && data.reuse.capsule) {
+                                    $badges.innerHTML += `<a class="chip tooltipped"><img src="https://rocket.watch/res/reuse.png">Reused capsule</a>`
+								}
+								if (data.links && data.links.reddit_launch) {
+                                    window.reddit_posts.push({
+										priority: 1,
+                                        id: data.links.reddit_launch.split("/comments/")[1].split("/")[0],
+                                        title: "r/SpaceX Launch Thread",
+                                        url: data.links.reddit_launch,
+                                        embed: embedify(data.links.reddit_launch)
+                                    });
+                                }
+                                if (data.links && data.links.reddit_campaign) {
+                                    window.reddit_posts.push({
+										priority: 1,
+										id: data.links.reddit_campaign.split("/comments/")[1].split("/")[0],
+                                        title: "r/SpaceX Campaign Thread",
+                                        url: data.links.reddit_campaign,
+                                        embed: embedify(data.links.reddit_campaign)
+                                    });
+                                }
+                            }
+                        });
+                    resources_promises.push(r_spacex_api_promise);
+				}
+				
+				// Display posts after all requests are complete
+                Promise.all(resources_promises).then(() => {
+					window.reddit_posts.sort((a,b) => (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0));
+					let reddit_list = window.reddit_posts.reduce((acc, post) => { return acc += `<option value='${post.id}'>${post.title}</option>`},"<option disabled selected>Select post</option>");
+                    $live.innerHTML =
+                        `<div class="container">
+                    <div class="card">
+                        <div class="video-container" id="reddit_frame">
+                            <iframe name="reddit_frame" src="${window.reddit_posts[Object.keys(window.reddit_posts)[0]].embed}"  allow="autoplay; fullscreen"></iframe>
+                        </div>
+                        <div class="cardnav">
+                            <a id="reddit_frame_reload" href="${window.reddit_posts[Object.keys(window.reddit_posts)[0]].embed}" target="reddit_frame">
+                                <i class="fas fa-sync-alt"></i>
+                            </a>
+                            <a id="reddit_frame_share" href="${window.reddit_posts[Object.keys(window.reddit_posts)[0]].url}" target="_blank">
+                                <i class="fas fa-external-link-square-alt"></i>
+                            </a>
+                            ${(Object.keys(window.reddit_posts).length > 1) ? (`<select id="reddit_frame_select" onchange="selectReddit(\'reddit_frame\')">${reddit_list}}</select>`) : ``}
+                        </div>
+                    </div>
+                </div>`;
+                });
+
+                if (launch.status.id == 1 || launch.status.id == 6) {
+                    let count = setInterval(function () {
+                        document.title = `[${Countdown(launch.net)}] ${launch.name.split("|")[1]}`;
+                        $countdown.innerHTML = Countdown(launch.net)
+                    }, 1000);
+                    countdowns.push(count);
+                }
 
                 // VIDEO
                 if (launch.vidURLs.length) {
@@ -253,4 +306,3 @@ export default function watch(id) {
         }
     })
 }
-
