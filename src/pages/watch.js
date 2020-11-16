@@ -93,8 +93,6 @@ export default async function watch(id) {
                     $buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="https://www.reddit.com/r/${agency_sources.reddit}" target="_blank">/r/${agency_sources.reddit} Subreddit</a>`;
 
                     if ((new Date(launch.net) > new Date("2009-01-01"))) {
-                        document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#live" class="active">Live</a></li>';
-
                         let load_reddit_promise = fetch(`https://www.reddit.com/r/${agency_sources.reddit}/search.json?sort=relevance&restrict_sr=on&q=${encodeURIComponent(launch.name.split("| ")[1].replace("SpX ", ""))}`)
                             .then(response => response.json())
                             .then(reddit => {
@@ -116,16 +114,16 @@ export default async function watch(id) {
 
                 // r/SpaceX API
                 if (launch.launch_service_provider.abbrev == "SpX") {
-                    let r_spacex_api_promise = fetch(`https://api.spacexdata.com/v2/launches${(launchDate > Date.now()) ? `/upcoming` : ``}?start=${(new Date(launchDate - (12 * 60 * 60 * 1000))).toISOString()}&final=${(new Date(launchDate + (12 * 60 * 60 * 1000))).toISOString()}`)
+                    let r_spacex_api_promise = fetch(`https://api.spacexdata.com/v3/launches${(launchDate > Date.now()) ? `/upcoming` : ``}?start=${(new Date(launchDate - (12 * 60 * 60 * 1000))).toISOString()}&final=${(new Date(launchDate + (12 * 60 * 60 * 1000))).toISOString()}`)
                         .then(response => response.json())
                         .then(body => {
                             let data = body[0];
                             if (data) {
                                 const reddit_frame_select = document.getElementById("reddit_frame_select");
-                                if (data.reuse && data.reuse.core) {
+                                if (data.rocket.first_stage.cores && data.rocket.first_stage.cores[0].reused) {
                                     $badges.innerHTML += `<a class="chip tooltipped"><img src="https://rocket.watch/res/reuse.png">Reused booster</a>`
                                 }
-                                if (data.reuse && data.reuse.capsule) {
+                                if (data.rocket.second_stage.payloads && data.rocket.second_stage.payloads[0].reused) {
                                     $badges.innerHTML += `<a class="chip tooltipped"><img src="https://rocket.watch/res/reuse.png">Reused capsule</a>`
 								}
 								if (data.links && data.links.reddit_launch) {
@@ -153,25 +151,32 @@ export default async function watch(id) {
 				
 				// Display posts after all requests are complete
                 Promise.all(resources_promises).then(() => {
-					window.reddit_posts.sort((a,b) => (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0));
-					let reddit_list = window.reddit_posts.reduce((acc, post) => { return acc += `<option value='${post.id}'>${post.title}</option>`},"<option disabled selected>Select post</option>");
-                    $live.innerHTML =
+                    if (window.reddit_posts.length) {
+                        window.reddit_posts.sort((a,b) => (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0));
+                        
+                        let reddit_list = window.reddit_posts.reduce((acc, post) => { return acc += `<option value='${post.id}'>${post.title}</option>`},"<option disabled selected>Select post</option>");
+                        
+                        document.getElementById("maintabs").innerHTML += '<li class="tab"><a href="#live" class="active">Live</a></li>';
+                        
+                        $live.innerHTML =
                         `<div class="container">
-                    <div class="card">
-                        <div class="video-container" id="reddit_frame">
-                            <iframe name="reddit_frame" src="${window.reddit_posts[Object.keys(window.reddit_posts)[0]].embed}"  allow="autoplay; fullscreen"></iframe>
-                        </div>
-                        <div class="cardnav">
-                            <a id="reddit_frame_reload" href="${window.reddit_posts[Object.keys(window.reddit_posts)[0]].embed}" target="reddit_frame">
-                                <i class="fas fa-sync-alt"></i>
-                            </a>
-                            <a id="reddit_frame_share" href="${window.reddit_posts[Object.keys(window.reddit_posts)[0]].url}" target="_blank">
-                                <i class="fas fa-external-link-square-alt"></i>
-                            </a>
-                            ${(Object.keys(window.reddit_posts).length > 1) ? (`<select id="reddit_frame_select" onchange="selectReddit(\'reddit_frame\')">${reddit_list}}</select>`) : ``}
-                        </div>
-                    </div>
-                </div>`;
+                            <div class="card">
+                                <div class="video-container" id="reddit_frame">
+                                    <iframe name="reddit_frame" src="${window.reddit_posts[0].embed}"  allow="autoplay; fullscreen"></iframe>
+                                </div>
+                                <div class="cardnav">
+                                    <a id="reddit_frame_reload" href="${window.reddit_posts[0]}" target="reddit_frame">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </a>
+                                    <a id="reddit_frame_share" href="${window.reddit_posts[0]}" target="_blank">
+                                        <i class="fas fa-external-link-square-alt"></i>
+                                    </a>
+                                    ${(window.reddit_posts.length > 1) ? (`<select id="reddit_frame_select" onchange="selectReddit(\'reddit_frame\')">${reddit_list}}</select>`) : ``}
+                                </div>
+                            </div>
+                        </div>`;
+                    }
+                    materialize();
                 });
 
                 if (launch.status.id == 1 || launch.status.id == 6) {
@@ -228,8 +233,6 @@ export default async function watch(id) {
                 let $information = document.createElement("div");
                 $information.id = "information";
                 $main.appendChild($information);
-
-                materialize()
 
                 if (launch.mission && launch.mission.wiki_url) {
                     $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${embedify(launch.mission.wiki_url)}"  allow="autoplay; fullscreen"></iframe></div></div>`;
