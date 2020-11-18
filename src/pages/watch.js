@@ -32,8 +32,8 @@ export default async function watch(id) {
                                     <a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.launch_service_provider.id}"><img src="${launch.launch_service_provider.logo_url}">${launch.launch_service_provider.name}</a>
 									<a class="chip tooltipped" data-tooltip="More info" href="/#pad=${launch.pad.id}"><i class="far fa-compass"></i>${launch.pad.name}</a>
 									<a class="chip tooltipped" id="launchdate" data-tooltip="${launch.net}"><i class="far fa-clock"></i>${ReadableDateString(launch.net)}</a>
-								</div>
-								<p class="flow-text" id="description"></p>
+                                </div>
+                                <p class="flow-text">${launch.mission && launch.mission.description.split(". ")[0]}</p>
 							</div>
 							<div id="buttons"></div>
 							<div class="card-tabs">
@@ -44,7 +44,6 @@ export default async function watch(id) {
             let $buttons = document.querySelector("#buttons");
             let $countdown = document.querySelector("#countdown-" + launch.id);
             let $badges = document.querySelector("#chips");
-            let $description = document.querySelector("#description");
 
             if (launch.probability != null && [3, 4, 7].indexOf(launch.status.id) == -1) {
                 $badges.innerHTML += `<a class="chip tooltipped" data-tooltip="Launch probability %">${launch.probability}% probability</a>`
@@ -64,13 +63,6 @@ export default async function watch(id) {
             if (launch.tbdtime != 1) {
                 if (launch.status.id != 3 && launch.status.id != 4 && launch.status.id != 7) {
                     $buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" href="/#countdown=${launch.launch_library_id || launch.slug}">Countdown only</a>`
-                }
-            }
-
-            if (launch.mission && launch.mission.description) {
-                $description.innerHTML = launch.mission.description;
-                if (launch.mission.description.length > 200) {
-                    $buttons.innerHTML += `<a class="waves-effect waves-light btn hoverable" onclick="(description.style.display = ((description.style.display == \'none\' )? \'unset\' : \'none\'))">Toggle Description</a>`;
                 }
             }
 
@@ -233,6 +225,17 @@ export default async function watch(id) {
                 let $information = document.createElement("div");
                 $information.id = "information";
                 $main.appendChild($information);
+
+                if (launch.mission && launch.mission.description.split(". ")) {                
+                    $information.innerHTML = 
+                        `<div class="container">
+                            <div class="card-panel">
+                                <p class="flow-text" id="description">
+                                    ${launch.mission && launch.mission.description || ""}
+                                </p>
+                            </div>
+                        </div>`;
+                }
 
                 if (launch.mission && launch.mission.wiki_url) {
                     $information.innerHTML += `<div class="container"><div class="card"><div class="video-container"><iframe src="${embedify(launch.mission.wiki_url)}"  allow="autoplay; fullscreen"></iframe></div></div>`;

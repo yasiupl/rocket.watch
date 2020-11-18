@@ -102,7 +102,7 @@ export default function home() {
                     </a>
                 </div>
                 <p class="flow-text">
-                    ${featured_launch.mission && featured_launch.mission.description || ""}
+                    ${featured_launch.mission && featured_launch.mission.description.split(". ")[0] || ""}
                 </p>
             </div>
             <div id="card-action" class="card-action">
