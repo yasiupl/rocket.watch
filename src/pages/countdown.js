@@ -4,11 +4,6 @@ export default function countdown(id) {
 
 	const $main = document.getElementsByTagName("main")[0];
 	const $info = document.getElementById("info");
-	const $live = document.createElement("div");
-	$live.id = "live";
-	$main.className = "";
-	$main.innerHTML = "";
-	$main.appendChild($live);
 
 	load(`launch/${(parseInt(id) ? ("?launch_library_id=" + id) : ("?search=" + id))}`, function (data) {
 		if (!data.detail) {
@@ -18,21 +13,27 @@ export default function countdown(id) {
 
 			$info.innerHTML =
 				`<div id="video"></div>
-		<div id="details" class="card-content">
-			<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.configuration.id}">${launch.name.replace("|", "</a> | ")}</h1>
-			<h3 id="countdown-${launch.id}" style="font-size: 10rem">${getLongStatusName(launch.status.id)}</h3>
-			<div id="chips">
-				<a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
-				<a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.launch_service_provider.id}">${launch.launch_service_provider.name}</a>
-				<a class="chip tooltipped" data-tooltip="More info" href="/#pad=${launch.pad.id}"><i class="far fa-compass"></i>${launch.pad.name}</a>
-				<a class="chip tooltipped" id="launchdate" data-tooltip="${launch.net}"><i class="far fa-clock"></i>${ReadableDateString(launch.net)}</a>
-			</div>
-			<p class="flow-text" id="description">${launch.mission && launch.mission.description || ""}</p>
-		</div>
-		<div class="card-action" id="buttons">
-			<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
-			<a class="waves-effect waves-light btn hoverable tooltipped" href="/#id=${launch.launch_library_id || launch.slug}" data-tooltip="Load live sources">Exit countdown mode</a>
-		</div>`;
+				<div id="details" class="card-content">
+					<h1><a class="tooltipped" data-tooltip="More info" href="/#rocket=${launch.rocket.configuration.id}">${launch.name.replace("|", "</a> | ")}</h1>
+					<h3 id="countdown-${launch.id}" style="font-size: 10rem">${getLongStatusName(launch.status.id)}</h3>
+					<div id="chips">
+						<a class="chip" href="javascript:window.history.back();"><i class="fas fa-arrow-alt-circle-left"></i>Go Back</a>
+						<a class="chip tooltipped" data-tooltip="More info" href="/#agency=${launch.launch_service_provider.id}">${launch.launch_service_provider.name}</a>
+						<a class="chip tooltipped" data-tooltip="More info" href="/#pad=${launch.pad.id}"><i class="far fa-compass"></i>${launch.pad.name}</a>
+						<a class="chip tooltipped" id="launchdate" data-tooltip="${launch.net}"><i class="far fa-clock"></i>${ReadableDateString(launch.net)}</a>
+					</div>
+				</div>
+				<div class="card-action" id="buttons">
+					<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+					<a class="waves-effect waves-light btn hoverable tooltipped" href="/#id=${launch.launch_library_id || launch.slug}" data-tooltip="Load live sources">Exit countdown mode</a>
+				</div>`;
+
+			$main.innerHTML = 
+			`<div class="card-panel">
+				<p class="flow-text" id="description">
+					${launch.mission && launch.mission.description || ""}
+				</p>
+			</div>`;
 
 			let buttons = document.querySelector("#buttons");
 			let countdown = document.querySelector("#countdown-" + launch.id);
