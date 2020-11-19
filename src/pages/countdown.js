@@ -5,7 +5,7 @@ export default function countdown(id) {
 	const $main = document.getElementsByTagName("main")[0];
 	const $info = document.getElementById("info");
 
-	load(`launch/${(parseInt(id) ? ("?launch_library_id=" + id) : ("?search=" + id))}`, function (data) {
+	load(`launch/${(parseInt(id) ? ("?launch_library_id=" + id) : ("?slug=" + id))}`, function (data) {
 		if (!data.detail) {
 			const launch = data.results && data.results[0] || data;
 
