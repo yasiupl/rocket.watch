@@ -146,7 +146,7 @@ export default function home() {
                         <h5>${getLongStatusName(launch.status.id)}</h5>
                     </div>
                     <div class="card-action">
-                        <a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id}">
+                        <a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id || launch.slug}">
                             Watch
                         </a>
                     </div>

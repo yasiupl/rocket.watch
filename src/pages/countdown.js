@@ -39,7 +39,7 @@ export default function countdown(id) {
 			let countdown = document.querySelector("#countdown-" + launch.id);
 			let badges = document.querySelector("#chips");
 
-			if (launch.probability != "-1" && [3, 4, 7].indexOf(launch.status.id) == -1) {
+			if (launch.probability != null && [3, 4, 7].indexOf(launch.status.id) == -1) {
 				badges.innerHTML += `<a class="chip tooltipped" data-tooltip="Launch probability %">${launch.probability}% probability</a>`
 			}
 
