@@ -66,7 +66,7 @@ export default function home() {
                             </h5>
                         </div>
                         <div class="card-action">
-                            <a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id || launch.slug}">
+                            <a class="waves-effect waves-light btn hoverable" href="/#launch=${launch.launch_library_id || launch.slug}">
                                 Details</a>
                         </div>
                     </div>
@@ -106,7 +106,7 @@ export default function home() {
                 </p>
             </div>
             <div id="card-action" class="card-action">
-                <a class="waves-effect waves-light btn hoverable" href="/#id=${featured_launch.launch_library_id || featured_launch.slug}">
+                <a class="waves-effect waves-light btn hoverable" href="/#launch=${featured_launch.launch_library_id || featured_launch.slug}">
                     Details
                 </a>
                 <a class="waves-effect waves-light btn hoverable" href="/#countdown=${featured_launch.launch_library_id || featured_launch.slug}">
@@ -146,7 +146,7 @@ export default function home() {
                         <h5>${getLongStatusName(launch.status.id)}</h5>
                     </div>
                     <div class="card-action">
-                        <a class="waves-effect waves-light btn hoverable" href="/#id=${launch.launch_library_id || launch.slug}">
+                        <a class="waves-effect waves-light btn hoverable" href="/#launch=${launch.launch_library_id || launch.slug}">
                             Watch
                         </a>
                     </div>

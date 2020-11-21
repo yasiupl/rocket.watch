@@ -410,7 +410,7 @@
           "is": "button",
           "when": "!recovery",
           "name": "First stage recovery",
-          "url": "/#id=1320&r"
+          "url": "/#launch=1320&r"
         },
         {
           "when": "recovery",

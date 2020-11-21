@@ -112,6 +112,10 @@ function init() {
             live(query.live);
             launched++
         }
+        if (query.launch) {
+            watch(query.launch);
+            launched++
+        }
         if (query.id) {
             watch(query.id);
             launched++

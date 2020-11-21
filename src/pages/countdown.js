@@ -25,7 +25,7 @@ export default function countdown(id) {
 				</div>
 				<div class="card-action" id="buttons">
 					<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
-					<a class="waves-effect waves-light btn hoverable tooltipped" href="/#id=${launch.launch_library_id || launch.slug}" data-tooltip="Load live sources">Exit countdown mode</a>
+					<a class="waves-effect waves-light btn hoverable tooltipped" href="/#launch=${launch.launch_library_id || launch.slug}" data-tooltip="Load live sources">Exit countdown mode</a>
 				</div>`;
 
 			$main.innerHTML = 
