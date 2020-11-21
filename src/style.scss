@@ -34,7 +34,7 @@ html {
       .col {
         flex-direction: column;
         display: flex;
-        flex: 1;
+        flex-grow: 1;
         .card {
           flex: 1;
           flex-direction: column;
