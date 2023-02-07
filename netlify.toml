@@ -23,16 +23,11 @@
   to = "https://www.youtube.com/channel/UCpY48ts_nCvlBRAVlbJePgg" 
   
 [[redirects]]
-  from = "https://rocketwatch.yasiu.pl"
-  to = "https://rocket.watch"
-  status = 301
-
-[[redirects]]
-  from = "https://spacex.yasiu.pl"
-  to = "https://rocket.watch/#agency=121"
+  from = "http://rocketwatch.yasiu.pl/"
+  to = "https://rocketwatch.space"
   status = 301
   
-[[redirects]]
-  from = "https://ula.yasiu.pl"
-  to = "https://rocket.watch/#agency=124"
+  [[redirects]]
+  from = "https://rocketwatch.yasiu.pl/"
+  to = "https://rocketwatch.space"
   status = 301
