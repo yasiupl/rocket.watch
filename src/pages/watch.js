@@ -113,10 +113,10 @@ export default async function watch(id) {
                             if (data) {
                                 const reddit_frame_select = document.getElementById("reddit_frame_select");
                                 if (data.rocket.first_stage.cores && data.rocket.first_stage.cores[0].reused) {
-                                    $badges.innerHTML += `<a class="chip tooltipped"><img src="https://rocket.watch/res/reuse.png">Reused booster</a>`
+                                    $badges.innerHTML += `<a class="chip tooltipped"><img src="/res/reuse.png">Reused booster</a>`
                                 }
                                 if (data.rocket.second_stage.payloads && data.rocket.second_stage.payloads[0].reused) {
-                                    $badges.innerHTML += `<a class="chip tooltipped"><img src="https://rocket.watch/res/reuse.png">Reused capsule</a>`
+                                    $badges.innerHTML += `<a class="chip tooltipped"><img src="/res/reuse.png">Reused capsule</a>`
 								}
 								if (data.links && data.links.reddit_launch) {
                                     window.reddit_posts.push({
