@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "rocket.watch frontend",
   "main": "index.js",
+  "engines": {
+    "node": "18.x"
+  }
   "scripts": {
     "test": "make test"
   },
