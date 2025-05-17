@@ -90,7 +90,7 @@ export default function agency(name) {
                             <div class="card">
                                 <div class="card-image">
                                     <a  href="/#rocket=${launcher.id}">
-                                        <img src="${launcher.image_url || "https://rocket.watch/assets/rocket_placeholder.jpg"}">
+                                        <img src="${launcher.image_url || '/assets/rocket_placeholder.jpg'}">
                                     </a>
                                     <span class="card-title">
                                         <a class="chip" href="/#rocket=${launcher.id}">${launcher.name}</a>

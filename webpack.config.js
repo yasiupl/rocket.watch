@@ -2,17 +2,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const WorkboxPlugin = require('workbox-webpack-plugin');
-const GoogleTagManagerPlugin = require('webpack-google-tag-manager-plugin');
 const path = require('path');
 
 module.exports = {
+    mode: 'production',
     entry: ['./src/app.js', './src/style.scss'],
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        hashFunction: 'sha256'
     },
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
+        static: path.join(__dirname, 'dist'),
         compress: true,
         port: 8080
     },
@@ -63,10 +64,6 @@ module.exports = {
             swSrc: './src/serviceworker.js',
             swDest: 'OneSignalSDKWorker.js'
         }),
-        new GoogleTagManagerPlugin({
-            id: 'GTM-PBBB4LF',
-            dataLayerName: 'dataLayer',
-        }),
     ],
     module: {
         rules: [{
@@ -74,12 +71,17 @@ module.exports = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
-                    'sass-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            implementation: require('sass'),
+                        },
+                    },
                 ],
             },
             {
                 test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
-                loader: "file-loader"
+                type: "asset/resource"
             }
         ]
     }

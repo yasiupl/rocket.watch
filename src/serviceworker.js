@@ -1,3 +1,4 @@
+const appBaseUrl = 'https://rocketwatch.space';
 importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');
 
 workbox.googleAnalytics.initialize();
@@ -21,7 +22,7 @@ workbox.routing.registerRoute(
 
 
 workbox.routing.registerRoute(
-  ({url}) => (url.origin === 'https://rocket.watch' &&
+  ({url}) => (url.origin === appBaseUrl &&
   url.pathname.startsWith('/assets/')) || (url.origin === 'https://spacelaunchnow-prod-east.nyc3.digitaloceanspaces.com'),
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: 'assets-cache',
@@ -32,4 +33,4 @@ workbox.routing.registerRoute(
     ],
   })
 );
-workbox.precaching.precacheAndRoute(self.__precacheManifest);
+workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);

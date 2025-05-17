@@ -1,7 +1,7 @@
 deploy: install copy build 
 
 install:
-	npm ci
+	npm install
 
 copy:
 	mkdir -p dist/assets
@@ -9,7 +9,7 @@ copy:
 	cp -r src/static/* dist
 
 build: copy
-	node_modules/.bin/webpack 
+	node_modules/.bin/webpack
 
 serve: copy
 	node_modules/.bin/webpack-dev-server
