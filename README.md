@@ -3,6 +3,7 @@
 [![Discord](https://img.shields.io/discord/150674920869724161)](https://discord.gg/cExSaKZ) [![Netlify Status](https://api.netlify.com/api/v1/badges/dd4154a3-2721-46b9-bdff-136de3c95f1f/deploy-status)](https://app.netlify.com/sites/rocketwatch/deploys)
 [![](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=114412&theme=dark)](https://www.producthunt.com/posts/rocket-watch)
 
+![showcase](https://i.imgur.com/qJ6fE74.png)
 ## Our Mission & Premise
 
 The original idea behind rocket.watch was to give spaceflight fans a tool to follow SpaceX activities in high detail. Initially, the app focused on SpaceX landings and the arrival of landing barges to Port Canaveral, Florida. The website included feeds like AIS, live marine radio, and live camera feeds on one page, allowing fans to see the outcome of the landing right as the barge appeared on the horizon. Many people would then come to see the booster in person, but many fans also stuck to the online feeds.
