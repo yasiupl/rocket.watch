@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/yasiupl/rocket.watch#readme",
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   },
   "devDependencies": {
     "css-loader": "^6.10.0",
