@@ -6,13 +6,15 @@ const GoogleTagManagerPlugin = require('webpack-google-tag-manager-plugin');
 const path = require('path');
 
 module.exports = {
+    mode: 'production',
     entry: ['./src/app.js', './src/style.scss'],
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.js',
+        hashFunction: 'sha256'
     },
     devServer: {
-        contentBase: path.join(__dirname, 'dist'),
+        static: path.join(__dirname, 'dist'),
         compress: true,
         port: 8080
     },

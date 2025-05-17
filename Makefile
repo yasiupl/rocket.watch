@@ -9,7 +9,7 @@ copy:
 	cp -r src/static/* dist
 
 build: copy
-	NODE_OPTIONS=--openssl-legacy-provider node_modules/.bin/webpack
+	node_modules/.bin/webpack
 
 serve: copy
-	NODE_OPTIONS=--openssl-legacy-provider node_modules/.bin/webpack-dev-server
+	node_modules/.bin/webpack-dev-server

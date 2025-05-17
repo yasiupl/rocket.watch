@@ -17,18 +17,18 @@
   },
   "homepage": "https://github.com/yasiupl/rocket.watch#readme",
   "devDependencies": {
-    "css-loader": "^3.5.2",
+    "css-loader": "^6.10.0",
     "file-loader": "^4.3.0",
-    "html-webpack-plugin": "4.0.0-beta.8",
-    "mini-css-extract-plugin": "^0.8.2",
+    "html-webpack-plugin": "^5.6.0",
+    "mini-css-extract-plugin": "^2.9.0",
     "sass": "^1.50.0",
-    "sass-loader": "^10.2.0",
-    "webpack": "^4.41.0",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.11.0",
+    "sass-loader": "^13.3.0",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.15.0",
     "webpack-inject-plugin": "^1.5.4",
     "webpack-pwa-manifest": "^4.2.0",
-    "workbox-webpack-plugin": "^4.3.1"
+    "workbox-webpack-plugin": "^6.6.0"
   },
   "dependencies": {
     "chart.js": "^2.9.3",
