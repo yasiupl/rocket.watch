@@ -1,3 +1,4 @@
+
 import { load, materialize, updateCountdown, ReadableDateString, Countdown } from '../js/utils'
 
 
@@ -30,7 +31,7 @@ export default function watch(id, mode = "live") {
 								</div>
 							</div>
 							<div id="buttons">
-								<a class="waves-effect waves-light btn hoverable blurple" href="https://rocket.watch/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
+								<a class="waves-effect waves-light btn hoverable blurple" href="/discord" target="_blank"><i class="fab fa-discord"></i> Discord</a>
 								<a class="waves-effect waves-light btn hoverable" href="/#launch=${launch.launch_library_id || launch.slug}">Exit TV mode</a>	
 							</div>
 							<div class="card-tabs">

@@ -20,5 +20,6 @@
         }
     },
     "launchlibraryURL": "https://launchlibrary.net/1.4.1/",
-    "deploymentURL": "http://localhost:9000/api/"
+    "deploymentURL": "http://localhost:9000/api/",
+    "appBaseUrl": "https://rocketwatch.space"
 }
