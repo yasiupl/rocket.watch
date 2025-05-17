@@ -35,7 +35,6 @@
   "dependencies": {
     "chart.js": "^2.9.3",
     "core-js": "^3.23.3",
-    "materialize-css": "^1.0.0",
-    "webpack-google-tag-manager-plugin": "^1.0.3"
+    "materialize-css": "^1.0.0"
   }
 }
