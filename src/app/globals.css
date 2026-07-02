@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+  }
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+.dark body {
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+}
+
+@keyframes exhaust {
+  0% { transform: scaleX(1) }
+  100% { transform: scaleX(0.5) }
+}
