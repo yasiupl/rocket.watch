@@ -16,6 +16,7 @@ export default function Navbar() {
     { href: '/search', label: 'Search', icon: Search },
     { href: '/future', label: 'Upcoming', icon: CalendarDays },
     { href: '/history', label: 'History', icon: History },
+    { href: '/locations', label: 'Locations', icon: MapPin },
   ];
 
   return (

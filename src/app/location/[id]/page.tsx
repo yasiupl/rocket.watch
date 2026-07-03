@@ -4,13 +4,12 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { fetchFromApi } from '@/lib/api';
 import Loading from '@/components/Loading';
-import LaunchCard from '@/components/LaunchCard';
+import PaginatedLaunchList from '@/components/PaginatedLaunchList';
 
 export default function LocationDetail() {
   const params = useParams();
   const id = params.id as string;
   const [location, setLocation] = useState<any>(null);
-  const [launches, setLaunches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,9 +18,6 @@ export default function LocationDetail() {
       try {
         const locData = await fetchFromApi(`location/${id}/`);
         setLocation(locData);
-
-        const launchData = await fetchFromApi('launch/', { location__id: id, limit: '12' });
-        setLaunches(launchData.results || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -44,10 +40,12 @@ export default function LocationDetail() {
          </div>
       </div>
 
-      <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Recent & Upcoming Launches</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {launches.map(launch => <LaunchCard key={launch.id} launch={launch} />)}
-      </div>
+      <PaginatedLaunchList
+         endpoint="launch/"
+         baseParams={{ location__id: id }}
+         title="Recent & Upcoming Launches"
+         defaultSort="-net"
+      />
     </div>
   );
 }
