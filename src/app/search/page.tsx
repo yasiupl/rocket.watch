@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search as SearchIcon } from 'lucide-react';
-import { fetchFromApi } from '@/lib/api';
+import { fetchFromApi, fetchSources } from '@/lib/api';
 import LaunchCard from '@/components/LaunchCard';
 import Loading from '@/components/Loading';
 
@@ -11,15 +11,29 @@ export default function Search() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [sources, setSources] = useState<any>(null);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
+  useEffect(() => {
+    async function init() {
+      try {
+        const sourcesData = await fetchSources();
+        setSources(sourcesData);
+      } catch (e) {
+        console.error("Failed to load sources", e);
+      }
+    }
+    init();
+  }, []);
+
+  const handleSearch = async (e?: React.FormEvent, directQuery?: string) => {
+    if (e) e.preventDefault();
+    const q = directQuery || query;
+    if (!q.trim()) return;
 
     setLoading(true);
     setHasSearched(true);
     try {
-      const data = await fetchFromApi('launch/', { search: query, limit: '24' });
+      const data = await fetchFromApi('launch/', { search: q, limit: '24' });
       setResults(data.results || []);
     } catch (error) {
       console.error('Error fetching search results:', error);
@@ -29,8 +43,11 @@ export default function Search() {
     }
   };
 
+  const collectionInfo = sources?.info?.search?.[query.toLowerCase()];
+
   return (
     <div className="max-w-7xl mx-auto space-y-8">
+
       <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
         <form onSubmit={handleSearch} className="flex gap-4">
           <div className="relative flex-grow">
@@ -54,6 +71,18 @@ export default function Search() {
           </button>
         </form>
       </div>
+
+      {collectionInfo && !loading && (
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row items-center gap-6 p-6">
+          {collectionInfo.img && (
+            <img src={collectionInfo.img} alt={collectionInfo.name} className="h-32 object-contain" />
+          )}
+          <div>
+             <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{collectionInfo.name}</h2>
+             <p className="text-slate-700 dark:text-slate-300">{collectionInfo.desc}</p>
+          </div>
+        </div>
+      )}
 
       {loading && <Loading />}
 
