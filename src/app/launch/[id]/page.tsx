@@ -42,18 +42,18 @@ export default function LaunchDetail() {
   const hasVideo = launch.vidURLs && launch.vidURLs.length > 0;
 
   // Custom links from sources.json
-  const customLinks = [];
+  const customLinks: any[] = [];
   if (sources && sources.custom) {
-    if (launch.launch_service_provider?.abbrev && sources.custom.byAgency[launch.launch_service_provider.abbrev.toLowerCase()]) {
+    if (launch.launch_service_provider?.abbrev && sources.custom.byAgency && sources.custom.byAgency[launch.launch_service_provider.abbrev.toLowerCase()]) {
       customLinks.push(...sources.custom.byAgency[launch.launch_service_provider.abbrev.toLowerCase()]);
     }
-    if (launch.pad?.location?.id && sources.custom.byLocationID[launch.pad.location.id]) {
+    if (launch.pad?.location?.id && sources.custom.byLocationID && sources.custom.byLocationID[launch.pad.location.id]) {
       customLinks.push(...sources.custom.byLocationID[launch.pad.location.id]);
     }
-    if (launch.mission?.name && sources.custom.byMissionName[launch.mission.name]) {
+    if (launch.mission?.name && sources.custom.byMissionName && sources.custom.byMissionName[launch.mission.name]) {
       customLinks.push(...sources.custom.byMissionName[launch.mission.name]);
     }
-    if (sources.custom.byMissionId[id]) {
+    if (sources.custom.byMissionId && sources.custom.byMissionId[id]) {
        customLinks.push(...sources.custom.byMissionId[id]);
     }
   }
@@ -155,14 +155,20 @@ export default function LaunchDetail() {
                  Curated Resources
                </h2>
                <div className="flex flex-col gap-3">
-                 {customLinks.map((link: any, i: number) => (
-                    link.url && (
-                      <a key={i} href={link.url} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline flex items-start gap-2">
+                 {customLinks.map((link: any, i: number) => {
+                    let href = link.url;
+                    // Fix protocol-less URLs from original JSON
+                    if (href && href.startsWith('//')) {
+                       href = `https:${href}`;
+                    }
+
+                    return href && (
+                      <a key={i} href={href} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline flex items-start gap-2">
                         {link.is === 'video' ? <Video className="h-4 w-4 mt-1 flex-shrink-0" /> : <LinkIcon className="h-4 w-4 mt-1 flex-shrink-0" />}
-                        <span>{link.name || link.url}</span>
+                        <span>{link.name || href}</span>
                       </a>
-                    )
-                 ))}
+                    );
+                 })}
                </div>
             </div>
           )}

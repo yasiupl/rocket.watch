@@ -1,13 +1,17 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Search as SearchIcon } from 'lucide-react';
 import { fetchFromApi, fetchSources } from '@/lib/api';
 import LaunchCard from '@/components/LaunchCard';
 import Loading from '@/components/Loading';
+import { useSearchParams } from 'next/navigation';
 
-export default function Search() {
-  const [query, setQuery] = useState('');
+function SearchContent() {
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get('q') || '';
+
+  const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
@@ -25,15 +29,15 @@ export default function Search() {
     init();
   }, []);
 
-  const handleSearch = async (e?: React.FormEvent, directQuery?: string) => {
+  const handleSearch = async (e?: React.FormEvent, q?: string) => {
     if (e) e.preventDefault();
-    const q = directQuery || query;
-    if (!q.trim()) return;
+    const searchQuery = q !== undefined ? q : query;
+    if (!searchQuery.trim()) return;
 
     setLoading(true);
     setHasSearched(true);
     try {
-      const data = await fetchFromApi('launch/', { search: q, limit: '24' });
+      const data = await fetchFromApi('launch/', { search: searchQuery, limit: '24' });
       setResults(data.results || []);
     } catch (error) {
       console.error('Error fetching search results:', error);
@@ -43,11 +47,16 @@ export default function Search() {
     }
   };
 
+  useEffect(() => {
+    if (initialQuery) {
+      handleSearch(undefined, initialQuery);
+    }
+  }, [initialQuery]);
+
   const collectionInfo = sources?.info?.search?.[query.toLowerCase()];
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
-
+    <>
       <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
         <form onSubmit={handleSearch} className="flex gap-4">
           <div className="relative flex-grow">
@@ -99,6 +108,16 @@ export default function Search() {
           ))}
         </div>
       )}
+    </>
+  );
+}
+
+export default function Search() {
+  return (
+    <div className="max-w-7xl mx-auto space-y-8">
+      <Suspense fallback={<Loading />}>
+        <SearchContent />
+      </Suspense>
     </div>
   );
 }

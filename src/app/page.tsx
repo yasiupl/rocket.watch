@@ -50,20 +50,30 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Curated Collections</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {sources.featuring.map((feature: any, i: number) => {
-              // The original JSON structure for featuring is like {"url": "?search=starship", "img": "url", "title": "Starship"}
+              // The original JSON structure for featuring is like {"url": "/?search=starship", "img": "url", "name": "Starship"}
               let href = feature.url;
-              if (href && href.startsWith('?search=')) {
+              if (href && href.startsWith('/?search=')) {
                 href = `/search?q=${href.split('=')[1]}`;
-              } else if (href && href.startsWith('?collection=')) {
+              } else if (href && href.startsWith('/?collection=')) {
                 href = `/search?q=${href.split('=')[1]}`;
+              } else if (href && href.startsWith('/#search=')) { // some older versions used hash
+                 href = `/search?q=${href.split('=')[1]}`;
+              }
+
+              // Also handle image paths properly if they are relative like ./assets/starship.jpeg
+              let imgSrc = feature.img;
+              if (imgSrc && imgSrc.startsWith('./assets/')) {
+                  imgSrc = imgSrc.replace('./assets/', '/assets/');
+              } else if (imgSrc && imgSrc.startsWith('assets/')) {
+                  imgSrc = '/' + imgSrc;
               }
 
               return (
                 <Link key={i} href={href || '/'} className="group block text-center space-y-4">
                    <div className="relative h-32 w-32 mx-auto rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-700 group-hover:border-blue-500 transition-colors">
-                      <img src={feature.img} alt={feature.title} className="w-full h-full object-cover" />
+                      <img src={imgSrc} alt={feature.name || feature.title} className="w-full h-full object-cover" />
                    </div>
-                   <h3 className="font-semibold text-lg text-slate-900 dark:text-white group-hover:text-blue-500 transition-colors">{feature.title}</h3>
+                   <h3 className="font-semibold text-lg text-slate-900 dark:text-white group-hover:text-blue-500 transition-colors">{feature.name || feature.title}</h3>
                 </Link>
               );
             })}
