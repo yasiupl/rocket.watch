@@ -6,6 +6,7 @@ import { fetchFromApi, fetchSources } from '@/lib/api';
 import LaunchCard from '@/components/LaunchCard';
 import Loading from '@/components/Loading';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -86,9 +87,36 @@ function SearchContent() {
           {collectionInfo.img && (
             <img src={collectionInfo.img} alt={collectionInfo.name} className="h-32 object-contain" />
           )}
-          <div>
+          <div className="flex-grow">
              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{collectionInfo.name}</h2>
-             <p className="text-slate-700 dark:text-slate-300">{collectionInfo.desc}</p>
+             <p className="text-slate-700 dark:text-slate-300 mb-4">{collectionInfo.desc}</p>
+
+             {collectionInfo.badges && collectionInfo.badges.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                   {collectionInfo.badges.map((badge: any, i: number) => {
+                      let href = badge.url;
+                      if (href && href.startsWith('/#rocket=')) {
+                          href = `/rocket/${href.split('=')[1]}`;
+                      } else if (href && href.startsWith('#rocket=')) {
+                          href = `/rocket/${href.split('=')[1]}`;
+                      } else if (href && href.startsWith('/#collection=')) {
+                          href = `/search?q=${href.split('=')[1]}`;
+                      }
+
+                      return (
+                        <Link
+                           key={i}
+                           href={href || '#'}
+                           className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                           title={badge.tip}
+                        >
+                           {badge.img && <img src={badge.img} alt={badge.name} className="h-4 w-4" />}
+                           {badge.name}
+                        </Link>
+                      );
+                   })}
+                </div>
+             )}
           </div>
         </div>
       )}

@@ -48,7 +48,7 @@ export default function Home() {
       {sources && sources.featuring && (
         <section className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow border border-slate-200 dark:border-slate-700">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 text-center">Curated Collections</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sources.featuring.map((feature: any, i: number) => {
               // The original JSON structure for featuring is like {"url": "/?search=starship", "img": "url", "name": "Starship"}
               let href = feature.url;
@@ -56,8 +56,14 @@ export default function Home() {
                 href = `/search?q=${href.split('=')[1]}`;
               } else if (href && href.startsWith('/?collection=')) {
                 href = `/search?q=${href.split('=')[1]}`;
-              } else if (href && href.startsWith('/#search=')) { // some older versions used hash
+              } else if (href && href.startsWith('/#search=')) {
                  href = `/search?q=${href.split('=')[1]}`;
+              } else if (href && href.startsWith('/#collection=')) {
+                 href = `/search?q=${href.split('=')[1]}`;
+              } else if (href && href.startsWith('#rocket=')) {
+                 href = `/rocket/${href.split('=')[1]}`;
+              } else if (href && href.startsWith('/#rocket=')) {
+                 href = `/rocket/${href.split('=')[1]}`;
               }
 
               // Also handle image paths properly if they are relative like ./assets/starship.jpeg
