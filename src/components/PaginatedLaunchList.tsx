@@ -35,6 +35,16 @@ export default function PaginatedLaunchList({ endpoint, baseParams = {}, title, 
           params.ordering = sort;
         }
 
+        // Launch Library 2.0.0 API quirk: pad and location ids are accessed via `pad` and `location` param directly, not `pad__id`.
+        if (params.pad__id) {
+            params.pad = params.pad__id;
+            delete params.pad__id;
+        }
+        if (params.location__id) {
+            params.location = params.location__id;
+            delete params.location__id;
+        }
+
         const data = await fetchFromApi(endpoint, params);
         setLaunches(data.results || []);
         setTotal(data.count || 0);
@@ -63,7 +73,7 @@ export default function PaginatedLaunchList({ endpoint, baseParams = {}, title, 
            <select
               value={sort}
               onChange={(e) => { setSort(e.target.value); setOffset(0); }}
-              className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
            >
               <option value="">Default Sorting</option>
               <option value="net">Date (Ascending)</option>
@@ -99,17 +109,17 @@ export default function PaginatedLaunchList({ endpoint, baseParams = {}, title, 
             <button
               onClick={handlePrev}
               disabled={offset === 0 || loading}
-              className="p-2 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-900 dark:text-white"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <span className="text-sm font-medium px-2">
+            <span className="text-sm font-medium px-2 text-slate-900 dark:text-white">
                Page {currentPage} of {totalPages}
             </span>
             <button
               onClick={handleNext}
               disabled={offset + limit >= total || loading}
-              className="p-2 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-slate-900 dark:text-white"
             >
               <ChevronRight className="h-5 w-5" />
             </button>

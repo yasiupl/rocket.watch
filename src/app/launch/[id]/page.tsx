@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { fetchFromApi, fetchSources } from '@/lib/api';
 import Loading from '@/components/Loading';
@@ -14,7 +14,6 @@ import Link from 'next/link';
 function parseMedia(url: string, defaultTitle: string = "Stream") {
   if (!url) return null;
 
-  // Clean up URL
   let cleanUrl = url;
   if (cleanUrl.startsWith('//')) {
     cleanUrl = `https:${cleanUrl}`;
@@ -23,7 +22,7 @@ function parseMedia(url: string, defaultTitle: string = "Stream") {
   const result = {
     title: defaultTitle,
     url: cleanUrl,
-    type: 'external' as 'external' | 'youtube' | 'twitch' | 'twitter',
+    type: 'external' as 'external' | 'youtube' | 'twitch' | 'twitter' | 'audio',
     videoId: ''
   };
 
@@ -38,15 +37,14 @@ function parseMedia(url: string, defaultTitle: string = "Stream") {
       result.type = 'twitch';
       result.videoId = urlObj.pathname.split('/')[1];
     } else if (host.includes('twitter.com') || host.includes('x.com')) {
-       // Only parse single tweets for react-tweet
        if (urlObj.pathname.includes('/status/')) {
           result.type = 'twitter';
           result.videoId = urlObj.pathname.split('/').pop() || '';
        }
+    } else if (cleanUrl.endsWith('.mp3') || cleanUrl.endsWith('.m3u8')) {
+        result.type = 'audio';
     }
-  } catch (e) {
-    // Invalid URL fallback to external
-  }
+  } catch (e) {}
 
   return result;
 }
@@ -57,6 +55,7 @@ export default function LaunchDetail() {
   const [launch, setLaunch] = useState<any>(null);
   const [sources, setSources] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const originalTitleRef = useRef<string>('');
 
   useEffect(() => {
     async function loadData() {
@@ -68,13 +67,28 @@ export default function LaunchDetail() {
         ]);
         setLaunch(data);
         setSources(sourcesData);
+        // Initially set the title.
+        const isUpcomingGo = data.status?.id === 1 || data.status?.id === 6;
+        if (!isUpcomingGo || !data.net) {
+            document.title = `${data.name} | rocket.watch`;
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     }
+
+    if (typeof document !== 'undefined') {
+       originalTitleRef.current = document.title;
+    }
     loadData();
+
+    return () => {
+       if (typeof document !== 'undefined') {
+          document.title = originalTitleRef.current || 'rocket.watch';
+       }
+    };
   }, [id]);
 
   if (loading) return <Loading />;
@@ -83,7 +97,6 @@ export default function LaunchDetail() {
   // Aggregate Media List
   const mediaList: any[] = [];
 
-  // 1. Official vidURLs
   if (launch.vidURLs) {
     launch.vidURLs.forEach((vid: any, idx: number) => {
       const parsed = parseMedia(vid.url, vid.title || `Official Stream ${idx + 1}`);
@@ -91,15 +104,17 @@ export default function LaunchDetail() {
     });
   }
 
-  // 2. Custom sources.json
   const customLinks: any[] = [];
   if (sources && sources.custom) {
     const pushCustom = (arr: any[]) => {
       arr.forEach(item => {
         if (item.url) {
-           if (item.is === 'video' || item.name?.toLowerCase().includes('live')) {
+           if (item.is === 'video' || item.is === 'audio' || item.name?.toLowerCase().includes('live')) {
               const parsed = parseMedia(item.url, item.name || "Custom Stream");
-              if (parsed) mediaList.push(parsed);
+              if (parsed) {
+                  if (item.is === 'audio') parsed.type = 'audio';
+                  mediaList.push(parsed);
+              }
            } else {
               customLinks.push(item);
            }
@@ -123,6 +138,12 @@ export default function LaunchDetail() {
 
   const hasMedia = mediaList.length > 0;
 
+  // Decide whether to show countdown or status text
+  const isUpcomingGo = launch.status?.id === 1 || launch.status?.id === 6; // 1: Go for Launch, 6: In Flight
+  const isTBD = launch.status?.id === 2 || launch.status?.id === 8;
+  const isSuccess = launch.status?.id === 3;
+  const isFailure = launch.status?.id === 4;
+
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       {launch.image && !hasMedia && (
@@ -141,8 +162,8 @@ export default function LaunchDetail() {
       )}
 
       {hasMedia && (
-        <div className="space-y-4 max-w-5xl mx-auto">
-           <MediaViewer media={mediaList} />
+        <div className="space-y-4 max-w-6xl mx-auto">
+           <MediaViewer media={mediaList} bgImage={launch.image} />
            <div>
               <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2">{launch.name}</h1>
               <p className="text-blue-600 dark:text-blue-400 text-lg">{launch.launch_service_provider?.name}</p>
@@ -157,34 +178,41 @@ export default function LaunchDetail() {
         </div>
       )}
 
-      {launch.net && (
-        <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow border border-slate-200 dark:border-slate-700 text-center max-w-4xl mx-auto">
-          <Countdown date={launch.net} />
-        </div>
-      )}
+      <div className="max-w-4xl mx-auto">
+        {(isUpcomingGo && launch.net) && (
+          <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow border border-slate-200 dark:border-slate-700 text-center">
+            {/* The `updateTitle` prop explicitly tells the Countdown component to take over the document title */}
+            <Countdown date={launch.net} updateTitle={true} launchName={launch.name} />
+          </div>
+        )}
 
-      {/* Info notices */}
-      <div className="max-w-4xl mx-auto space-y-4">
-        {launch.status?.id === 4 && (
-          <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl shadow border border-red-200 dark:border-red-800 flex items-start gap-3 text-red-800 dark:text-red-200">
-            <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
-            <div>
-                <p className="font-semibold">Launch Failure</p>
-                <p className="text-sm mt-1">{launch.status.description || "The launch did not succeed."}</p>
+        {isSuccess && (
+          <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl shadow border border-green-200 dark:border-green-800 text-center text-green-800 dark:text-green-200">
+             <h3 className="text-2xl font-bold uppercase tracking-wider">{launch.status.name}</h3>
+             <p className="mt-2">This mission completed successfully.</p>
+          </div>
+        )}
+
+        {isFailure && (
+          <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-xl shadow border border-red-200 dark:border-red-800 flex items-center justify-center gap-3 text-red-800 dark:text-red-200">
+            <AlertCircle className="h-8 w-8 flex-shrink-0" />
+            <div className="text-left">
+                <p className="font-bold text-xl uppercase tracking-wider">Launch Failure</p>
+                <p className="mt-1">{launch.status.description || "The launch did not succeed."}</p>
             </div>
           </div>
         )}
-        {launch.status?.id === 2 && (
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-xl shadow border border-yellow-200 dark:border-yellow-800 flex items-start gap-3 text-yellow-800 dark:text-yellow-200">
-            <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
-            <div>
-                <p className="font-semibold">TBD / Hold</p>
-                <p className="text-sm mt-1">{launch.status.description || "The launch date is not yet confirmed."}</p>
+
+        {isTBD && (
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl shadow border border-yellow-200 dark:border-yellow-800 flex items-center justify-center gap-3 text-yellow-800 dark:text-yellow-200">
+            <AlertCircle className="h-8 w-8 flex-shrink-0" />
+            <div className="text-left">
+                <p className="font-bold text-xl uppercase tracking-wider">{launch.status.name}</p>
+                <p className="mt-1">{launch.status.description || "The launch date is not yet confirmed."}</p>
             </div>
           </div>
         )}
       </div>
-
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
         <div className="md:col-span-2 space-y-6">
@@ -210,7 +238,6 @@ export default function LaunchDetail() {
                     if (href && href.startsWith('//')) {
                        href = `https:${href}`;
                     }
-
                     return href && (
                       <a key={i} href={href} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline flex items-start gap-2">
                         <LinkIcon className="h-4 w-4 mt-1 flex-shrink-0" />
