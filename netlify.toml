@@ -1,34 +1,3 @@
 [build]
-  base = "/"
-  publish = "dist/"
-  command = "make deploy"
-
-[build.environment]
-  NODE_OPTIONS = "--max_old_space_size=4096"
-  NODE_VERSION = "20"
-
-[[redirects]]
-  from = "/discord"
-  to = "https://discord.gg/cExSaKZ"
-
-[[redirects]]
-  from = "/reddit"
-  to = "https://reddit.com/r/rocketwatch"
-
-[[redirects]]
-  from = "/twitter"
-  to = "https://twitter.com/rocket_watch"
-  
-[[redirects]]
-  from = "/youtube"
-  to = "https://www.youtube.com/channel/UCpY48ts_nCvlBRAVlbJePgg" 
-  
-[[redirects]]
-  from = "http://rocketwatch.yasiu.pl/"
-  to = "https://rocketwatch.space"
-  status = 301
-  
-  [[redirects]]
-  from = "https://rocketwatch.yasiu.pl/"
-  to = "https://rocketwatch.space"
-  status = 301
+  command = "npm run build"
+  publish = "dist"
