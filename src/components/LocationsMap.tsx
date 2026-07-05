@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { fetchFromApi } from '@/lib/api';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import Link from 'next/link';
@@ -25,18 +25,36 @@ const highlightIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-// Component to handle programmatic popup opening
-function MapController({ activePadId, pads }: { activePadId: string | null, pads: any[] }) {
-  const map = useMap();
+// Component to handle map boundaries and resetting
+function MapController({
+  onBoundsChange,
+  resetTrigger,
+  onResetComplete
+}: {
+  onBoundsChange: (bounds: L.LatLngBounds) => void,
+  resetTrigger: boolean,
+  onResetComplete: () => void
+}) {
+  const map = useMapEvents({
+    moveend() {
+      onBoundsChange(map.getBounds());
+    },
+    zoomend() {
+      onBoundsChange(map.getBounds());
+    },
+  });
 
   useEffect(() => {
-    if (activePadId) {
-      const pad = pads.find(p => p.id.toString() === activePadId);
-      if (pad && pad.latitude && pad.longitude) {
-        map.flyTo([parseFloat(pad.latitude), parseFloat(pad.longitude)], 5, { animate: true, duration: 1.5 });
-      }
+    // Initial bounds report
+    onBoundsChange(map.getBounds());
+  }, [map, onBoundsChange]);
+
+  useEffect(() => {
+    if (resetTrigger) {
+      map.setView([20, 0], 2);
+      onResetComplete();
     }
-  }, [activePadId, pads, map]);
+  }, [resetTrigger, map, onResetComplete]);
 
   return null;
 }
@@ -44,9 +62,11 @@ function MapController({ activePadId, pads }: { activePadId: string | null, pads
 export default function LocationsMap() {
   const [locations, setLocations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activePadId, setActivePadId] = useState<string | null>(null);
+  const [activePad, setActivePad] = useState<any | null>(null);
   const [sortField, setSortField] = useState('total_launch_count');
   const [sortOrder, setSortOrder] = useState('desc');
+  const [mapBounds, setMapBounds] = useState<L.LatLngBounds | null>(null);
+  const [resetTrigger, setResetTrigger] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -56,7 +76,6 @@ export default function LocationsMap() {
         let offset = 0;
 
         while (true) {
-          // Changed to fetch via internal lambda api instead of ll.thespacedevs.com
           const data = await fetchFromApi('pad/', { limit: limit.toString(), offset: offset.toString() });
           allResults = [...allResults, ...(data.results || [])];
 
@@ -81,10 +100,18 @@ export default function LocationsMap() {
     return <div className="h-[600px] bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center animate-pulse">Loading map...</div>;
   }
 
-  // Filter pads with valid coordinates and sort them
+  // Filter pads with valid coordinates
   const validPads = locations.filter(pad => pad.latitude && pad.longitude);
 
-  const sortedPads = [...validPads].sort((a, b) => {
+  // Further filter pads that are currently visible within map bounds
+  const visiblePads = validPads.filter(pad => {
+    if (!mapBounds) return true;
+    const lat = parseFloat(pad.latitude);
+    const lng = parseFloat(pad.longitude);
+    return mapBounds.contains([lat, lng]);
+  });
+
+  const sortedPads = [...visiblePads].sort((a, b) => {
     let valA = a[sortField];
     let valB = b[sortField];
 
@@ -101,52 +128,94 @@ export default function LocationsMap() {
 
   return (
     <div className="space-y-6">
-      <div className="h-[500px] w-full rounded-xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 relative z-0">
-        <MapContainer
-          center={[20, 0]}
-          zoom={2}
-          style={{ height: '100%', width: '100%' }}
-          className="z-0"
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <MapController activePadId={activePadId} pads={validPads} />
 
-          {validPads.map((pad) => {
-            const isHovered = activePadId === pad.id.toString();
-            return (
-              <Marker
-                key={pad.id}
-                position={[parseFloat(pad.latitude), parseFloat(pad.longitude)]}
-                icon={isHovered ? highlightIcon : new L.Icon.Default()}
-                eventHandlers={{
-                  mouseover: () => setActivePadId(pad.id.toString()),
-                  mouseout: () => setActivePadId(null)
-                }}
-              >
-                <Popup>
-                  <div className="p-1">
-                    <h3 className="font-bold mb-1">{pad.name}</h3>
-                    <p className="text-xs text-gray-600 mb-2">{pad.location?.name}</p>
-                    <p className="text-xs text-gray-500 mb-2">Total Launches: {pad.total_launch_count}</p>
-                    <Link href={`/pad/${pad.id}`} className="text-blue-500 hover:underline text-sm font-medium">
-                      View Pad Details
-                    </Link>
-                  </div>
-                </Popup>
-              </Marker>
-            );
-          })}
-        </MapContainer>
+      <div className="flex flex-col lg:flex-row gap-6">
+          {/* Map Column */}
+          <div className="lg:w-2/3 h-[500px] rounded-xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 relative z-0">
+            <button
+                onClick={() => setResetTrigger(true)}
+                className="absolute top-4 right-4 z-[400] bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-1.5 rounded-md shadow-md border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 font-medium text-sm transition-colors"
+            >
+                Reset Zoom
+            </button>
+            <MapContainer
+              center={[20, 0]}
+              zoom={2}
+              style={{ height: '100%', width: '100%' }}
+              className="z-0"
+              scrollWheelZoom={true}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <MapController
+                 onBoundsChange={setMapBounds}
+                 resetTrigger={resetTrigger}
+                 onResetComplete={() => setResetTrigger(false)}
+              />
+
+              {validPads.map((pad) => {
+                const isSelected = activePad?.id === pad.id;
+                return (
+                  <Marker
+                    key={pad.id}
+                    position={[parseFloat(pad.latitude), parseFloat(pad.longitude)]}
+                    icon={isSelected ? highlightIcon : new L.Icon.Default()}
+                    eventHandlers={{
+                      click: () => setActivePad(pad)
+                    }}
+                  />
+                );
+              })}
+            </MapContainer>
+          </div>
+
+          {/* Details Card Column */}
+          <div className="lg:w-1/3">
+             {activePad ? (
+                 <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 h-full flex flex-col">
+                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{activePad.name}</h3>
+                     <p className="text-slate-600 dark:text-slate-400 mb-6 font-medium text-lg border-b border-slate-200 dark:border-slate-700 pb-4">{activePad.location?.name}</p>
+
+                     <div className="space-y-4 flex-grow">
+                         <div className="flex justify-between items-center">
+                             <span className="text-slate-500 dark:text-slate-400 font-medium">Total Launches</span>
+                             <span className="text-slate-900 dark:text-white font-bold bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-md">{activePad.total_launch_count}</span>
+                         </div>
+                         <div className="flex justify-between items-center">
+                             <span className="text-slate-500 dark:text-slate-400 font-medium">Coordinates</span>
+                             <span className="text-slate-900 dark:text-white font-mono text-sm">{parseFloat(activePad.latitude).toFixed(4)}, {parseFloat(activePad.longitude).toFixed(4)}</span>
+                         </div>
+                         {activePad.wiki_url && (
+                             <div className="pt-2">
+                                <a href={activePad.wiki_url} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline text-sm">Read on Wikipedia</a>
+                             </div>
+                         )}
+                     </div>
+
+                     <div className="mt-8 pt-4 border-t border-slate-200 dark:border-slate-700">
+                         <Link
+                            href={`/pad/${activePad.id}`}
+                            className="block w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white text-center font-bold rounded-lg transition-colors"
+                         >
+                            View Launches from this Pad
+                         </Link>
+                     </div>
+                 </div>
+             ) : (
+                 <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl shadow-inner border border-slate-200 dark:border-slate-700 h-full flex flex-col items-center justify-center text-center">
+                     <p className="text-slate-500 dark:text-slate-400 text-lg">Select a pad from the map or list to view details.</p>
+                 </div>
+             )}
+          </div>
       </div>
 
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow border border-slate-200 dark:border-slate-700 overflow-hidden">
         <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
-           <h3 className="font-bold text-slate-900 dark:text-white">Launch Pads ({validPads.length})</h3>
+           <h3 className="font-bold text-slate-900 dark:text-white">Visible Launch Pads ({sortedPads.length})</h3>
            <div className="flex gap-2 items-center">
-              <span className="text-sm text-slate-500">Sort by:</span>
+              <span className="text-sm text-slate-500 hidden sm:inline">Sort by:</span>
               <select
                  className="text-sm border border-slate-300 dark:border-slate-600 rounded px-2 py-1 bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                  value={`${sortField}-${sortOrder}`}
@@ -163,28 +232,36 @@ export default function LocationsMap() {
               </select>
            </div>
         </div>
-        <div className="max-h-[600px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50">
-           {sortedPads.map(pad => (
-              <div
-                 key={pad.id}
-                 className={`p-4 transition-colors cursor-pointer flex justify-between items-center ${activePadId === pad.id.toString() ? 'bg-blue-50 dark:bg-slate-700' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
-                 onMouseEnter={() => setActivePadId(pad.id.toString())}
-                 onMouseLeave={() => setActivePadId(null)}
-              >
-                 <div>
-                    <h4 className="font-semibold text-blue-600 dark:text-blue-400">
-                       <Link href={`/pad/${pad.id}`} className="hover:underline">{pad.name}</Link>
-                    </h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">{pad.location?.name}</p>
-                 </div>
-                 <div className="text-right">
-                    <span className="inline-block bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs font-medium">
-                       {pad.total_launch_count} launches
-                    </span>
-                 </div>
-              </div>
-           ))}
-        </div>
+
+        {sortedPads.length === 0 ? (
+            <div className="p-8 text-center text-slate-500 dark:text-slate-400">
+                No pads found in this area. Zoom out or pan the map.
+            </div>
+        ) : (
+            <div className="max-h-[600px] overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700/50 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+               {sortedPads.map(pad => (
+                  <div
+                     key={pad.id}
+                     className={`p-4 transition-colors cursor-pointer border-b border-r border-slate-100 dark:border-slate-700/50 ${activePad?.id === pad.id ? 'bg-blue-50 dark:bg-slate-700/80 ring-inset ring-2 ring-blue-500' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50'}`}
+                     onClick={() => setActivePad(pad)}
+                  >
+                     <div className="flex justify-between items-start gap-4">
+                         <div>
+                            <h4 className="font-semibold text-blue-600 dark:text-blue-400 line-clamp-1" title={pad.name}>
+                               {pad.name}
+                            </h4>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 mt-1" title={pad.location?.name}>{pad.location?.name}</p>
+                         </div>
+                         <div className="flex-shrink-0 text-right">
+                            <span className="inline-block bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs font-medium border border-slate-200 dark:border-slate-600">
+                               {pad.total_launch_count}
+                            </span>
+                         </div>
+                     </div>
+                  </div>
+               ))}
+            </div>
+        )}
       </div>
     </div>
   );
