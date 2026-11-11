@@ -1,12 +1,14 @@
+# This section is for the new Next.js app in /next-app
 [build]
-  base = "/"
-  publish = "dist/"
-  command = "make deploy"
+  base = "next-app/" # Run build command from next-app directory
+  publish = ".next/" # Next.js default build output directory
+  command = "npm run build" # Build command for Next.js
 
 [build.environment]
   NODE_OPTIONS = "--max_old_space_size=4096"
-  NODE_VERSION = "20"
+  NODE_VERSION = "20" # Ensure this is compatible with your Next.js version's requirements
 
+# Redirects should remain the same as they are domain-level
 [[redirects]]
   from = "/discord"
   to = "https://discord.gg/cExSaKZ"
@@ -28,7 +30,18 @@
   to = "https://rocketwatch.space"
   status = 301
   
-  [[redirects]]
+[[redirects]]
   from = "https://rocketwatch.yasiu.pl/"
   to = "https://rocketwatch.space"
   status = 301
+
+# If you still need to deploy the old site from `dist/` for a different domain or path,
+# you would need a more complex setup, possibly using monorepo features of Netlify or separate sites.
+# This configuration assumes `next-app` is the primary application being deployed for the main site.
+
+# For optimal Next.js support on Netlify (SSR, ISR, Image Optimization, etc.),
+# ensure the @netlify/plugin-nextjs is installed in your `next-app/package.json`
+# or let Netlify attempt to auto-install it.
+# You can explicitly add it to package.json: npm install @netlify/plugin-nextjs
+# And create a netlify.toml inside `next-app/` if more specific config is needed for the plugin,
+# or rely on Netlify's auto-detection. This top-level netlify.toml should generally work.
